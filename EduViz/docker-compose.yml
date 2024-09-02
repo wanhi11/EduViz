@@ -1,0 +1,33 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server
+    environment:
+      SA_PASSWORD: "Huy@1234"  # Mật khẩu cho SQL Server
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - mynetwork
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eduviz:latest
+    container_name: web_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker  # Sử dụng môi trường Docker
+      - ConnectionStrings__DefaultConnection=Server=db;Database=EduVizDB;User ID=sa;Password=Huy@1234;TrustServerCertificate=True;  # Sửa mật khẩu cho đúng
+    ports:
+      - "8311:80"
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
