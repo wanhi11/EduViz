@@ -56,7 +56,7 @@ namespace EduViz
                     }
                 });
             });
-            builder.WebHost.UseUrls("http://0.0.0.0:8080");
+            
             builder.Services.AddCors(option =>
                option.AddPolicy("CORS", builder =>
                    builder.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed((host) => true)));
