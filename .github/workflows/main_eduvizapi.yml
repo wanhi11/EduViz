@@ -5,7 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+permissions:
+  id-token: write
+  contents: read
 jobs:
   build:
     runs-on: windows-latest
@@ -51,6 +53,7 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E8EC21317D2C4D248159CBAA457D458A }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BF063059DCF6410083EB900FEB222FB5 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3DB57FCB61BB4A8E9D013D66828D1BAE }}
+          enable-AzPSSession: true
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
