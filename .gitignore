@@ -1,10 +1,4 @@
-*.swp
-*.*~
-project.lock.json
-.DS_Store
-*.pyc
-nupkg/
-
+/EduViz/EduViz.csproj
 # Visual Studio Code
 .vscode/
 
