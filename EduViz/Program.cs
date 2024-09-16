@@ -2,6 +2,8 @@ using EduViz.Entities;
 using EduViz.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using EduViz.Data;
+using EduViz.Middlewares;
 using Microsoft.OpenApi.Models;
 
 namespace EduViz
@@ -12,16 +14,9 @@ namespace EduViz
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Nạp cấu hình tương ứng với môi trường
-            builder.Configuration
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
             // Cấu hình các dịch vụ
             builder.Services.AddInfrastructure(builder.Configuration);
-
+            
             builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "EduViz API", Version = "v1" });
@@ -37,7 +32,7 @@ namespace EduViz
                     Scheme = "bearer"
                 });
                 
-                // Thêm yêu cầu bảo mật để sử dụng scheme Bearer
+
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -63,6 +58,11 @@ namespace EduViz
 
             var app = builder.Build();
 
+            app.Lifetime.ApplicationStarted.Register(async () =>
+            {
+                // Database Initialiser 
+                await app.InitialiseDatabaseAsync();
+            });
             if (app.Environment.IsDevelopment())
             {
                 await using (var scope = app.Services.CreateAsyncScope())
@@ -74,12 +74,12 @@ namespace EduViz
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            
             app.UseCors("CORS");
 
             app.UseHttpsRedirection();
+            
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseAuthentication();
 

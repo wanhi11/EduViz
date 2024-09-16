@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using EduViz.Enums;
+
 namespace EduViz.Entities
 {
 
@@ -23,10 +25,9 @@ namespace EduViz.Entities
 
         [Required]
         public DateTime PaymentDate { get; set; }
+        
 
-        [Required]
-        public string TransactionId { get; set; }
-
+        public PaymentStatus? PaymentStatus { get; set; }
         public virtual User Student { get; set; }
         public virtual MentorDetails Mentor { get; set; }
         public virtual Course Course { get; set; }
