@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoMapper;
 using EduViz.Data;
+using EduViz.Dtos;
 using EduViz.Mappers;
 using EduViz.Middlewares;
 using EduViz.Repositories;
@@ -56,6 +57,10 @@ namespace EduViz.Extensions
             services.AddScoped<DatabaseInitialiser>();
             services.AddScoped<IdentityService>();
             services.AddScoped<UserService>();
+            services.AddScoped<PayOsPaymentService>();
+            services.AddScoped<PaymentService>();
+            services.AddScoped<MentorDetailService>();
+            services.AddScoped<UpgradeOrderDetailService>();
             return services;
         }
     }

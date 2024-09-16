@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EduViz.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInit : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -110,6 +110,28 @@ namespace EduViz.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UpgradeOrderDetails",
+                columns: table => new
+                {
+                    UpgradeOrderDetailsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderCode = table.Column<long>(type: "bigint", nullable: false),
+                    Amount = table.Column<int>(type: "int", nullable: false),
+                    PackageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MentorDetailsID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PaymentStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UpgradeOrderDetails", x => x.UpgradeOrderDetailsId);
+                    table.ForeignKey(
+                        name: "FK_UpgradeOrderDetails_MentorDetails_MentorDetailsID",
+                        column: x => x.MentorDetailsID,
+                        principalTable: "MentorDetails",
+                        principalColumn: "MentorDetailsId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
@@ -145,7 +167,7 @@ namespace EduViz.Migrations
                     CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TransactionId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PaymentStatus = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -443,6 +465,11 @@ namespace EduViz.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UpgradeOrderDetails_MentorDetailsID",
+                table: "UpgradeOrderDetails",
+                column: "MentorDetailsID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserCourses_CourseId",
                 table: "UserCourses",
                 column: "CourseId");
@@ -473,6 +500,9 @@ namespace EduViz.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentQuizScores");
+
+            migrationBuilder.DropTable(
+                name: "UpgradeOrderDetails");
 
             migrationBuilder.DropTable(
                 name: "UserCourses");

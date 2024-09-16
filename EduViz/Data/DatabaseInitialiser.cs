@@ -50,7 +50,7 @@ public class DatabaseInitialiser : IDataInitialiser
 
     public async Task TrySeedAsync()
     {
-        if (_context.Users.Any())
+        if (_context.Users.Any() && _context.MentorDetails.Any())
         {
             return;
         }
@@ -94,9 +94,28 @@ public class DatabaseInitialiser : IDataInitialiser
             mentor,
             vipMentor
         };
+        var normalMentorDetails = new MentorDetails()
+        {
+            UserId = mentor.UserId,
+            MentorDetailsId = Guid.NewGuid(),
+            VipExpirationDate = DateTime.ParseExact("12/09/2024","dd/MM/yyyy",null),
+        };
+        var vipMentorDetails = new MentorDetails()
+        {
+            UserId = vipMentor.UserId,
+            MentorDetailsId = Guid.NewGuid(),
+            VipExpirationDate = DateTime.ParseExact("31/03/2025","dd/MM/yyyy",null)
+        };
+        List<MentorDetails> mentorDetailList = new List<MentorDetails>()
+        {
+            normalMentorDetails,
+            vipMentorDetails
+        };
         await _context.Users.AddRangeAsync(users);
+        await _context.MentorDetails.AddRangeAsync(mentorDetailList);
         await _context.SaveChangesAsync();
     }
+    
 }
 public static class DatabaseInitialiserExtension
 {

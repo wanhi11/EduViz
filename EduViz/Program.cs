@@ -16,7 +16,7 @@ namespace EduViz
 
             // Cấu hình các dịch vụ
             builder.Services.AddInfrastructure(builder.Configuration);
-
+            
             builder.Services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1", new OpenApiInfo { Title = "EduViz API", Version = "v1" });

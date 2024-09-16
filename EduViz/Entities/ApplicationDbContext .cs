@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EduViz.Common.Payloads.Request;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduViz.Entities
 {
@@ -18,6 +19,7 @@ namespace EduViz.Entities
         public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<MentorSubject> MentorSubjects { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<UpgradeOrderDetails> UpgradeOrderDetails { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

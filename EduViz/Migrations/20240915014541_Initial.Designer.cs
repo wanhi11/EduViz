@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240829051955_DbInit")]
-    partial class DbInit
+    [Migration("20240915014541_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,12 +169,11 @@ namespace EduViz.Migrations
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PaymentStatus")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("StudentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PaymentId");
 
@@ -328,6 +327,35 @@ namespace EduViz.Migrations
                     b.HasKey("SubjectId");
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("EduViz.Entities.UpgradeOrderDetails", b =>
+                {
+                    b.Property<Guid>("UpgradeOrderDetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MentorDetailsID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PackageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("UpgradeOrderDetailsId");
+
+                    b.HasIndex("MentorDetailsID");
+
+                    b.ToTable("UpgradeOrderDetails");
                 });
 
             modelBuilder.Entity("EduViz.Entities.User", b =>
@@ -569,6 +597,17 @@ namespace EduViz.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("EduViz.Entities.UpgradeOrderDetails", b =>
+                {
+                    b.HasOne("EduViz.Entities.MentorDetails", "MentorDetails")
+                        .WithMany("UpdagradeOrderDetails")
+                        .HasForeignKey("MentorDetailsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MentorDetails");
+                });
+
             modelBuilder.Entity("EduViz.Entities.UserCourse", b =>
                 {
                     b.HasOne("EduViz.Entities.Course", "Course")
@@ -620,6 +659,8 @@ namespace EduViz.Migrations
                     b.Navigation("MentorSubjects");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("UpdagradeOrderDetails");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Post", b =>
