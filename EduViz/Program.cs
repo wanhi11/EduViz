@@ -74,6 +74,8 @@ namespace EduViz
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI();
             
             app.UseCors("CORS");
 
