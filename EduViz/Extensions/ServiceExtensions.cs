@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoMapper;
+using EduViz.Controllers;
 using EduViz.Data;
 using EduViz.Dtos;
 using EduViz.Mappers;
@@ -61,6 +62,7 @@ namespace EduViz.Extensions
             services.AddScoped<PaymentService>();
             services.AddScoped<MentorDetailService>();
             services.AddScoped<UpgradeOrderDetailService>();
+            services.AddScoped<SubjectService>();
             return services;
         }
     }

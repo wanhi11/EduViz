@@ -13,5 +13,6 @@ public class ApplicationMapper : Profile
         CreateMap<MentorDetails, MentorDetailModel>().ReverseMap();
         CreateMap<Course, CourseModel>().ReverseMap();
         CreateMap<UpgradeOrderDetails, UpgradeOrderDetailModel>().ReverseMap();
+        CreateMap<Subject, SubjectModel>().ReverseMap();
     }
 }
