@@ -4,6 +4,7 @@ using EduViz.Dtos;
 using EduViz.Entities;
 using EduViz.Exceptions;
 using EduViz.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduViz.Services;
 
@@ -13,14 +14,16 @@ public class CourseService
     private readonly IRepository<Subject, Guid> _subjectRepository;
     private readonly IMapper _mapper;
     private readonly IRepository<Course, Guid> _courseRepositoty;
+    private readonly IRepository<MentorDetails, Guid> _mentorRepository;
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
-        IMapper mapper,IRepository<Course,Guid> courseRepository)
+        IMapper mapper,IRepository<Course,Guid> courseRepository,IRepository<MentorDetails,Guid> mentorRepository)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
         _mapper = mapper;
         _courseRepositoty = courseRepository;
+        _mentorRepository = mentorRepository;
     }
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
@@ -47,6 +50,54 @@ public class CourseService
         }
 
         return null;
+    }
+    public async Task<List<CourseModel>> GetCoursesBySubjectWithVipMentorFirst(string subjectName)
+    {
+        var currentDate = DateTime.UtcNow;
+        
+        var vipMentors = await _mentorRepository
+            .FindByCondition(m => m.VipExpirationDate > currentDate)
+            .OrderBy(m => Guid.NewGuid())
+            .ToListAsync();
+        
+        var coursesBySubject = _courseRepositoty
+            .FindByCondition(c => c.Subject.SubjectName.Equals(subjectName, StringComparison.OrdinalIgnoreCase));
+        
+        var vipCourses = coursesBySubject
+            .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .ToList();
+        
+        var nonVipCourses = coursesBySubject
+            .Where(c => !vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .ToList();
+        
+        var combinedCourses = vipCourses.Concat(nonVipCourses).ToList();
+
+        return _mapper.Map<List<CourseModel>>(combinedCourses);
+    }
+    public async Task<List<CourseModel>> GetCoursesWithVipMentorFirst()
+    {
+        var currentDate = DateTime.UtcNow;
+        
+        var vipMentors = await _mentorRepository
+            .FindByCondition(m => m.VipExpirationDate > currentDate)
+            .OrderBy(m => Guid.NewGuid())
+            .ToListAsync();
+
+        var coursesBySubject = _courseRepositoty
+            .GetAll();
+        
+        var vipCourses = coursesBySubject
+            .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .ToList();
+        
+        var nonVipCourses = coursesBySubject
+            .Where(c => !vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .ToList();
+        
+        var combinedCourses = vipCourses.Concat(nonVipCourses).ToList();
+
+        return _mapper.Map<List<CourseModel>>(combinedCourses);
     }
 
 }
