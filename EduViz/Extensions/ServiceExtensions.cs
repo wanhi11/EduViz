@@ -56,6 +56,7 @@ namespace EduViz.Extensions
 
             services.AddScoped(typeof(IRepository<,>), typeof(GenericRepository<,>));
             services.AddScoped<DatabaseInitialiser>();
+            services.AddScoped<CloudinaryService>();
             services.AddScoped<IdentityService>();
             services.AddScoped<UserService>();
             services.AddScoped<PayOsPaymentService>();

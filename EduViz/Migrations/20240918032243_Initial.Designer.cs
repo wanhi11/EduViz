@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240915014541_Initial")]
+    [Migration("20240918032243_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,11 +92,23 @@ namespace EduViz.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("MentorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Picture")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Schedule")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
@@ -363,6 +375,9 @@ namespace EduViz.Migrations
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()

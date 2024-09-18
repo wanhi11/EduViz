@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EduViz.Enums;
 
 namespace EduViz.Dtos;
 
@@ -14,4 +15,10 @@ public class CourseModel
     public Guid SubjectId { get; set; }
     
     public decimal Price { get; set; }
+    public string? Picture { get; set; }
+            
+    public DateTime StartDate { get; set; }
+    public int Duration { get; set; }
+            
+    public Schedule Schedule { get; set; }
 }

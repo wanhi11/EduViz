@@ -15,15 +15,18 @@ public class CourseService
     private readonly IMapper _mapper;
     private readonly IRepository<Course, Guid> _courseRepositoty;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
+    private readonly CloudinaryService _cloudinaryService;
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
-        IMapper mapper,IRepository<Course,Guid> courseRepository,IRepository<MentorDetails,Guid> mentorRepository)
+        IMapper mapper, IRepository<Course, Guid> courseRepository, IRepository<MentorDetails, Guid> mentorRepository,
+        CloudinaryService cloudinaryService)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
         _mapper = mapper;
         _courseRepositoty = courseRepository;
         _mentorRepository = mentorRepository;
+        _cloudinaryService = cloudinaryService;
     }
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
@@ -34,7 +37,7 @@ public class CourseService
         {
             throw new NotFoundException("Cannot find the suitable subject!");
         }
-
+        
         var user = _userRepository.FindByCondition(u => u.UserId.Equals(newCourse.MentorId)).FirstOrDefault();
         if (user is null)
         {
@@ -61,7 +64,8 @@ public class CourseService
             .ToListAsync();
         
         var coursesBySubject = _courseRepositoty
-            .FindByCondition(c => c.Subject.SubjectName.Equals(subjectName, StringComparison.OrdinalIgnoreCase));
+            .FindByCondition(c => c.Subject.SubjectName.Equals(subjectName, StringComparison.OrdinalIgnoreCase) &&
+            c.StartDate >currentDate);
         
         var vipCourses = coursesBySubject
             .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
@@ -85,7 +89,7 @@ public class CourseService
             .ToListAsync();
 
         var coursesBySubject = _courseRepositoty
-            .GetAll();
+            .FindByCondition(c=> c.StartDate>currentDate);
         
         var vipCourses = coursesBySubject
             .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))

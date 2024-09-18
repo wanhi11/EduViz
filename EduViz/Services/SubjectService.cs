@@ -27,5 +27,16 @@ public class SubjectService
 
         return _mapper.Map<List<SubjectModel>>(result);
     }
-    
+
+    public SubjectModel GetSubjectByName(string name)
+    {
+        var result = _subjectRepository.FindByCondition(s => s.SubjectName.Equals(name)).FirstOrDefault();
+        if (result is null)
+        {
+            throw new NotFoundException("there is no suitable subject");
+        }
+
+        return _mapper.Map<SubjectModel>(result);
+    }
+
 }
