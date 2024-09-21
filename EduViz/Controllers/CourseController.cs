@@ -54,7 +54,8 @@ public class CourseController:ControllerBase
                 Price = course.Price,
                 Picture = course.Picture,
                 SubjectName = subject.SubjectName,
-                MentorName = user.UserName
+                MentorName = user.UserName,
+                CourseId = course.CourseId
             });
         }
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
@@ -87,7 +88,8 @@ public class CourseController:ControllerBase
                 Price = course.Price,
                 Picture = course.Picture,
                 SubjectName = subject.SubjectName,
-                MentorName = user.UserName
+                MentorName = user.UserName,
+                CourseId = course.CourseId
             });
         }
 
