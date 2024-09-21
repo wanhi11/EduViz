@@ -25,5 +25,5 @@ public class CourseResponse
     public DateTime StartDate { get; set; }
     public int Duration { get; set; }
             
-    public Schedule Schedule { get; set; }
+    public string Schedule { get; set; }
 }

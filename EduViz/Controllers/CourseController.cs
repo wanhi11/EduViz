@@ -47,7 +47,7 @@ public class CourseController:ControllerBase
             var user =await _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                Schedule = course.Schedule,
+                Schedule = course.Schedule.ToString(),
                 CourseName = course.CourseName,
                 StartDate = course.StartDate,
                 Duration = course.Duration,
@@ -81,7 +81,7 @@ public class CourseController:ControllerBase
             var user =await _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                Schedule = course.Schedule,
+                Schedule = course.Schedule.ToString(),
                 CourseName = course.CourseName,
                 StartDate = course.StartDate,
                 Duration = course.Duration,
@@ -180,9 +180,28 @@ public class CourseController:ControllerBase
     {
         var course = _courseService.GetCourseById(courseId);
         var result = _courseService.GetCourseByMentorId(course.MentorId, courseId);
+        var listResult = new List<CourseResponse>();
+        foreach (var courseModel in result)
+        {
+            var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
+            var mentor = _mentorService.GetById(courseModel.MentorId);
+            var user =await _userService.GetUserById(mentor.UserId);
+            listResult.Add(new CourseResponse()
+            {
+                Schedule = courseModel.Schedule.ToString(),
+                CourseName = courseModel.CourseName,
+                StartDate = courseModel.StartDate,
+                Duration = courseModel.Duration,
+                Price = courseModel.Price,
+                Picture = courseModel.Picture,
+                SubjectName = subject.SubjectName,
+                MentorName = user.UserName,
+                CourseId = courseModel.CourseId
+            });
+        }
         return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
         {
-            ListRelativeCourse = result
+            ListRelativeCourse = listResult
         }));
     }
 
