@@ -4,5 +4,5 @@ namespace EduViz.Common.Payloads.Response;
 
 public class GetAllCourseWithName
 {
-    public List<CourseModel> ListCourse { get; set; }
+    public List<CourseResponse> ListCourse { get; set; }
 }

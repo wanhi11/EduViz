@@ -57,52 +57,69 @@ public class CourseService
     public async Task<List<CourseModel>> GetCoursesBySubjectWithVipMentorFirst(string subjectName)
     {
         var currentDate = DateTime.UtcNow;
-        
+
+        // Fetch all VIP mentors first
         var vipMentors = await _mentorRepository
             .FindByCondition(m => m.VipExpirationDate > currentDate)
-            .OrderBy(m => Guid.NewGuid())
             .ToListAsync();
-        
-        var coursesBySubject = _courseRepositoty
-            .FindByCondition(c => c.Subject.SubjectName.Equals(subjectName, StringComparison.OrdinalIgnoreCase) &&
-            c.StartDate >currentDate);
-        
+
+        // Fetch all courses that have a start date greater than the current date
+        var coursesBySubject = await _courseRepositoty
+            .FindByCondition(c => c.StartDate > currentDate && c.Subject.SubjectName.Equals(subjectName))
+            .ToListAsync();
+
+        // Get a list of VIP Mentor Ids
+        var vipMentorIds = vipMentors.Select(m => m.MentorDetailsId).ToList();
+
+        // Separate VIP courses and non-VIP courses
         var vipCourses = coursesBySubject
-            .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .Where(c => vipMentorIds.Contains(c.MentorId))
             .ToList();
-        
+
         var nonVipCourses = coursesBySubject
-            .Where(c => !vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .Where(c => !vipMentorIds.Contains(c.MentorId))
             .ToList();
-        
+
+        // Combine both VIP and non-VIP courses
         var combinedCourses = vipCourses.Concat(nonVipCourses).ToList();
 
+        // Map the combined courses to the desired model
         return _mapper.Map<List<CourseModel>>(combinedCourses);
     }
+
     public async Task<List<CourseModel>> GetCoursesWithVipMentorFirst()
     {
         var currentDate = DateTime.UtcNow;
-        
+
+        // Fetch all VIP mentors first
         var vipMentors = await _mentorRepository
             .FindByCondition(m => m.VipExpirationDate > currentDate)
-            .OrderBy(m => Guid.NewGuid())
             .ToListAsync();
 
-        var coursesBySubject = _courseRepositoty
-            .FindByCondition(c=> c.StartDate>currentDate);
-        
+        // Fetch all courses that have a start date greater than the current date
+        var coursesBySubject = await _courseRepositoty
+            .FindByCondition(c => c.StartDate > currentDate)
+            .ToListAsync();
+
+        // Get a list of VIP Mentor Ids
+        var vipMentorIds = vipMentors.Select(m => m.MentorDetailsId).ToList();
+
+        // Separate VIP courses and non-VIP courses
         var vipCourses = coursesBySubject
-            .Where(c => vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .Where(c => vipMentorIds.Contains(c.MentorId))
             .ToList();
-        
+
         var nonVipCourses = coursesBySubject
-            .Where(c => !vipMentors.Any(m => m.MentorDetailsId == c.MentorId))
+            .Where(c => !vipMentorIds.Contains(c.MentorId))
             .ToList();
-        
+
+        // Combine both VIP and non-VIP courses
         var combinedCourses = vipCourses.Concat(nonVipCourses).ToList();
 
+        // Map the combined courses to the desired model
         return _mapper.Map<List<CourseModel>>(combinedCourses);
     }
+
 
     public List<CourseModel> GetCourseByMentorId(Guid mentorId,Guid currentCourseId)
     {

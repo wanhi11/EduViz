@@ -64,6 +64,7 @@ namespace EduViz.Extensions
             services.AddScoped<MentorDetailService>();
             services.AddScoped<UpgradeOrderDetailService>();
             services.AddScoped<SubjectService>();
+            services.AddScoped<CourseService>();
             return services;
         }
     }

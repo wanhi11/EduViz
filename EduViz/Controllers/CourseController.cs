@@ -39,9 +39,27 @@ public class CourseController:ControllerBase
             throw new NotFoundException("there is no course");
         }
 
+        var listResult = new List<CourseResponse>();
+        foreach (var course in result)
+        {
+            var subject = _subjectService.GetSubjectById(course.SubjectId);
+            var mentor = _mentorService.GetById(course.MentorId);
+            var user =await _userService.GetUserById(mentor.UserId);
+            listResult.Add(new CourseResponse()
+            {
+                Schedule = course.Schedule,
+                CourseName = course.CourseName,
+                StartDate = course.StartDate,
+                Duration = course.Duration,
+                Price = course.Price,
+                Picture = course.Picture,
+                SubjectName = subject.SubjectName,
+                MentorName = user.UserName
+            });
+        }
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
         {
-            ListCourse = result
+            ListCourse = listResult
         }));
     }
     
@@ -54,10 +72,28 @@ public class CourseController:ControllerBase
         {
             throw new NotFoundException("there is no course");
         }
+        var listResult = new List<CourseResponse>();
+        foreach (var course in result)
+        {
+            var subject = _subjectService.GetSubjectById(course.SubjectId);
+            var mentor = _mentorService.GetById(course.MentorId);
+            var user =await _userService.GetUserById(mentor.UserId);
+            listResult.Add(new CourseResponse()
+            {
+                Schedule = course.Schedule,
+                CourseName = course.CourseName,
+                StartDate = course.StartDate,
+                Duration = course.Duration,
+                Price = course.Price,
+                Picture = course.Picture,
+                SubjectName = subject.SubjectName,
+                MentorName = user.UserName
+            });
+        }
 
         return Ok(ApiResult<GetAllCourseWithName>.Succeed(new GetAllCourseWithName()
         {
-            ListCourse = result
+            ListCourse = listResult
         }));
     }
 
