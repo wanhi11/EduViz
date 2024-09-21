@@ -10,9 +10,9 @@ public class CreateCourseRequest
     public string SubjectName { get; set; }
     public decimal Price { get; set; }
     
-    public Schedule WeekSchedule { get; set; }
+    public string WeekSchedule { get; set; }
     
-    public DateTime StartDate { get; set; }
+    public string StartDate { get; set; }
     public int Duration { get; set; }
     public IFormFile? Picture { get; set; }
 }
@@ -21,7 +21,8 @@ public static class CreateCourseRequestExtensions
 {
     public static CourseModel ToCourseModel(this CreateCourseRequest courseRequest)
     {
-        if (courseRequest.StartDate < DateTime.Now)
+        var currentDate = DateTime.ParseExact(courseRequest.StartDate, "dd/MM/yyyy", null);
+        if (currentDate < DateTime.Now)
         {
             throw new BadRequestException("StartDate is passed");
         }
@@ -31,8 +32,8 @@ public static class CreateCourseRequestExtensions
             CourseId = Guid.NewGuid(),
             CourseName = courseRequest.CourseName,
             Price = courseRequest.Price,
-            StartDate = courseRequest.StartDate,
-            Schedule = courseRequest.WeekSchedule,
+            StartDate = currentDate,
+            Schedule = (Schedule) Enum.Parse(typeof(Schedule), courseRequest.WeekSchedule),
             Duration = courseRequest.Duration,
         };
         return courseModel;

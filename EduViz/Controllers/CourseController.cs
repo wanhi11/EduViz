@@ -110,7 +110,7 @@ public class CourseController:ControllerBase
         var mentor = _mentorService.GetByMentorId(currentUser.UserId);
         var course = req.ToCourseModel();
         var subject = _subjectService.GetSubjectByName(req.SubjectName);
-        course.CourseId = subject.SubjectId;
+        course.SubjectId = subject.SubjectId;
         course.MentorId = mentor.MentorDetailsId;
         
         if (req.Picture != null)
@@ -130,9 +130,21 @@ public class CourseController:ControllerBase
             throw new BadRequestException("something went wrong when create course");
         }
 
+        var response = new CourseResponse()
+        {
+            CourseId = result!.CourseId,
+            Schedule = result.Schedule.ToString(),
+            CourseName = result.CourseName,
+            StartDate = result.StartDate,
+            Duration = result.Duration,
+            Price = result.Duration,
+            MentorName = currentUser.UserName,
+            Picture = result.Picture,
+            SubjectName = subject.SubjectName
+        };
         return Ok(ApiResult<CreateCourseResponse>.Succeed(new CreateCourseResponse()
         {
-            createdCourse = course
+            createdCourse = response
         }));
     }
 

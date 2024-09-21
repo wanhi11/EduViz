@@ -31,17 +31,11 @@ public class CourseService
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
     {
-        var subject = _subjectRepository.FindByCondition(s => s.SubjectName.Equals(newCourse.CourseName))
+        var subject = _subjectRepository.FindByCondition(s => s.SubjectId.Equals(newCourse.SubjectId))
             .FirstOrDefault();
         if (subject is null)
         {
             throw new NotFoundException("Cannot find the suitable subject!");
-        }
-        
-        var user = _userRepository.FindByCondition(u => u.UserId.Equals(newCourse.MentorId)).FirstOrDefault();
-        if (user is null)
-        {
-            throw new NotFoundException("This account has been removed or banned");
         }
         var course = _mapper.Map<Course>(newCourse);
 
