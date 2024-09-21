@@ -50,7 +50,8 @@ public class DatabaseInitialiser : IDataInitialiser
 
     public async Task TrySeedAsync()
     {
-        if (_context.Users.Any() && _context.MentorDetails.Any()&&_context.Subjects.Any())
+        if (_context.Users.Any() && _context.MentorDetails.Any() && _context.Subjects.Any()
+            && _context.Courses.Any())
         {
             return;
         }
@@ -98,13 +99,13 @@ public class DatabaseInitialiser : IDataInitialiser
         {
             UserId = mentor.UserId,
             MentorDetailsId = Guid.NewGuid(),
-            VipExpirationDate = DateTime.ParseExact("12/09/2024","dd/MM/yyyy",null),
+            VipExpirationDate = DateTime.ParseExact("12/09/2024", "dd/MM/yyyy", null),
         };
         var vipMentorDetails = new MentorDetails()
         {
             UserId = vipMentor.UserId,
             MentorDetailsId = Guid.NewGuid(),
-            VipExpirationDate = DateTime.ParseExact("31/03/2025","dd/MM/yyyy",null)
+            VipExpirationDate = DateTime.ParseExact("31/03/2025", "dd/MM/yyyy", null)
         };
         List<MentorDetails> mentorDetailList = new List<MentorDetails>()
         {
@@ -132,9 +133,50 @@ public class DatabaseInitialiser : IDataInitialiser
             english,
             hoa
         };
+        var course1 = new Course()
+        {
+            SubjectId = math.SubjectId,
+            Duration = 1,
+            Schedule = Schedule.SatSun,
+            CourseName = "Toán thầy A",
+            StartDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            Price = 1000,
+            CourseId = Guid.NewGuid(),
+            MentorId = normalMentorDetails.MentorDetailsId,
+        };
+        var course2 = new Course()
+        {
+            SubjectId = hoa.SubjectId,
+            Duration = 2,
+            Schedule = Schedule.MonWedFri,
+            CourseName = "Hóa thầy A",
+            StartDate = DateTime.ParseExact("13/10/2024", "dd/MM/yyyy", null),
+            Price = 15000,
+            CourseId = Guid.NewGuid(),
+            MentorId = normalMentorDetails.MentorDetailsId,
+        };
+        var course3 = new Course()
+        {
+            SubjectId = english.SubjectId,
+            Duration = 3,
+            Schedule = Schedule.MonWedFri,
+            CourseName = "Tiếng anh thầy B",
+            StartDate = DateTime.ParseExact("14/10/2024", "dd/MM/yyyy", null),
+            Price = 20000,
+            CourseId = Guid.NewGuid(),
+            MentorId = vipMentorDetails.MentorDetailsId,
+        };
+        List<Course> courseList = new List<Course>()
+        {
+            course1,
+            course2,
+            course3
+        };
+
         await _context.Users.AddRangeAsync(users);
         await _context.MentorDetails.AddRangeAsync(mentorDetailList);
         await _context.Subjects.AddRangeAsync(monhoc);
+        await _context.Courses.AddRangeAsync(courseList);
         await _context.SaveChangesAsync();
     }
     
