@@ -58,35 +58,35 @@ public class DatabaseInitialiser : IDataInitialiser
 
         var mentor = new User()
         {
-            UserId = Guid.NewGuid(),
-            Email = "mentor1@gmail.com",
-            UserName = "Mentor",
-            Password = SecurityUtil.Hash("123456"),
-            Role = Role.Mentor,
+            userId = Guid.NewGuid(),
+            email = "mentor1@gmail.com",
+            userName = "Mentor",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Mentor,
         };
         var admin = new User()
         {
-            UserId = Guid.NewGuid(),
-            Email = "admin@gmail.com",
-            UserName = "Admin",
-            Password = SecurityUtil.Hash("123456"),
-            Role = Role.Admin,
+            userId = Guid.NewGuid(),
+            email = "admin@gmail.com",
+            userName = "Admin",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Admin,
         };
         var student = new User()
         {
-            UserId = Guid.NewGuid(),
-            Email = "student@gmail.com",
-            UserName = "Student",
-            Password = SecurityUtil.Hash("123456"),
-            Role = Role.Student,
+            userId = Guid.NewGuid(),
+            email = "student@gmail.com",
+            userName = "Student",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Student,
         };
         var vipMentor = new User()
         {
-            UserId = Guid.NewGuid(),
-            Email = "vipmentor@gmail.com",
-            UserName = "VipMentor",
-            Password = SecurityUtil.Hash("123456"),
-            Role = Role.Mentor,
+            userId = Guid.NewGuid(),
+            email = "vipmentor@gmail.com",
+            userName = "VipMentor",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Mentor,
         };
         List<User> users = new List<User>()
         {
@@ -97,15 +97,15 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var normalMentorDetails = new MentorDetails()
         {
-            UserId = mentor.UserId,
-            MentorDetailsId = Guid.NewGuid(),
-            VipExpirationDate = DateTime.ParseExact("12/09/2024", "dd/MM/yyyy", null),
+            userId = mentor.userId,
+            mentorDetailsId = Guid.NewGuid(),
+            vipExpirationDate = DateTime.ParseExact("12/09/2024", "dd/MM/yyyy", null),
         };
         var vipMentorDetails = new MentorDetails()
         {
-            UserId = vipMentor.UserId,
-            MentorDetailsId = Guid.NewGuid(),
-            VipExpirationDate = DateTime.ParseExact("31/03/2025", "dd/MM/yyyy", null)
+            userId = vipMentor.userId,
+            mentorDetailsId = Guid.NewGuid(),
+            vipExpirationDate = DateTime.ParseExact("31/03/2025", "dd/MM/yyyy", null)
         };
         List<MentorDetails> mentorDetailList = new List<MentorDetails>()
         {
@@ -114,18 +114,18 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var math = new Subject()
         {
-            SubjectId = Guid.NewGuid(),
-            SubjectName = "Toan"
+            subjectId = Guid.NewGuid(),
+            subjectName = "Toan"
         };
         var english = new Subject()
         {
-            SubjectId = Guid.NewGuid(),
-            SubjectName = "Tieng Anh"
+            subjectId = Guid.NewGuid(),
+            subjectName = "Tieng Anh"
         };
         var hoa = new Subject()
         {
-            SubjectId = Guid.NewGuid(),
-            SubjectName = "Hoa"
+            subjectId = Guid.NewGuid(),
+            subjectName = "Hoa"
         };
         List<Subject> monhoc = new List<Subject>()
         {
@@ -135,36 +135,36 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course1 = new Course()
         {
-            SubjectId = math.SubjectId,
-            Duration = 1,
-            Schedule = Schedule.SatSun,
-            CourseName = "Toán thầy A",
-            StartDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
-            Price = 1000,
-            CourseId = Guid.NewGuid(),
-            MentorId = normalMentorDetails.MentorDetailsId,
+            subjectId = math.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Toán thầy A",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = normalMentorDetails.mentorDetailsId,
         };
         var course2 = new Course()
         {
-            SubjectId = hoa.SubjectId,
-            Duration = 2,
-            Schedule = Schedule.MonWedFri,
-            CourseName = "Hóa thầy A",
-            StartDate = DateTime.ParseExact("13/10/2024", "dd/MM/yyyy", null),
-            Price = 15000,
-            CourseId = Guid.NewGuid(),
-            MentorId = normalMentorDetails.MentorDetailsId,
+            subjectId = hoa.subjectId,
+            duration = 2,
+            schedule = Schedule.MonWedFri,
+            courseName = "Hóa thầy A",
+            startDate = DateTime.ParseExact("13/10/2024", "dd/MM/yyyy", null),
+            price = 15000,
+            courseId = Guid.NewGuid(),
+            mentorId = normalMentorDetails.mentorDetailsId,
         };
         var course3 = new Course()
         {
-            SubjectId = english.SubjectId,
-            Duration = 3,
-            Schedule = Schedule.MonWedFri,
-            CourseName = "Tiếng anh thầy B",
-            StartDate = DateTime.ParseExact("14/10/2024", "dd/MM/yyyy", null),
-            Price = 20000,
-            CourseId = Guid.NewGuid(),
-            MentorId = vipMentorDetails.MentorDetailsId,
+            subjectId = english.subjectId,
+            duration = 3,
+            schedule = Schedule.MonWedFri,
+            courseName = "Tiếng anh thầy B",
+            startDate = DateTime.ParseExact("14/10/2024", "dd/MM/yyyy", null),
+            price = 20000,
+            courseId = Guid.NewGuid(),
+            mentorId = vipMentorDetails.mentorDetailsId,
         };
         List<Course> courseList = new List<Course>()
         {

@@ -9,32 +9,32 @@
         public class Course
         {
             [Key]
-            public Guid CourseId { get; set; }
+            public Guid courseId { get; set; }
 
             [Required]
             [MaxLength(200)]
-            public string CourseName { get; set; }
+            public string courseName { get; set; }
 
             [ForeignKey("Mentor")]
-            public Guid MentorId { get; set; }
+            public Guid mentorId { get; set; }
 
             [ForeignKey("Subject")]
-            public Guid SubjectId { get; set; }
+            public Guid subjectId { get; set; }
 
             [Required]
-            public decimal Price { get; set; }
+            public decimal price { get; set; }
             
-            public string? Picture { get; set; }
+            public string? picture { get; set; }
             
-            public DateTime StartDate { get; set; }
-            public int Duration { get; set; }
+            public DateTime startDate { get; set; }
+            public int duration { get; set; }
             
-            public Schedule Schedule { get; set; }
+            public Schedule schedule { get; set; }
 
-            public virtual MentorDetails Mentor { get; set; }
-            public virtual Subject Subject { get; set; }
-            public virtual ICollection<Class> Classes { get; set; }
-            public virtual ICollection<UserCourse> UserCourses { get; set; }
-            public virtual ICollection<Payment> Payments { get; set; }
+            public virtual MentorDetails mentor { get; set; }
+            public virtual Subject subject { get; set; }
+            public virtual ICollection<Class> classes { get; set; }
+            public virtual ICollection<UserCourse> userCourses { get; set; }
+            public virtual ICollection<Payment> payments { get; set; }
         }
     }

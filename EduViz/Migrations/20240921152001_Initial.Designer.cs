@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240918144334_Initial")]
+    [Migration("20240921152001_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,116 +27,116 @@ namespace EduViz.Migrations
 
             modelBuilder.Entity("EduViz.Entities.Class", b =>
                 {
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid>("classId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ClassName")
+                    b.Property<string>("className")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<Guid>("CourseId")
+                    b.Property<Guid>("courseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MentorId")
+                    b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ClassId");
+                    b.HasKey("classId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("courseId");
 
-                    b.HasIndex("MentorId");
+                    b.HasIndex("mentorId");
 
                     b.ToTable("Classes");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Comment", b =>
                 {
-                    b.Property<Guid>("CommentId")
+                    b.Property<Guid>("commentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ParentCommentId")
+                    b.Property<Guid?>("parentCommentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid>("postId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CommentId");
+                    b.HasKey("commentId");
 
-                    b.HasIndex("ParentCommentId");
+                    b.HasIndex("parentCommentId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("postId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Course", b =>
                 {
-                    b.Property<Guid>("CourseId")
+                    b.Property<Guid>("courseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CourseName")
+                    b.Property<string>("courseName")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("Duration")
+                    b.Property<int>("duration")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("MentorId")
+                    b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Picture")
+                    b.Property<string>("picture")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Schedule")
+                    b.Property<int>("schedule")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime>("startDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SubjectId")
+                    b.Property<Guid>("subjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CourseId");
+                    b.HasKey("courseId");
 
-                    b.HasIndex("MentorId");
+                    b.HasIndex("mentorId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("subjectId");
 
                     b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("EduViz.Entities.MentorDetails", b =>
                 {
-                    b.Property<Guid>("MentorDetailsId")
+                    b.Property<Guid>("mentorDetailsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("VipExpirationDate")
+                    b.Property<DateTime>("vipExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("MentorDetailsId");
+                    b.HasKey("mentorDetailsId");
 
-                    b.HasIndex("UserId")
+                    b.HasIndex("userId")
                         .IsUnique();
 
                     b.ToTable("MentorDetails");
@@ -144,576 +144,575 @@ namespace EduViz.Migrations
 
             modelBuilder.Entity("EduViz.Entities.MentorSubject", b =>
                 {
-                    b.Property<Guid>("MentorSubjectId")
+                    b.Property<Guid>("mentorSubjectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MentorId")
+                    b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SubjectId")
+                    b.Property<Guid>("subjectId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("MentorSubjectId");
+                    b.HasKey("mentorSubjectId");
 
-                    b.HasIndex("MentorId");
+                    b.HasIndex("mentorId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("subjectId");
 
                     b.ToTable("MentorSubjects");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Payment", b =>
                 {
-                    b.Property<Guid>("PaymentId")
+                    b.Property<Guid>("paymentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("CourseId")
+                    b.Property<Guid>("courseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MentorId")
+                    b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<DateTime>("paymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PaymentStatus")
+                    b.Property<int?>("paymentStatus")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StudentId")
+                    b.Property<Guid>("studentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("PaymentId");
+                    b.HasKey("paymentId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("courseId");
 
-                    b.HasIndex("MentorId");
+                    b.HasIndex("mentorId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("studentId");
 
                     b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Post", b =>
                 {
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid>("postId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid>("classId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
+                    b.Property<string>("content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PostId");
+                    b.HasKey("postId");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("classId");
 
                     b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Question", b =>
                 {
-                    b.Property<Guid>("QuestionId")
+                    b.Property<Guid>("questionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AnswerA")
+                    b.Property<string>("answerA")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AnswerB")
+                    b.Property<string>("answerB")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AnswerC")
+                    b.Property<string>("answerC")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AnswerD")
+                    b.Property<string>("answerD")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CorrectAnswer")
+                    b.Property<string>("correctAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QuestionText")
+                    b.Property<string>("questionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("QuizId")
+                    b.Property<Guid>("quizId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("QuestionId");
+                    b.HasKey("questionId");
 
-                    b.HasIndex("QuizId");
+                    b.HasIndex("quizId");
 
                     b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Quiz", b =>
                 {
-                    b.Property<Guid>("QuizId")
+                    b.Property<Guid>("quizId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid>("classId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeSpan>("Duration")
+                    b.Property<TimeSpan>("duration")
                         .HasColumnType("time");
 
-                    b.Property<string>("QuizTitle")
+                    b.Property<string>("quizTitle")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.HasKey("QuizId");
+                    b.HasKey("quizId");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("classId");
 
                     b.ToTable("Quizzes");
                 });
 
             modelBuilder.Entity("EduViz.Entities.StudentClass", b =>
                 {
-                    b.Property<Guid>("StudentClassId")
+                    b.Property<Guid>("studentClassId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClassId")
+                    b.Property<Guid>("classId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("StudentClassId");
+                    b.HasKey("studentClassId");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("classId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("StudentClasses");
                 });
 
             modelBuilder.Entity("EduViz.Entities.StudentQuizScore", b =>
                 {
-                    b.Property<Guid>("StudentQuizScoreId")
+                    b.Property<Guid>("studentQuizScoreId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("QuizId")
+                    b.Property<Guid>("quizId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Score")
+                    b.Property<double>("score")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("StudentQuizScoreId");
+                    b.HasKey("studentQuizScoreId");
 
-                    b.HasIndex("QuizId");
+                    b.HasIndex("quizId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("StudentQuizScores");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Subject", b =>
                 {
-                    b.Property<Guid>("SubjectId")
+                    b.Property<Guid>("subjectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SubjectName")
+                    b.Property<string>("subjectName")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.HasKey("SubjectId");
+                    b.HasKey("subjectId");
 
                     b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("EduViz.Entities.UpgradeOrderDetails", b =>
                 {
-                    b.Property<Guid>("UpgradeOrderDetailsId")
+                    b.Property<Guid>("upgradeOrderDetailsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Amount")
+                    b.Property<int>("amount")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("MentorDetailsID")
+                    b.Property<Guid>("mentorDetailsID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("OrderCode")
+                    b.Property<long>("orderCode")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("PackageName")
+                    b.Property<string>("packageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaymentStatus")
+                    b.Property<int>("paymentStatus")
                         .HasColumnType("int");
 
-                    b.HasKey("UpgradeOrderDetailsId");
+                    b.HasKey("upgradeOrderDetailsId");
 
-                    b.HasIndex("MentorDetailsID");
+                    b.HasIndex("mentorDetailsID");
 
                     b.ToTable("UpgradeOrderDetails");
                 });
 
             modelBuilder.Entity("EduViz.Entities.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Avatar")
+                    b.Property<string>("avatar")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
+                    b.Property<int?>("gender")
                         .HasColumnType("int");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Role")
+                    b.Property<int>("role")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
+                    b.Property<string>("userName")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("userId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("EduViz.Entities.UserCourse", b =>
                 {
-                    b.Property<Guid>("UserCourseId")
+                    b.Property<Guid>("userCourseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CourseId")
+                    b.Property<Guid>("courseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("UserCourseId");
+                    b.HasKey("userCourseId");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("courseId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("userId");
 
                     b.ToTable("UserCourses");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Class", b =>
                 {
-                    b.HasOne("EduViz.Entities.Course", "Course")
-                        .WithMany("Classes")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("EduViz.Entities.Course", "course")
+                        .WithMany("classes")
+                        .HasForeignKey("courseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.MentorDetails", "Mentor")
-                        .WithMany("Classes")
-                        .HasForeignKey("MentorId")
+                    b.HasOne("EduViz.Entities.MentorDetails", "mentor")
+                        .WithMany("classes")
+                        .HasForeignKey("mentorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("course");
 
-                    b.Navigation("Mentor");
+                    b.Navigation("mentor");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Comment", b =>
                 {
-                    b.HasOne("EduViz.Entities.Comment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId");
+                    b.HasOne("EduViz.Entities.Comment", "parentComment")
+                        .WithMany("replies")
+                        .HasForeignKey("parentCommentId");
 
-                    b.HasOne("EduViz.Entities.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                    b.HasOne("EduViz.Entities.Post", "post")
+                        .WithMany("comments")
+                        .HasForeignKey("postId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.User", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
+                    b.HasOne("EduViz.Entities.User", "user")
+                        .WithMany("comments")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("ParentComment");
+                    b.Navigation("parentComment");
 
-                    b.Navigation("Post");
+                    b.Navigation("post");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Course", b =>
                 {
-                    b.HasOne("EduViz.Entities.MentorDetails", "Mentor")
-                        .WithMany("Courses")
-                        .HasForeignKey("MentorId")
+                    b.HasOne("EduViz.Entities.MentorDetails", "mentor")
+                        .WithMany("courses")
+                        .HasForeignKey("mentorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.Subject", "Subject")
-                        .WithMany("Courses")
-                        .HasForeignKey("SubjectId")
+                    b.HasOne("EduViz.Entities.Subject", "subject")
+                        .WithMany("courses")
+                        .HasForeignKey("subjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mentor");
+                    b.Navigation("mentor");
 
-                    b.Navigation("Subject");
+                    b.Navigation("subject");
                 });
 
             modelBuilder.Entity("EduViz.Entities.MentorDetails", b =>
                 {
-                    b.HasOne("EduViz.Entities.User", "User")
-                        .WithOne("MentorDetails")
-                        .HasForeignKey("EduViz.Entities.MentorDetails", "UserId")
+                    b.HasOne("EduViz.Entities.User", "user")
+                        .WithOne("mentorDetails")
+                        .HasForeignKey("EduViz.Entities.MentorDetails", "userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("EduViz.Entities.MentorSubject", b =>
                 {
-                    b.HasOne("EduViz.Entities.MentorDetails", "Mentor")
-                        .WithMany("MentorSubjects")
-                        .HasForeignKey("MentorId")
+                    b.HasOne("EduViz.Entities.MentorDetails", "mentor")
+                        .WithMany("mentorSubjects")
+                        .HasForeignKey("mentorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.Subject", "Subject")
-                        .WithMany("MentorSubjects")
-                        .HasForeignKey("SubjectId")
+                    b.HasOne("EduViz.Entities.Subject", "subject")
+                        .WithMany("mentorSubjects")
+                        .HasForeignKey("subjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Mentor");
+                    b.Navigation("mentor");
 
-                    b.Navigation("Subject");
+                    b.Navigation("subject");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Payment", b =>
                 {
-                    b.HasOne("EduViz.Entities.Course", "Course")
-                        .WithMany("Payments")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("EduViz.Entities.Course", "course")
+                        .WithMany("payments")
+                        .HasForeignKey("courseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.MentorDetails", "Mentor")
-                        .WithMany("Payments")
-                        .HasForeignKey("MentorId")
+                    b.HasOne("EduViz.Entities.MentorDetails", "mentor")
+                        .WithMany("payments")
+                        .HasForeignKey("mentorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.User", "Student")
-                        .WithMany("Payments")
-                        .HasForeignKey("StudentId")
+                    b.HasOne("EduViz.Entities.User", "student")
+                        .WithMany("payments")
+                        .HasForeignKey("studentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("course");
 
-                    b.Navigation("Mentor");
+                    b.Navigation("mentor");
 
-                    b.Navigation("Student");
+                    b.Navigation("student");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Post", b =>
                 {
-                    b.HasOne("EduViz.Entities.Class", "Class")
-                        .WithMany("Posts")
-                        .HasForeignKey("ClassId")
+                    b.HasOne("EduViz.Entities.Class", "mentorClass")
+                        .WithMany("posts")
+                        .HasForeignKey("classId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Class");
+                    b.Navigation("mentorClass");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Question", b =>
                 {
-                    b.HasOne("EduViz.Entities.Quiz", "Quiz")
-                        .WithMany("Questions")
-                        .HasForeignKey("QuizId")
+                    b.HasOne("EduViz.Entities.Quiz", "quiz")
+                        .WithMany("questions")
+                        .HasForeignKey("quizId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Quiz");
+                    b.Navigation("quiz");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Quiz", b =>
                 {
-                    b.HasOne("EduViz.Entities.Class", "Class")
-                        .WithMany("Quizzes")
-                        .HasForeignKey("ClassId")
+                    b.HasOne("EduViz.Entities.Class", "mentorClass")
+                        .WithMany("quizzes")
+                        .HasForeignKey("classId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Class");
+                    b.Navigation("mentorClass");
                 });
 
             modelBuilder.Entity("EduViz.Entities.StudentClass", b =>
                 {
-                    b.HasOne("EduViz.Entities.Class", "Class")
-                        .WithMany("StudentClasses")
-                        .HasForeignKey("ClassId")
+                    b.HasOne("EduViz.Entities.Class", "mentorClass")
+                        .WithMany("studentClasses")
+                        .HasForeignKey("classId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.User", "User")
-                        .WithMany("StudentClasses")
-                        .HasForeignKey("UserId")
+                    b.HasOne("EduViz.Entities.User", "user")
+                        .WithMany("studentClasses")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Class");
+                    b.Navigation("mentorClass");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("EduViz.Entities.StudentQuizScore", b =>
                 {
-                    b.HasOne("EduViz.Entities.Quiz", "Quiz")
-                        .WithMany("StudentQuizScores")
-                        .HasForeignKey("QuizId")
+                    b.HasOne("EduViz.Entities.Quiz", "quiz")
+                        .WithMany("studentQuizScores")
+                        .HasForeignKey("quizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.User", "User")
-                        .WithMany("StudentQuizScores")
-                        .HasForeignKey("UserId")
+                    b.HasOne("EduViz.Entities.User", "user")
+                        .WithMany("studentQuizScores")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Quiz");
+                    b.Navigation("quiz");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("EduViz.Entities.UpgradeOrderDetails", b =>
                 {
-                    b.HasOne("EduViz.Entities.MentorDetails", "MentorDetails")
-                        .WithMany("UpdagradeOrderDetails")
-                        .HasForeignKey("MentorDetailsID")
+                    b.HasOne("EduViz.Entities.MentorDetails", "mentorDetails")
+                        .WithMany("upgradeOrderDetails")
+                        .HasForeignKey("mentorDetailsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("MentorDetails");
+                    b.Navigation("mentorDetails");
                 });
 
             modelBuilder.Entity("EduViz.Entities.UserCourse", b =>
                 {
-                    b.HasOne("EduViz.Entities.Course", "Course")
-                        .WithMany("UserCourses")
-                        .HasForeignKey("CourseId")
+                    b.HasOne("EduViz.Entities.Course", "course")
+                        .WithMany("userCourses")
+                        .HasForeignKey("courseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EduViz.Entities.User", "User")
-                        .WithMany("UserCourses")
-                        .HasForeignKey("UserId")
+                    b.HasOne("EduViz.Entities.User", "user")
+                        .WithMany("userCourses")
+                        .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Course");
+                    b.Navigation("course");
 
-                    b.Navigation("User");
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Class", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("posts");
 
-                    b.Navigation("Quizzes");
+                    b.Navigation("quizzes");
 
-                    b.Navigation("StudentClasses");
+                    b.Navigation("studentClasses");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Comment", b =>
                 {
-                    b.Navigation("Replies");
+                    b.Navigation("replies");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Course", b =>
                 {
-                    b.Navigation("Classes");
+                    b.Navigation("classes");
 
-                    b.Navigation("Payments");
+                    b.Navigation("payments");
 
-                    b.Navigation("UserCourses");
+                    b.Navigation("userCourses");
                 });
 
             modelBuilder.Entity("EduViz.Entities.MentorDetails", b =>
                 {
-                    b.Navigation("Classes");
+                    b.Navigation("classes");
 
-                    b.Navigation("Courses");
+                    b.Navigation("courses");
 
-                    b.Navigation("MentorSubjects");
+                    b.Navigation("mentorSubjects");
 
-                    b.Navigation("Payments");
+                    b.Navigation("payments");
 
-                    b.Navigation("UpdagradeOrderDetails");
+                    b.Navigation("upgradeOrderDetails");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Post", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("comments");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Quiz", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("questions");
 
-                    b.Navigation("StudentQuizScores");
+                    b.Navigation("studentQuizScores");
                 });
 
             modelBuilder.Entity("EduViz.Entities.Subject", b =>
                 {
-                    b.Navigation("Courses");
+                    b.Navigation("courses");
 
-                    b.Navigation("MentorSubjects");
+                    b.Navigation("mentorSubjects");
                 });
 
             modelBuilder.Entity("EduViz.Entities.User", b =>
                 {
-                    b.Navigation("Comments");
+                    b.Navigation("comments");
 
-                    b.Navigation("MentorDetails")
+                    b.Navigation("mentorDetails")
                         .IsRequired();
 
-                    b.Navigation("Payments");
+                    b.Navigation("payments");
 
-                    b.Navigation("StudentClasses");
+                    b.Navigation("studentClasses");
 
-                    b.Navigation("StudentQuizScores");
+                    b.Navigation("studentQuizScores");
 
-                    b.Navigation("UserCourses");
+                    b.Navigation("userCourses");
                 });
 #pragma warning restore 612, 618
         }

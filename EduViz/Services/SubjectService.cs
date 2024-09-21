@@ -30,7 +30,7 @@ public class SubjectService
 
     public SubjectModel GetSubjectByName(string name)
     {
-        var result = _subjectRepository.FindByCondition(s => s.SubjectName.Equals(name)).FirstOrDefault();
+        var result = _subjectRepository.FindByCondition(s => s.subjectName.Equals(name)).FirstOrDefault();
         if (result is null)
         {
             throw new NotFoundException("there is no suitable subject");
@@ -41,7 +41,7 @@ public class SubjectService
 
     public SubjectModel GetSubjectById(Guid subjectId)
     {
-        var subject = _subjectRepository.FindByCondition(s => s.SubjectId.Equals(subjectId)).FirstOrDefault();
+        var subject = _subjectRepository.FindByCondition(s => s.subjectId.Equals(subjectId)).FirstOrDefault();
         if (subject is null)
         {
             throw new NotFoundException("there is no suitable subject");

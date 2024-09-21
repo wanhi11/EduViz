@@ -7,13 +7,13 @@ namespace EduViz.Entities
     public class Subject
     {
         [Key]
-        public Guid SubjectId { get; set; }
+        public Guid subjectId { get; set; }
 
         [Required]
         [MaxLength(150)]
-        public string SubjectName { get; set; }
+        public string subjectName { get; set; }
 
-        public virtual ICollection<MentorSubject> MentorSubjects { get; set; } = new HashSet<MentorSubject>();
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<MentorSubject> mentorSubjects { get; set; } = new HashSet<MentorSubject>();
+        public virtual ICollection<Course> courses { get; set; }
     }
 }

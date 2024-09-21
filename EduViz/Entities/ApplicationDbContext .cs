@@ -30,107 +30,107 @@ namespace EduViz.Entities
         {
             // User and Comments
             modelBuilder.Entity<User>()
-                .HasMany(u => u.Comments)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId)
+                .HasMany(u => u.comments)
+                .WithOne(c => c.user)
+                .HasForeignKey(c => c.userId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // User and MentorDetails
             modelBuilder.Entity<User>()
-                .HasOne(u => u.MentorDetails)
-                .WithOne(m => m.User)
-                .HasForeignKey<MentorDetails>(m => m.UserId)
+                .HasOne(u => u.mentorDetails)
+                .WithOne(m => m.user)
+                .HasForeignKey<MentorDetails>(m => m.userId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // MentorDetails and Courses
             modelBuilder.Entity<MentorDetails>()
-                .HasMany(m => m.Courses)
-                .WithOne(c => c.Mentor)
-                .HasForeignKey(c => c.MentorId)
+                .HasMany(m => m.courses)
+                .WithOne(c => c.mentor)
+                .HasForeignKey(c => c.mentorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Course and Classes
             modelBuilder.Entity<Course>()
-                .HasMany(c => c.Classes)
-                .WithOne(cl => cl.Course)
-                .HasForeignKey(cl => cl.CourseId)
+                .HasMany(c => c.classes)
+                .WithOne(cl => cl.course)
+                .HasForeignKey(cl => cl.courseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Class and Posts
             modelBuilder.Entity<Class>()
-                .HasMany(cl => cl.Posts)
-                .WithOne(p => p.Class)
-                .HasForeignKey(p => p.ClassId)
+                .HasMany(cl => cl.posts)
+                .WithOne(p => p.mentorClass)
+                .HasForeignKey(p => p.classId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Class and Quizzes
             modelBuilder.Entity<Class>()
-                .HasMany(cl => cl.Quizzes)
-                .WithOne(q => q.Class)
-                .HasForeignKey(q => q.ClassId)
+                .HasMany(cl => cl.quizzes)
+                .WithOne(q => q.mentorClass)
+                .HasForeignKey(q => q.classId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Post and Comments
             modelBuilder.Entity<Post>()
-                .HasMany(p => p.Comments)
-                .WithOne(c => c.Post)
-                .HasForeignKey(c => c.PostId)
+                .HasMany(p => p.comments)
+                .WithOne(c => c.post)
+                .HasForeignKey(c => c.postId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Quiz and Questions
             modelBuilder.Entity<Quiz>()
-                .HasMany(q => q.Questions)
-                .WithOne(qu => qu.Quiz)
-                .HasForeignKey(qu => qu.QuizId)
+                .HasMany(q => q.questions)
+                .WithOne(qu => qu.quiz)
+                .HasForeignKey(qu => qu.quizId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // UserCourse and User
             modelBuilder.Entity<UserCourse>()
-                .HasOne(uc => uc.User)
-                .WithMany(u => u.UserCourses)
-                .HasForeignKey(uc => uc.UserId)
+                .HasOne(uc => uc.user)
+                .WithMany(u => u.userCourses)
+                .HasForeignKey(uc => uc.userId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // UserCourse and Course
             modelBuilder.Entity<UserCourse>()
-                .HasOne(uc => uc.Course)
-                .WithMany(c => c.UserCourses)
-                .HasForeignKey(uc => uc.CourseId)
+                .HasOne(uc => uc.course)
+                .WithMany(c => c.userCourses)
+                .HasForeignKey(uc => uc.courseId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // MentorSubject and MentorDetails
             modelBuilder.Entity<MentorSubject>()
-                .HasOne(ms => ms.Mentor)
-                .WithMany(m => m.MentorSubjects)
-                .HasForeignKey(ms => ms.MentorId)
+                .HasOne(ms => ms.mentor)
+                .WithMany(m => m.mentorSubjects)
+                .HasForeignKey(ms => ms.mentorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // MentorSubject and Subject
             modelBuilder.Entity<MentorSubject>()
-                .HasOne(ms => ms.Subject)
-                .WithMany(s => s.MentorSubjects)
-                .HasForeignKey(ms => ms.SubjectId)
+                .HasOne(ms => ms.subject)
+                .WithMany(s => s.mentorSubjects)
+                .HasForeignKey(ms => ms.subjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Payment and Student
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Student)
-                .WithMany(u => u.Payments)
-                .HasForeignKey(p => p.StudentId)
+                .HasOne(p => p.student)
+                .WithMany(u => u.payments)
+                .HasForeignKey(p => p.studentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Payment and MentorDetails
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Mentor)
-                .WithMany(m => m.Payments)
-                .HasForeignKey(p => p.MentorId)
+                .HasOne(p => p.mentor)
+                .WithMany(m => m.payments)
+                .HasForeignKey(p => p.mentorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Payment and Course
             modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Course)
-                .WithMany(c => c.Payments)
-                .HasForeignKey(p => p.CourseId)
+                .HasOne(p => p.course)
+                .WithMany(c => c.payments)
+                .HasForeignKey(p => p.courseId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

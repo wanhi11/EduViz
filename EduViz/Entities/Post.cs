@@ -7,15 +7,15 @@ namespace EduViz.Entities
     public class Post
     {
         [Key]
-        public Guid PostId { get; set; }
+        public Guid postId { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        public string content { get; set; }
 
         [ForeignKey("Class")]
-        public Guid ClassId { get; set; }
+        public Guid classId { get; set; }
 
-        public virtual Class Class { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual Class mentorClass { get; set; }
+        public virtual ICollection<Comment> comments { get; set; }
     }
 }

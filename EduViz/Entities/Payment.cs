@@ -9,27 +9,27 @@ namespace EduViz.Entities
     public class Payment
     {
         [Key]
-        public Guid PaymentId { get; set; }
+        public Guid paymentId { get; set; }
 
         [ForeignKey("Student")]
-        public Guid StudentId { get; set; }
+        public Guid studentId { get; set; }
 
         [ForeignKey("Mentor")]
-        public Guid MentorId { get; set; }
+        public Guid mentorId { get; set; }
 
         [ForeignKey("Course")]
-        public Guid CourseId { get; set; }
+        public Guid courseId { get; set; }
 
         [Required]
-        public decimal Amount { get; set; }
+        public decimal amount { get; set; }
 
         [Required]
-        public DateTime PaymentDate { get; set; }
+        public DateTime paymentDate { get; set; }
         
 
-        public PaymentStatus? PaymentStatus { get; set; }
-        public virtual User Student { get; set; }
-        public virtual MentorDetails Mentor { get; set; }
-        public virtual Course Course { get; set; }
+        public PaymentStatus? paymentStatus { get; set; }
+        public virtual User student { get; set; }
+        public virtual MentorDetails mentor { get; set; }
+        public virtual Course course { get; set; }
     }
 }

@@ -7,26 +7,26 @@ namespace EduViz.Entities
     public class Question
     {
         [Key]
-        public Guid QuestionId { get; set; }
+        public Guid questionId { get; set; }
 
         [Required]
-        public string QuestionText { get; set; }
+        public string questionText { get; set; }
 
         [Required]
-        public string AnswerA { get; set; }
+        public string answerA { get; set; }
 
         [Required]
-        public string AnswerB { get; set; }
+        public string answerB { get; set; }
 
-        public string? AnswerC { get; set; }
-        public string? AnswerD { get; set; }
+        public string? answerC { get; set; }
+        public string? answerD { get; set; }
 
         [Required]
-        public string CorrectAnswer { get; set; }
+        public string correctAnswer { get; set; }
 
         [ForeignKey("Quiz")]
-        public Guid QuizId { get; set; }
+        public Guid quizId { get; set; }
 
-        public virtual Quiz Quiz { get; set; }
+        public virtual Quiz quiz { get; set; }
     }
 }

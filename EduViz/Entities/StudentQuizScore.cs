@@ -7,18 +7,18 @@ namespace EduViz.Entities
     public class StudentQuizScore
     {
         [Key]
-        public Guid StudentQuizScoreId { get; set; }
+        public Guid studentQuizScoreId { get; set; }
 
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public Guid userId { get; set; }
 
         [ForeignKey("Quiz")]
-        public Guid QuizId { get; set; }
+        public Guid quizId { get; set; }
 
         [Required]
-        public double Score { get; set; }
+        public double score { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual Quiz Quiz { get; set; }
+        public virtual User user { get; set; }
+        public virtual Quiz quiz { get; set; }
     }
 }

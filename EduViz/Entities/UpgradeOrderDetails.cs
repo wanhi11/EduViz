@@ -7,16 +7,16 @@ namespace EduViz.Entities;
 public class UpgradeOrderDetails
 {
     [Key]
-    public Guid UpgradeOrderDetailsId { get; set; }
+    public Guid upgradeOrderDetailsId { get; set; }
     
-    public long OrderCode { get; set; }
-    public int Amount { get; set; }
-    public string PackageName { get; set; }
+    public long orderCode { get; set; }
+    public int amount { get; set; }
+    public string packageName { get; set; }
 
     [ForeignKey("MentorDetails")] 
-    public Guid MentorDetailsID { get; set; }
+    public Guid mentorDetailsID { get; set; }
     
-    public PaymentStatus PaymentStatus { get; set; }
+    public PaymentStatus paymentStatus { get; set; }
     
-    public virtual MentorDetails MentorDetails { get; set; }
+    public virtual MentorDetails mentorDetails { get; set; }
 }

@@ -22,7 +22,7 @@ public class UpgradeOrderDetailService
     public UpgradeOrderDetailModel FindOrderByCode(long code)
     {
         var result = _upgradeOrderRepository.FindByCondition(
-            o => o.OrderCode == code).FirstOrDefault();
+            o => o.orderCode == code).FirstOrDefault();
         if (result is null)
         {
             throw new NotFoundException("Upgrade Order not found");
@@ -34,13 +34,13 @@ public class UpgradeOrderDetailService
     public async Task<UpgradeOrderDetailModel> UpdateStatus(long code)
     {
         var order = _upgradeOrderRepository.FindByCondition(
-            o => o.OrderCode == code).FirstOrDefault();
+            o => o.orderCode == code).FirstOrDefault();
         if (order is null)
         {
             throw new NotFoundException("Upgrade Order not found");
         }
 
-        order.PaymentStatus = PaymentStatus.Completed;
+        order.paymentStatus = PaymentStatus.Completed;
         _upgradeOrderRepository.Update(order);
         if (!(await _upgradeOrderRepository.Commit() >0))
         {

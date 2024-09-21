@@ -7,15 +7,15 @@ namespace EduViz.Entities
     public class MentorSubject
     {
         [Key]
-        public Guid MentorSubjectId { get; set; }
+        public Guid mentorSubjectId { get; set; }
 
         [ForeignKey("Mentor")]
-        public Guid MentorId { get; set; }
+        public Guid mentorId { get; set; }
 
         [ForeignKey("Subject")]
-        public Guid SubjectId { get; set; }
+        public Guid subjectId { get; set; }
 
-        public virtual MentorDetails Mentor { get; set; }
-        public virtual Subject Subject { get; set; }
+        public virtual MentorDetails mentor { get; set; }
+        public virtual Subject subject { get; set; }
     }
 }

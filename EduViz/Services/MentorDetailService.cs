@@ -19,11 +19,11 @@ public class MentorDetailService
     public  MentorDetailModel GetById(Guid Id)
     {
         return _mapper.Map<MentorDetailModel>(_mentorDetailRepository.FindByCondition(md =>
-            md.MentorDetailsId.Equals(Id)).FirstOrDefault());
+            md.mentorDetailsId.Equals(Id)).FirstOrDefault());
     }
     public  MentorDetailModel GetByMentorId(Guid MId)
     {
         return _mapper.Map<MentorDetailModel>(_mentorDetailRepository.FindByCondition(md =>
-            md.UserId.Equals(MId)).FirstOrDefault());
+            md.userId.Equals(MId)).FirstOrDefault());
     }
 }

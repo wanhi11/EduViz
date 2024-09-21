@@ -7,20 +7,20 @@ namespace EduViz.Entities
     public class Quiz
     {
         [Key]
-        public Guid QuizId { get; set; }
+        public Guid quizId { get; set; }
 
         [Required]
         [MaxLength(200)]
-        public string QuizTitle { get; set; }
+        public string quizTitle { get; set; }
 
         [ForeignKey("Class")]
-        public Guid ClassId { get; set; }
+        public Guid classId { get; set; }
 
         [Required]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan duration { get; set; }
 
-        public virtual Class Class { get; set; }
-        public virtual ICollection<Question> Questions { get; set; }
-        public virtual ICollection<StudentQuizScore> StudentQuizScores { get; set; }
+        public virtual Class mentorClass { get; set; }
+        public virtual ICollection<Question> questions { get; set; }
+        public virtual ICollection<StudentQuizScore> studentQuizScores { get; set; }
     }
 }

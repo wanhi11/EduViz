@@ -7,15 +7,15 @@ namespace EduViz.Entities
     public class StudentClass
     {
         [Key]
-        public Guid StudentClassId { get; set; }
+        public Guid studentClassId { get; set; }
 
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public Guid userId { get; set; }
 
         [ForeignKey("Class")]
-        public Guid ClassId { get; set; }
+        public Guid classId { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual Class Class { get; set; }
+        public virtual User user { get; set; }
+        public virtual Class mentorClass { get; set; }
     }
 }

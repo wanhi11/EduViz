@@ -29,7 +29,7 @@ public class IdentityService
 
     public LoginResult Login(string email, string password)
         {
-            var user = _userRepository.FindByCondition(u => u.Email == email).FirstOrDefault();
+            var user = _userRepository.FindByCondition(u => u.email == email).FirstOrDefault();
     
     
             if (user is null)
@@ -42,7 +42,7 @@ public class IdentityService
             }
     
             var hash = SecurityUtil.Hash(password);
-            if (!user.Password.Equals(hash))
+            if (!user.password.Equals(hash))
             {
                 return new LoginResult
                 {
@@ -64,22 +64,22 @@ public class IdentityService
           
             var authClaims = new List<Claim>
             {
-                new(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
+                new(JwtRegisteredClaimNames.NameId, user.userId.ToString()),
     /*            new(JwtRegisteredClaimNames.Sub, user.UserName),*/
-                new(JwtRegisteredClaimNames.Email, user.Email),
-                new(ClaimTypes.Role, user.Role.ToString()),
+                new(JwtRegisteredClaimNames.Email, user.email),
+                new(ClaimTypes.Role, user.role.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-            if (user.Role.ToString().Equals("Mentor"))
+            if (user.role.ToString().Equals("Mentor"))
             {
                 string vipStatus = "IsVip";
-                var mentor = _mentorRepository.FindByCondition(m => m.UserId.Equals(user.UserId))
+                var mentor = _mentorRepository.FindByCondition(m => m.userId.Equals(user.userId))
                     .FirstOrDefault();
                 if (mentor is null)
                 {
                     throw new BadRequestException("Something went wrong");
                 }
-                else if(mentor.VipExpirationDate < DateTime.Now)
+                else if(mentor.vipExpirationDate < DateTime.Now)
                 {
                     vipStatus = "NotVip";
                 }

@@ -30,7 +30,7 @@ public class CourseController:ControllerBase
         _cloudinaryService = cloudinaryService;
     }
 
-    [HttpGet("course")]
+    [HttpGet]
     public async Task<IActionResult> GetAllCourse()
     {
         var result = await _courseService.GetCoursesWithVipMentorFirst();
@@ -65,7 +65,7 @@ public class CourseController:ControllerBase
     }
     
     [HttpGet]
-    [Route("course/{subjectName}")]
+    [Route("/{subjectName}")]
     public async Task<IActionResult> GetAllCourseWithName([FromRoute] string subjectName)
     {
         var result = await _courseService.GetCoursesBySubjectWithVipMentorFirst(subjectName);

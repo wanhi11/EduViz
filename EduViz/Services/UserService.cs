@@ -28,12 +28,12 @@ public class UserService
 
     public async Task<UserModel> GetUserByEmail(string email)
     {
-        return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.Email.Equals(email)).FirstOrDefault());
+        return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.email.Equals(email)).FirstOrDefault());
     }
 
     public async Task<UserModel> GetUserById(Guid Id)
     {
-        return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.UserId.Equals(Id)).FirstOrDefault());
+        return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.userId.Equals(Id)).FirstOrDefault());
     }
     public  UserModel GetUserInToken(string token)
     {
@@ -53,7 +53,7 @@ public class UserService
 
         string email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
 
-        var user =  _userRepository.FindByCondition(x => x.Email == email).FirstOrDefault();
+        var user =  _userRepository.FindByCondition(x => x.email == email).FirstOrDefault();
         if (user is null)
         {
             throw new BadRequestException("Can not found User");
@@ -63,7 +63,7 @@ public class UserService
 
     public async Task<UserModel?> CreateMentor(CreateMentorRequest mentor)
     {
-        var existedMentor = _userRepository.FindByCondition(u => u.Email.Equals(mentor.Email)).FirstOrDefault();
+        var existedMentor = _userRepository.FindByCondition(u => u.email.Equals(mentor.Email)).FirstOrDefault();
         if (existedMentor is not null)
         {
             throw new BadRequestException("This Email has been used");
@@ -71,31 +71,31 @@ public class UserService
 
         var user = new User()
         {
-            UserName = mentor.Name,
-            Gender = mentor.Gender,
-            Email = mentor.Email,
-            Password = SecurityUtil.Hash(mentor.Password),
-            Role = Role.Mentor,
-            UserId = Guid.NewGuid()
+            userName = mentor.Name,
+            gender = mentor.Gender,
+            email = mentor.Email,
+            password = SecurityUtil.Hash(mentor.Password),
+            role = Role.Mentor,
+            userId = Guid.NewGuid()
         };
         var mentorDetail = new MentorDetails()
         {
-            MentorDetailsId = Guid.NewGuid(),
-            UserId = user.UserId,
-            VipExpirationDate = DateTime.Now
+            mentorDetailsId = Guid.NewGuid(),
+            userId = user.userId,
+            vipExpirationDate = DateTime.Now
         };
         foreach (var subjectName in mentor.Subject)
         {
-            var subject = _subjecRepository.FindByCondition(s => s.SubjectName.Equals(subjectName)).FirstOrDefault();
+            var subject = _subjecRepository.FindByCondition(s => s.subjectName.Equals(subjectName)).FirstOrDefault();
             if (subject is null)
             {
                 throw new BadRequestException("Subject does not exist");
             }
 
-            subject.MentorSubjects.Add(new MentorSubject()
+            subject.mentorSubjects.Add(new MentorSubject()
             {
-                MentorId = mentorDetail.MentorDetailsId,
-                SubjectId = subject.SubjectId
+                mentorId = mentorDetail.mentorDetailsId,
+                subjectId = subject.subjectId
             });
         }
         await _userRepository.AddAsync(user);
@@ -117,20 +117,21 @@ public class UserService
     public async Task<UserModel> CreateStudent(UserModel newStudent)
     {
         var user = _mapper.Map<User>(newStudent);
-        var existUser = _userRepository.FindByCondition(u => u.Email.Equals(newStudent.Email)).FirstOrDefault();
-        if (existUser is not null)
+        var existUser = _userRepository.FindByCondition(u => u.email.Equals(newStudent.Email)).FirstOrDefault();
+        if (existUser != null)
         {
             throw new BadRequestException("This Email has been used");
         }
 
-        user.Role = Role.Student;
-        var result = await _userRepository.AddAsync(user);
-        if (result is null)
+        user.role = Role.Student;
+        var createdUser = await _userRepository.AddAsync(user);
+        
+        if (!(await _userRepository.Commit()>0))
         {
             throw new BadRequestException("Something went wrong when create account");
         }
 
-        return _mapper.Map<UserModel>(result);
+        return _mapper.Map<UserModel>(createdUser);
     }
     
 }

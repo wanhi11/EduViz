@@ -20,8 +20,8 @@ public class PaymentService
     public async Task<PaymentModel> CreateNewPayment(PaymentModel newModel)
     {
         var payment = _mapper.Map<Payment>(newModel);
-        payment.PaymentDate = DateTime.Now;
-        payment.PaymentStatus = PaymentStatus.Pending;
+        payment.paymentDate = DateTime.Now;
+        payment.paymentStatus = PaymentStatus.Pending;
 
         payment = await _paymentRepository.AddAsync(payment);
         if (await _paymentRepository.Commit() > 0)

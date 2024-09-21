@@ -6,23 +6,23 @@ namespace EduViz.Entities
     public class Class
     {
         [Key]
-        public Guid ClassId { get; set; }
+        public Guid classId { get; set; }
 
         [Required]
         [MaxLength(150)]
-        public string ClassName { get; set; }
+        public string className { get; set; }
 
         [ForeignKey("Course")]
-        public Guid CourseId { get; set; }
+        public Guid courseId { get; set; }
 
         [ForeignKey("Mentor")]
-        public Guid MentorId { get; set; }
+        public Guid mentorId { get; set; }
 
-        public virtual Course Course { get; set; }
-        public virtual MentorDetails Mentor { get; set; }
-        public virtual ICollection<Post> Posts { get; set; }
-        public virtual ICollection<Quiz> Quizzes { get; set; }
-        public virtual ICollection<StudentClass> StudentClasses { get; set; }
+        public virtual Course course { get; set; }
+        public virtual MentorDetails mentor { get; set; }
+        public virtual ICollection<Post> posts { get; set; }
+        public virtual ICollection<Quiz> quizzes { get; set; }
+        public virtual ICollection<StudentClass> studentClasses { get; set; }
     }
 }
 

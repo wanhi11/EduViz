@@ -31,7 +31,7 @@ public class CourseService
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
     {
-        var subject = _subjectRepository.FindByCondition(s => s.SubjectId.Equals(newCourse.SubjectId))
+        var subject = _subjectRepository.FindByCondition(s => s.subjectId.Equals(newCourse.SubjectId))
             .FirstOrDefault();
         if (subject is null)
         {
@@ -54,24 +54,24 @@ public class CourseService
 
         // Fetch all VIP mentors first
         var vipMentors = await _mentorRepository
-            .FindByCondition(m => m.VipExpirationDate > currentDate)
+            .FindByCondition(m => m.vipExpirationDate > currentDate)
             .ToListAsync();
 
         // Fetch all courses that have a start date greater than the current date
         var coursesBySubject = await _courseRepositoty
-            .FindByCondition(c => c.StartDate > currentDate && c.Subject.SubjectName.Equals(subjectName))
+            .FindByCondition(c => c.startDate > currentDate && c.subject.subjectName.Equals(subjectName))
             .ToListAsync();
 
         // Get a list of VIP Mentor Ids
-        var vipMentorIds = vipMentors.Select(m => m.MentorDetailsId).ToList();
+        var vipMentorIds = vipMentors.Select(m => m.mentorDetailsId).ToList();
 
         // Separate VIP courses and non-VIP courses
         var vipCourses = coursesBySubject
-            .Where(c => vipMentorIds.Contains(c.MentorId))
+            .Where(c => vipMentorIds.Contains(c.mentorId))
             .ToList();
 
         var nonVipCourses = coursesBySubject
-            .Where(c => !vipMentorIds.Contains(c.MentorId))
+            .Where(c => !vipMentorIds.Contains(c.mentorId))
             .ToList();
 
         // Combine both VIP and non-VIP courses
@@ -87,24 +87,24 @@ public class CourseService
 
         // Fetch all VIP mentors first
         var vipMentors = await _mentorRepository
-            .FindByCondition(m => m.VipExpirationDate > currentDate)
+            .FindByCondition(m => m.vipExpirationDate > currentDate)
             .ToListAsync();
 
         // Fetch all courses that have a start date greater than the current date
         var coursesBySubject = await _courseRepositoty
-            .FindByCondition(c => c.StartDate > currentDate)
+            .FindByCondition(c => c.startDate > currentDate)
             .ToListAsync();
 
         // Get a list of VIP Mentor Ids
-        var vipMentorIds = vipMentors.Select(m => m.MentorDetailsId).ToList();
+        var vipMentorIds = vipMentors.Select(m => m.mentorDetailsId).ToList();
 
         // Separate VIP courses and non-VIP courses
         var vipCourses = coursesBySubject
-            .Where(c => vipMentorIds.Contains(c.MentorId))
+            .Where(c => vipMentorIds.Contains(c.mentorId))
             .ToList();
 
         var nonVipCourses = coursesBySubject
-            .Where(c => !vipMentorIds.Contains(c.MentorId))
+            .Where(c => !vipMentorIds.Contains(c.mentorId))
             .ToList();
 
         // Combine both VIP and non-VIP courses
@@ -118,7 +118,7 @@ public class CourseService
     public List<CourseModel> GetCourseByMentorId(Guid mentorId,Guid currentCourseId)
     {
         var listRelatedCourse = _courseRepositoty.FindByCondition(c 
-                => c.Mentor.MentorDetailsId.Equals(mentorId) && !c.CourseId.Equals(currentCourseId))
+                => c.mentor.mentorDetailsId.Equals(mentorId) && !c.courseId.Equals(currentCourseId))
             .ToList();
         if (!listRelatedCourse.Any())
         {
@@ -130,7 +130,7 @@ public class CourseService
 
     public CourseModel GetCourseById(Guid courseId)
     {
-        var neededCourse = _courseRepositoty.FindByCondition(c => c.CourseId.Equals(courseId)).FirstOrDefault();
+        var neededCourse = _courseRepositoty.FindByCondition(c => c.courseId.Equals(courseId)).FirstOrDefault();
         if (neededCourse is null)
         {
             throw new BadRequestException("There is no Course");

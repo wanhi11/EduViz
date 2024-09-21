@@ -50,11 +50,11 @@ public class PayOsPaymentService
         
         var mentorUpgradeDetail = new UpgradeOrderDetails()
         {
-            Amount = amount,
-            OrderCode = orderCode,
-            PaymentStatus = PaymentStatus.Pending,
-            MentorDetailsID = request.MentorDetailID,
-            PackageName = request.MonthDuration+"M"
+            amount = amount,
+            orderCode = orderCode,
+            paymentStatus = PaymentStatus.Pending,
+            mentorDetailsID = request.MentorDetailID,
+            packageName = request.MonthDuration+"M"
         };
         await _upgradeRepository.AddAsync(mentorUpgradeDetail);
         if (!(await _upgradeRepository.Commit() > 0))
@@ -127,14 +127,14 @@ public class PayOsPaymentService
             int monthToAdd = GetMonthsFromDescription(webhookData.description);
             if (monthToAdd > 0)
             {
-                var mentor = _mentorRepository.FindByCondition(m => m.MentorDetailsId.Equals(mentorId)).FirstOrDefault();
+                var mentor = _mentorRepository.FindByCondition(m => m.mentorDetailsId.Equals(mentorId)).FirstOrDefault();
                 if (mentor is null)
                 {
                     throw new NotFoundException("Not Found");
                 }
 
-                mentor.VipExpirationDate = mentor.VipExpirationDate > DateTime.UtcNow
-                    ? mentor.VipExpirationDate.AddMonths(monthToAdd)
+                mentor.vipExpirationDate = mentor.vipExpirationDate > DateTime.UtcNow
+                    ? mentor.vipExpirationDate.AddMonths(monthToAdd)
                     : DateTime.UtcNow.AddMonths(monthToAdd);
                 _mentorRepository.Update(mentor);
                 

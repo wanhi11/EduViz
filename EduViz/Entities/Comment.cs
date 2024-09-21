@@ -6,23 +6,23 @@ namespace EduViz.Entities
     public class Comment
     {
         [Key]
-        public Guid CommentId { get; set; }
+        public Guid commentId { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        public string content { get; set; }
 
         [ForeignKey("Post")]
-        public Guid PostId { get; set; }
+        public Guid postId { get; set; }
 
         [ForeignKey("User")]
-        public Guid UserId { get; set; }
+        public Guid userId { get; set; }
 
-        public Guid? ParentCommentId { get; set; }
+        public Guid? parentCommentId { get; set; }
 
-        public virtual Post Post { get; set; }
-        public virtual User User { get; set; }
-        public virtual Comment ParentComment { get; set; }
-        public virtual ICollection<Comment> Replies { get; set; }
+        public virtual Post post { get; set; }
+        public virtual User user { get; set; }
+        public virtual Comment parentComment { get; set; }
+        public virtual ICollection<Comment> replies { get; set; }
     }
 
 }

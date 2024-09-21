@@ -18,7 +18,7 @@ public class SubjectController:ControllerBase
         _subjectService = subjectService;
     }
 
-    [HttpGet("Subjects")]
+    [HttpGet]
     public IActionResult GetAllSubject()
     {
         var result = _subjectService.GetAllSubject();

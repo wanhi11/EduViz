@@ -8,30 +8,29 @@ namespace EduViz.Entities
     public class User
     {
         [Key]
-        public Guid UserId { get; set; }
-
-        [Required]
+        public Guid userId { get; set; }
+        
         [MaxLength(100)]
-        public string UserName { get; set; }
+        public string? userName { get; set; }
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public string password { get; set; }
 
         [Required]
-        public Role Role { get; set; }
+        public Role role { get; set; }
         
-        public string? Avatar { get; set; }
-        public Gender Gender { get; set; }
+        public string? avatar { get; set; }
+        public Gender? gender { get; set; }
 
-        public virtual MentorDetails MentorDetails { get; set; }
-        public virtual ICollection<UserCourse> UserCourses { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<StudentClass> StudentClasses { get; set; }
-        public virtual ICollection<StudentQuizScore> StudentQuizScores { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
+        public virtual MentorDetails mentorDetails { get; set; }
+        public virtual ICollection<UserCourse> userCourses { get; set; }
+        public virtual ICollection<Comment> comments { get; set; }
+        public virtual ICollection<StudentClass> studentClasses { get; set; }
+        public virtual ICollection<StudentQuizScore> studentQuizScores { get; set; }
+        public virtual ICollection<Payment> payments { get; set; }
     }
 }

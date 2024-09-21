@@ -7,18 +7,18 @@
         public class MentorDetails
         {
             [Key]
-            public Guid MentorDetailsId { get; set; }
+            public Guid mentorDetailsId { get; set; }
 
             [ForeignKey("User")]
-            public Guid UserId { get; set; }
+            public Guid userId { get; set; }
 
-            public DateTime VipExpirationDate { get; set; }
+            public DateTime vipExpirationDate { get; set; }
 
-            public virtual User User { get; set; }
-            public virtual ICollection<MentorSubject> MentorSubjects { get; set; }
-            public virtual ICollection<Course> Courses { get; set; }
-            public virtual ICollection<Class> Classes { get; set; }
-            public virtual ICollection<Payment> Payments { get; set; }
-            public virtual ICollection<UpgradeOrderDetails> UpdagradeOrderDetails { get; set; }
+            public virtual User user { get; set; }
+            public virtual ICollection<MentorSubject> mentorSubjects { get; set; }
+            public virtual ICollection<Course> courses { get; set; }
+            public virtual ICollection<Class> classes { get; set; }
+            public virtual ICollection<Payment> payments { get; set; }
+            public virtual ICollection<UpgradeOrderDetails> upgradeOrderDetails { get; set; }
         }
     }

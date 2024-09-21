@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduViz.Controllers;
-[Route("api/auth/[action]")]
+[Route("api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest req)
     {
         var loginResult = _identityService.Login(req.Email, req.Password);

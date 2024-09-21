@@ -6,7 +6,7 @@ namespace EduViz.Common.Payloads.Request;
 
 public class CreateCourseRequest
 {
-    public string CourseName { get; set; }
+    public string courseName { get; set; }
     public string SubjectName { get; set; }
     public decimal Price { get; set; }
     
@@ -30,7 +30,7 @@ public static class CreateCourseRequestExtensions
         var courseModel = new CourseModel()
         {
             CourseId = Guid.NewGuid(),
-            CourseName = courseRequest.CourseName,
+            CourseName = courseRequest.courseName,
             Price = courseRequest.Price,
             StartDate = currentDate,
             Schedule = (Schedule) Enum.Parse(typeof(Schedule), courseRequest.WeekSchedule),
