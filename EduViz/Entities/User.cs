@@ -25,6 +25,7 @@ namespace EduViz.Entities
         public Role Role { get; set; }
         
         public string? Avatar { get; set; }
+        public Gender Gender { get; set; }
 
         public virtual MentorDetails MentorDetails { get; set; }
         public virtual ICollection<UserCourse> UserCourses { get; set; }

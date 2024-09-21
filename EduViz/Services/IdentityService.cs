@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using EduViz.Dtos.Auth;
 using EduViz.Entities;
+using EduViz.Exceptions;
 using EduViz.Helpers;
 using EduViz.Repositories;
 using EduViz.Settings;
@@ -16,11 +17,14 @@ public class IdentityService
     private readonly JwtSettings _jwtSettings;
     private readonly IOptions<JwtSettings> _jwtSettingsOptions;
     private readonly IRepository<User, Guid> _userRepository;
+    private readonly IRepository<MentorDetails, Guid> _mentorRepository;
 
-    public IdentityService(IOptions<JwtSettings> jwtSettingsOptions, IRepository<User,Guid>userRepository)
+    public IdentityService(IOptions<JwtSettings> jwtSettingsOptions, IRepository<User,Guid>userRepository,
+        IRepository<MentorDetails,Guid> mentorRepository)
     {
         _jwtSettings = jwtSettingsOptions.Value;
         _userRepository = userRepository;
+        _mentorRepository = mentorRepository;
     }
 
     public LoginResult Login(string email, string password)
@@ -66,7 +70,22 @@ public class IdentityService
                 new(ClaimTypes.Role, user.Role.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-    
+            if (user.Role.ToString().Equals("Mentor"))
+            {
+                string vipStatus = "IsVip";
+                var mentor = _mentorRepository.FindByCondition(m => m.UserId.Equals(user.UserId))
+                    .FirstOrDefault();
+                if (mentor is null)
+                {
+                    throw new BadRequestException("Something went wrong");
+                }
+                else if(mentor.VipExpirationDate < DateTime.Now)
+                {
+                    vipStatus = "NotVip";
+                }
+                authClaims.Add(new Claim(ClaimTypes.UserData,vipStatus));
+            }
+
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
     
             var tokenDescriptor = new SecurityTokenDescriptor()

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240918032243_Initial")]
+    [Migration("20240918144334_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -382,6 +382,9 @@ namespace EduViz.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()

@@ -104,4 +104,30 @@ public class CourseService
         return _mapper.Map<List<CourseModel>>(combinedCourses);
     }
 
+    public List<CourseModel> GetCourseByMentorId(Guid mentorId,Guid currentCourseId)
+    {
+        var listRelatedCourse = _courseRepositoty.FindByCondition(c 
+                => c.Mentor.MentorDetailsId.Equals(mentorId) && !c.CourseId.Equals(currentCourseId))
+            .ToList();
+        if (!listRelatedCourse.Any())
+        {
+            throw new NotFoundException("There is no Course else");
+        }
+
+        return _mapper.Map<List<CourseModel>>(listRelatedCourse);
+    }
+
+    public CourseModel GetCourseById(Guid courseId)
+    {
+        var neededCourse = _courseRepositoty.FindByCondition(c => c.CourseId.Equals(courseId)).FirstOrDefault();
+        if (neededCourse is null)
+        {
+            throw new BadRequestException("There is no Course");
+        }
+
+        return _mapper.Map<CourseModel>(neededCourse);
+    }
+    
+
+
 }

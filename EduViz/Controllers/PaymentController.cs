@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 namespace EduViz.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/payment")]
 public class PaymentController : ControllerBase
 {
     private readonly PaymentService _paymentService;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduViz.Controllers;
-[Route("api/[controller]/[action]")]
+[Route("api/auth/[action]")]
 [ApiController]
 public class AuthController : ControllerBase
 {

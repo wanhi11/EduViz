@@ -13,7 +13,7 @@ namespace EduViz.Entities
         [MaxLength(150)]
         public string SubjectName { get; set; }
 
-        public virtual ICollection<MentorSubject> MentorSubjects { get; set; }
+        public virtual ICollection<MentorSubject> MentorSubjects { get; set; } = new HashSet<MentorSubject>();
         public virtual ICollection<Course> Courses { get; set; }
     }
 }

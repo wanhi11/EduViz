@@ -50,7 +50,7 @@ public class DatabaseInitialiser : IDataInitialiser
 
     public async Task TrySeedAsync()
     {
-        if (_context.Users.Any() && _context.MentorDetails.Any())
+        if (_context.Users.Any() && _context.MentorDetails.Any()&&_context.Subjects.Any())
         {
             return;
         }
@@ -111,8 +111,30 @@ public class DatabaseInitialiser : IDataInitialiser
             normalMentorDetails,
             vipMentorDetails
         };
+        var math = new Subject()
+        {
+            SubjectId = Guid.NewGuid(),
+            SubjectName = "Toan"
+        };
+        var english = new Subject()
+        {
+            SubjectId = Guid.NewGuid(),
+            SubjectName = "Tieng Anh"
+        };
+        var hoa = new Subject()
+        {
+            SubjectId = Guid.NewGuid(),
+            SubjectName = "Hoa"
+        };
+        List<Subject> monhoc = new List<Subject>()
+        {
+            math,
+            english,
+            hoa
+        };
         await _context.Users.AddRangeAsync(users);
         await _context.MentorDetails.AddRangeAsync(mentorDetailList);
+        await _context.Subjects.AddRangeAsync(monhoc);
         await _context.SaveChangesAsync();
     }
     

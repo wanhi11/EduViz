@@ -39,4 +39,15 @@ public class SubjectService
         return _mapper.Map<SubjectModel>(result);
     }
 
+    public SubjectModel GetSubjectById(Guid subjectId)
+    {
+        var subject = _subjectRepository.FindByCondition(s => s.SubjectId.Equals(subjectId)).FirstOrDefault();
+        if (subject is null)
+        {
+            throw new NotFoundException("there is no suitable subject");
+        }
+
+        return _mapper.Map<SubjectModel>(subject);
+    }
+
 }

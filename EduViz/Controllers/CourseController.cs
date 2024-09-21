@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EduViz.Controllers;
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/course")]
 public class CourseController:ControllerBase
 {
     private readonly CourseService _courseService;
@@ -112,5 +112,42 @@ public class CourseController:ControllerBase
             }
         }));
     }
-    
+
+    [HttpGet]
+    [Route("detail/{courseId:guid}")]
+    public async Task<IActionResult> GetCourseDetail([FromRoute] Guid courseId )
+    {
+        var course = _courseService.GetCourseById(courseId);
+        var subject = _subjectService.GetSubjectById(course.SubjectId);
+        var mentor = _mentorService.GetById(course.MentorId);
+        var mentorAccount = await _userService.GetUserById(mentor.UserId);
+        return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
+   
+        {
+            Schedule = course.Schedule.ToString(),
+            Picture = course.Picture,
+            SubjectName = subject.SubjectName,
+            Duration = course.Duration,
+            Price = course.Price,
+            CourseName = course.CourseName,
+            MentorName = mentorAccount.UserName,
+            StartDate = course.StartDate,
+            Avatar = mentorAccount.Avatar
+        }));
+    }
+
+    [HttpGet]
+    [Route(("relative-courses/{courseId:guid}"))]
+    public async Task<IActionResult> GetRelativeCourses([FromRoute] Guid courseId)
+    {
+        var course = _courseService.GetCourseById(courseId);
+        var result = _courseService.GetCourseByMentorId(course.MentorId, courseId);
+        return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
+        {
+            ListRelativeCourse = result
+        }));
+    }
+
+
+
 }

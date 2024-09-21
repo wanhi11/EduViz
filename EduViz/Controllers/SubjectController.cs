@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 namespace EduViz.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/subject")]
 public class SubjectController:ControllerBase
 {
     private readonly SubjectService _subjectService;

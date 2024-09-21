@@ -28,5 +28,10 @@
         Completed,
         Failed
     }
+    public enum Gender
+    {
+        Male,
+        Female
+    }
 }
 
