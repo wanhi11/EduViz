@@ -8,7 +8,7 @@ public class UserModel
     public Guid UserId { get; set; }
 
     [Required] [MaxLength(100)] 
-    public string UserName { get; set; }
+    public string? UserName { get; set; }
 
     [Required] [EmailAddress] 
     public string Email { get; set; }
