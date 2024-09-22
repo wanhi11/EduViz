@@ -33,10 +33,19 @@ public class CourseService
     {
         var subject = _subjectRepository.FindByCondition(s => s.subjectId.Equals(newCourse.SubjectId))
             .FirstOrDefault();
+        
         if (subject is null)
         {
             throw new NotFoundException("Cannot find the suitable subject!");
         }
+
+        var existedCourse = _courseRepositoty.FindByCondition(c => c.courseName.Equals(newCourse.CourseName))
+            .FirstOrDefault();
+        if (existedCourse is not null)
+        {
+            throw new BadRequestException("Course name has been existed");
+        }
+
         var course = _mapper.Map<Course>(newCourse);
 
         await _courseRepositoty.AddAsync(course);

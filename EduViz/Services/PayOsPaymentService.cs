@@ -22,10 +22,13 @@ public class PayOsPaymentService
     private readonly IConfiguration _configuration;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
     private readonly IRepository<UpgradeOrderDetails, Guid> _upgradeRepository;
+    private readonly IRepository<Course, Guid> _courseRepository;
+    private readonly IRepository<Payment, Guid> _paymentRepository;
 
 
     public PayOsPaymentService(IConfiguration configuration, IRepository<MentorDetails, Guid> mentorRepository,
-        IRepository<User, Guid> userRepository,IRepository<UpgradeOrderDetails,Guid> upgradeRepository)
+        IRepository<User, Guid> userRepository,IRepository<UpgradeOrderDetails,Guid> upgradeRepository,
+        IRepository<Course,Guid> courseRepository,IRepository<Payment,Guid> paymentRepository)
     {
         _configuration = configuration;
         _clientId = _configuration["PayOS:ClientId"];
@@ -33,6 +36,8 @@ public class PayOsPaymentService
         _checksumKey = _configuration["PayOS:ChecksumKey"];
         _mentorRepository = mentorRepository;
         _upgradeRepository = upgradeRepository;
+        _courseRepository = courseRepository;
+        _paymentRepository = paymentRepository;
     }
 
     public async Task<PayOSPaymentResponse> CreateVipUpgradePaymentLinkAsync(
@@ -151,5 +156,41 @@ public class PayOsPaymentService
     {
         PayOS payOS = new PayOS(_clientId, _apiKey, _checksumKey);
         return await payOS.confirmWebhook(webhookUrl);
+    }
+
+    public async Task<PayOSPaymentResponse> CreatePurchaseCourseAsync(
+        CoursePurchaseRequest req,Guid studentId)
+    {
+        var course = _courseRepository.FindByCondition(c => c.courseId.Equals(req.courseId)).FirstOrDefault();
+        if (course is null)
+        {
+            throw new NotFoundException("This course does not exist");
+        }
+
+        int amount = (int) course.price;
+        List<ItemData> items = new List<ItemData>
+        {   
+            new ItemData(course.courseName,1,amount)
+        };
+        long orderCode = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var result = await CreatePaymentLinkAsync(orderCode, amount,
+            "Purchase course" + course.courseName, items,
+            req.cancelUrl, req.returnUrl);
+        var payment = new Payment()
+        {
+            amount = amount,
+            paymentStatus = PaymentStatus.Pending,
+            studentId = studentId,
+            courseId = course.courseId,
+            mentorId = course.mentorId,
+            paymentDate = DateTime.Now,
+            paymentId = Guid.NewGuid()
+        };
+        await _paymentRepository.AddAsync(payment);
+        if (!(await _paymentRepository.Commit() > 0))
+        {
+            throw new BadRequestException("Something went wrong when create payment");
+        }
+        return result;
     }
 }

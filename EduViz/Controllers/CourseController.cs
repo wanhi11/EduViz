@@ -142,7 +142,7 @@ public class CourseController:ControllerBase
             courseName = result.CourseName,
             startDate = result.StartDate,
             duration = result.Duration,
-            price = result.Duration,
+            price = result.Price,
             mentorName = currentUser.UserName,
             picture = result.Picture,
             subjectName = subject.SubjectName,

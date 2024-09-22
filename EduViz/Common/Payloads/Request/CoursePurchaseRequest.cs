@@ -6,3 +6,4 @@ public class CoursePurchaseRequest
     public string cancelUrl { get; set; } 
     public string returnUrl { get; set; }
 }
+

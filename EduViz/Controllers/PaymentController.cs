@@ -22,15 +22,18 @@ public class PaymentController : ControllerBase
     private readonly UserService _userService;
     private readonly PayOsPaymentService _payOSService;
     private readonly UpgradeOrderDetailService _upgradeService;
+    private readonly CourseService _courseService;
 
     public PaymentController(PaymentService paymentService, MentorDetailService mentorDetailService,
-        UserService userService, PayOsPaymentService payOSService,UpgradeOrderDetailService upgradeService)
+        UserService userService, PayOsPaymentService payOSService,UpgradeOrderDetailService upgradeService,
+        CourseService courseService)
     {
         _paymentService = paymentService;
         _mentorDetailService = mentorDetailService;
         _userService = userService;
         _payOSService = payOSService;
         _upgradeService = upgradeService;
+        _courseService = courseService;
     }
 
     [HttpGet("premium-package")]
@@ -119,4 +122,27 @@ public class PaymentController : ControllerBase
         // Return a JSON response (you can return an actual object if needed)
         return Ok(new { message = "Webhook received successfully" });
     }
+
+    [HttpPost("purchase-course")]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> PurchaseCourse([FromBody] CoursePurchaseRequest purchasereq)
+    {
+        Request.Headers.TryGetValue("Authorization", out var token);
+        token = token.ToString().Split()[1];
+        var user = _userService.GetUserInToken(token);
+        var result = await _payOSService.CreatePurchaseCourseAsync(purchasereq,user.UserId);
+        if (result is null)
+        {
+            throw new BadRequestException("Something went wrong");
+        }
+
+        return Ok(ApiResult<PayOSPaymentData>.Succeed(new PayOSPaymentData()
+        {
+            paymentLink = result.payOSResult.checkoutUrl,
+            signature = result.signature
+        }));
+        
+    }
+
+
 }   
