@@ -33,7 +33,7 @@ public class UserController:ControllerBase
         }
         return Ok(ApiResult<CreateMentorResponse>.Succeed(new CreateMentorResponse()
         {
-            Gender = result.Gender,
+            Gender = result.Gender is null? null: result.Gender.ToString(),
             Email = result.Email,
             Name = result.UserName,
             Subject = req.Subject
@@ -49,6 +49,42 @@ public class UserController:ControllerBase
         return Ok(ApiResult<CreateStudentResponse>.Succeed(new CreateStudentResponse()
         {
             Email = userModel.Email
+        }));
+    }
+
+    [HttpGet]
+    [Route("my-account")]
+    [Authorize]
+    public async Task<IActionResult> GetUserDetail()
+    {
+        
+        Request.Headers.TryGetValue("Authorization", out var token);
+        token = token.ToString().Split()[1];
+        var user = _userService.GetUserInToken(token);
+
+        if (user.Role.ToString().Equals("Mentor"))
+        {
+            var mentor = _mentorService.GetByMentorId(user.UserId);
+            
+            return Ok(ApiResult<UserDetailMentorResponse>.Succeed(new UserDetailMentorResponse()
+            {
+                email = user.Email,
+                gender = user.Gender is null? null :user.Gender.ToString(),
+                role = user.Role.ToString(),
+                avatar = user.Avatar,
+                name = user.UserName,
+                expiredDate = mentor.VipExpirationDate,
+                isVip = mentor.VipExpirationDate > DateTime.Now ? true : false  
+            }));
+        }
+
+        return Ok(ApiResult<UserDetailStudentResponse>.Succeed(new UserDetailStudentResponse()
+        {
+            email = user.Email,
+            gender = user.Gender is null?null:user.Gender.ToString(),
+            role = user.Role.ToString(),
+            avatar = user.Avatar,
+            name = user.UserName,
         }));
     }
 }

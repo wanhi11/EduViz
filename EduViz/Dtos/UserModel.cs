@@ -16,6 +16,6 @@ public class UserModel
     [Required] public string Password { get; set; }
 
     [Required] public Role Role { get; set; }
-    public Gender Gender { get; set; }
+    public Gender? Gender { get; set; }
     public string? Avatar { get; set; }
 }

@@ -31,9 +31,15 @@ public class UserService
         return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.email.Equals(email)).FirstOrDefault());
     }
 
-    public async Task<UserModel> GetUserById(Guid Id)
+    public UserModel GetUserById(Guid Id)
     {
-        return _mapper.Map<UserModel>(_userRepository.FindByCondition(u => u.userId.Equals(Id)).FirstOrDefault());
+        var result = _userRepository.FindByCondition(u => u.userId.Equals(Id)).FirstOrDefault();
+        if (result is null)
+        {
+            throw new BadRequestException("There is no user");
+        }
+
+        return _mapper.Map<UserModel>(result);
     }
     public  UserModel GetUserInToken(string token)
     {

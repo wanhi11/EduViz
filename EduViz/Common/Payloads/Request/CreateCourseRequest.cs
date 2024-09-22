@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using EduViz.Dtos;
 using EduViz.Enums;
 using EduViz.Exceptions;

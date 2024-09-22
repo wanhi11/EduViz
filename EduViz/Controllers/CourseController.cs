@@ -44,7 +44,7 @@ public class CourseController:ControllerBase
         {
             var subject = _subjectService.GetSubjectById(course.SubjectId);
             var mentor = _mentorService.GetById(course.MentorId);
-            var user =await _userService.GetUserById(mentor.UserId);
+            var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
                 Schedule = course.Schedule.ToString(),
@@ -78,7 +78,7 @@ public class CourseController:ControllerBase
         {
             var subject = _subjectService.GetSubjectById(course.SubjectId);
             var mentor = _mentorService.GetById(course.MentorId);
-            var user =await _userService.GetUserById(mentor.UserId);
+            var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
                 Schedule = course.Schedule.ToString(),
@@ -170,7 +170,7 @@ public class CourseController:ControllerBase
         var course = _courseService.GetCourseById(courseId);
         var subject = _subjectService.GetSubjectById(course.SubjectId);
         var mentor = _mentorService.GetById(course.MentorId);
-        var mentorAccount = await _userService.GetUserById(mentor.UserId);
+        var mentorAccount = _userService.GetUserById(mentor.UserId);
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
    
         {
@@ -197,7 +197,7 @@ public class CourseController:ControllerBase
         {
             var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
             var mentor = _mentorService.GetById(courseModel.MentorId);
-            var user =await _userService.GetUserById(mentor.UserId);
+            var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
                 Schedule = courseModel.Schedule.ToString(),

@@ -8,5 +8,5 @@ public class CreateMentorResponse
 
     public string Email { get; set; }
     public List<string> Subject { get; set; }
-    public Gender Gender { get; set; }
+    public string? Gender { get; set; }
 }
