@@ -71,7 +71,9 @@ namespace EduViz.Migrations
                     picture = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     startDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     duration = table.Column<int>(type: "int", nullable: false),
-                    schedule = table.Column<int>(type: "int", nullable: false)
+                    schedule = table.Column<int>(type: "int", nullable: false),
+                    beginingClass = table.Column<TimeSpan>(type: "time", nullable: false),
+                    endingClass = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {

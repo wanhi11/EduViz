@@ -84,6 +84,9 @@ namespace EduViz.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<TimeSpan>("beginingClass")
+                        .HasColumnType("time");
+
                     b.Property<string>("courseName")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -91,6 +94,9 @@ namespace EduViz.Migrations
 
                     b.Property<int>("duration")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("endingClass")
+                        .HasColumnType("time");
 
                     b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");

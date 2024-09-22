@@ -4,6 +4,7 @@ using EduViz.Common.Payloads.Request;
 using EduViz.Common.Payloads.Response;
 using EduViz.Enums;
 using EduViz.Exceptions;
+using EduViz.Helpers;
 using EduViz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -47,7 +48,7 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                schedule = course.Schedule.ToString(),
+                schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                 courseName = course.CourseName,
                 startDate = course.StartDate,
                 duration = course.Duration,
@@ -55,7 +56,9 @@ public class CourseController:ControllerBase
                 picture = course.Picture,
                 subjectName = subject.SubjectName,
                 mentorName = user.UserName,
-                courseId = course.CourseId
+                courseId = course.CourseId,
+                beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+                endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
         }
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
@@ -81,7 +84,7 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                schedule = course.Schedule.ToString(),
+                schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                 courseName = course.CourseName,
                 startDate = course.StartDate,
                 duration = course.Duration,
@@ -89,7 +92,9 @@ public class CourseController:ControllerBase
                 picture = course.Picture,
                 subjectName = subject.SubjectName,
                 mentorName = user.UserName,
-                courseId = course.CourseId
+                courseId = course.CourseId,
+                beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+                endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
         }
 
@@ -133,14 +138,16 @@ public class CourseController:ControllerBase
         var response = new CourseResponse()
         {
             courseId = result!.CourseId,
-            schedule = result.Schedule.ToString(),
+            schedule = ConvertEnumHelper.ConvertEnumToDayList(result.Schedule.ToString()),
             courseName = result.CourseName,
             startDate = result.StartDate,
             duration = result.Duration,
             price = result.Duration,
             mentorName = currentUser.UserName,
             picture = result.Picture,
-            subjectName = subject.SubjectName
+            subjectName = subject.SubjectName,
+            beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+            endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
         };
         return Ok(ApiResult<CreateCourseResponse>.Succeed(new CreateCourseResponse()
         {
@@ -154,11 +161,11 @@ public class CourseController:ControllerBase
     {
         return Ok(ApiResult<GetWeekScheduleResponse>.Succeed(new GetWeekScheduleResponse()
         {
-            weekSchedule = new List<string>()
+            weekSchedule = new List<List<string>>()
             {
-                Schedule.SatSun.ToString(),
-                Schedule.MonWedFri.ToString(),
-                Schedule.TueThuSat.ToString(),
+                ConvertEnumHelper.ConvertEnumToDayList(Schedule.TueThuSat.ToString()),
+                ConvertEnumHelper.ConvertEnumToDayList(Schedule.SatSun.ToString()),
+                ConvertEnumHelper.ConvertEnumToDayList(Schedule.MonWedFri.ToString()),
             }
         }));
     }
@@ -182,7 +189,9 @@ public class CourseController:ControllerBase
             courseName = course.CourseName,
             mentorName = mentorAccount.UserName,
             startDate = course.StartDate,
-            avatar = mentorAccount.Avatar
+            avatar = mentorAccount.Avatar,
+            beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+            endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
         }));
     }
 
@@ -200,7 +209,7 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                schedule = courseModel.Schedule.ToString(),
+                schedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,
                 startDate = courseModel.StartDate,
                 duration = courseModel.Duration,
@@ -208,7 +217,9 @@ public class CourseController:ControllerBase
                 picture = courseModel.Picture,
                 subjectName = subject.SubjectName,
                 mentorName = user.UserName,
-                courseId = courseModel.CourseId
+                courseId = courseModel.CourseId,
+                beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+                endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
         }
         return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()

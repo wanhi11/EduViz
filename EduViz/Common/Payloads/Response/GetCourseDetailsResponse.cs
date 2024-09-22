@@ -15,4 +15,6 @@ public class GetCourseDetailsResponse
     public string subjectName { get; set; }
     public string mentorName { get; set; }
     public string avatar { get; set; }
+    public string beginingClass { get; set; }
+    public string endingClass { get; set; }
 }

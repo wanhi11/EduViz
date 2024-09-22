@@ -21,4 +21,6 @@ public class CourseModel
     public int Duration { get; set; }
             
     public Schedule Schedule { get; set; }
+    public TimeSpan beginingClass { get; set; }
+    public TimeSpan endingClass { get; set; }
 }

@@ -143,6 +143,8 @@ public class DatabaseInitialiser : IDataInitialiser
             price = 1000,
             courseId = Guid.NewGuid(),
             mentorId = normalMentorDetails.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
         };
         var course2 = new Course()
         {
@@ -154,6 +156,8 @@ public class DatabaseInitialiser : IDataInitialiser
             price = 15000,
             courseId = Guid.NewGuid(),
             mentorId = normalMentorDetails.mentorDetailsId,
+            beginingClass = new TimeSpan(19,30,00),
+            endingClass = new TimeSpan(21,30,00)
         };
         var course3 = new Course()
         {
@@ -165,6 +169,8 @@ public class DatabaseInitialiser : IDataInitialiser
             price = 20000,
             courseId = Guid.NewGuid(),
             mentorId = vipMentorDetails.mentorDetailsId,
+            beginingClass = new TimeSpan(18,45,00),
+            endingClass = new TimeSpan(20,45,00)
         };
         List<Course> courseList = new List<Course>()
         {

@@ -30,6 +30,9 @@
             public int duration { get; set; }
             
             public Schedule schedule { get; set; }
+            
+            public TimeSpan beginingClass { get; set; }
+            public TimeSpan endingClass { get; set; }
 
             public virtual MentorDetails mentor { get; set; }
             public virtual Subject subject { get; set; }
