@@ -15,7 +15,7 @@ public class CreateCourseRequest
     public List<string> weekSchedule { get; set; }
     
     public string startDate { get; set; }
-    public int duration { get; set; }
+    public int monthDuration { get; set; }
     public IFormFile? picture { get; set; }
     public string beginingClass { get; set; }
     public string endingClass { get; set; }
@@ -71,7 +71,7 @@ public static class CreateCourseRequestExtensions
             Price = courseRequest.price,
             StartDate = startDate,
             Schedule = (Schedule) Enum.Parse(typeof(Schedule), ConvertEnumHelper.ConvertDayListToEnum(courseRequest.weekSchedule)),
-            Duration = courseRequest.duration,
+            Duration = courseRequest.monthDuration,
             beginingClass = TimeSpan.Parse(courseRequest.beginingClass),
             endingClass = TimeSpan.Parse(courseRequest.endingClass)
         };

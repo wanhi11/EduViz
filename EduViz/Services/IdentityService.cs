@@ -93,7 +93,7 @@ public class IdentityService
                 Subject = new ClaimsIdentity(authClaims),
                 SigningCredentials =
                     new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
-                Expires = utcNow.Add(TimeSpan.FromHours(1)),
+                Expires = utcNow.Add(TimeSpan.FromDays(4)),
             };
     
             var handler = new JwtSecurityTokenHandler();

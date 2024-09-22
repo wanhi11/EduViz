@@ -1,8 +1,10 @@
 using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
+using EduViz.Common.Payloads.Response;
 using EduViz.Dtos;
 using EduViz.Entities;
 using EduViz.Exceptions;
+using EduViz.Helpers;
 using EduViz.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +35,7 @@ public class CourseService
     {
         var subject = _subjectRepository.FindByCondition(s => s.subjectId.Equals(newCourse.SubjectId))
             .FirstOrDefault();
-        
+
         if (subject is null)
         {
             throw new NotFoundException("Cannot find the suitable subject!");
@@ -57,9 +59,16 @@ public class CourseService
 
         return null;
     }
-    public async Task<List<CourseModel>> GetCoursesBySubjectWithVipMentorFirst(string subjectName)
+
+    public async Task<List<CourseModel>?> GetCoursesBySubjectWithVipMentorFirst(string subjectName)
     {
         var currentDate = DateTime.UtcNow;
+
+        var existedCourse = _courseRepositoty.FindByCondition(c => c.subject.subjectName.Equals(subjectName));
+        if (!existedCourse.Any())
+        {
+            return null;
+        }
 
         // Fetch all VIP mentors first
         var vipMentors = await _mentorRepository
@@ -67,41 +76,7 @@ public class CourseService
             .ToListAsync();
 
         // Fetch all courses that have a start date greater than the current date
-        var coursesBySubject = await _courseRepositoty
-            .FindByCondition(c => c.startDate > currentDate && c.subject.subjectName.Equals(subjectName))
-            .ToListAsync();
-
-        // Get a list of VIP Mentor Ids
-        var vipMentorIds = vipMentors.Select(m => m.mentorDetailsId).ToList();
-
-        // Separate VIP courses and non-VIP courses
-        var vipCourses = coursesBySubject
-            .Where(c => vipMentorIds.Contains(c.mentorId))
-            .ToList();
-
-        var nonVipCourses = coursesBySubject
-            .Where(c => !vipMentorIds.Contains(c.mentorId))
-            .ToList();
-
-        // Combine both VIP and non-VIP courses
-        var combinedCourses = vipCourses.Concat(nonVipCourses).ToList();
-
-        // Map the combined courses to the desired model
-        return _mapper.Map<List<CourseModel>>(combinedCourses);
-    }
-
-    public async Task<List<CourseModel>> GetCoursesWithVipMentorFirst()
-    {
-        var currentDate = DateTime.UtcNow;
-
-        // Fetch all VIP mentors first
-        var vipMentors = await _mentorRepository
-            .FindByCondition(m => m.vipExpirationDate > currentDate)
-            .ToListAsync();
-
-        // Fetch all courses that have a start date greater than the current date
-        var coursesBySubject = await _courseRepositoty
-            .FindByCondition(c => c.startDate > currentDate)
+        var coursesBySubject = await existedCourse.Where(c => c.startDate > DateTime.Now)
             .ToListAsync();
 
         // Get a list of VIP Mentor Ids
@@ -124,18 +99,25 @@ public class CourseService
     }
 
 
-    public List<CourseModel> GetCourseByMentorId(Guid mentorId,Guid currentCourseId)
+    public List<CourseModel> GetCourseByMentorId(Guid mentorId, Guid? currentCourseId)
     {
-        var listRelatedCourse = _courseRepositoty.FindByCondition(c 
-                => c.mentor.mentorDetailsId.Equals(mentorId) && !c.courseId.Equals(currentCourseId))
-            .ToList();
+        var query = _courseRepositoty.FindByCondition(c => c.mentor.mentorDetailsId.Equals(mentorId));
+
+        if (currentCourseId.HasValue)
+        {
+            query = query.Where(c => !c.courseId.Equals(currentCourseId.Value));
+        }
+
+        var listRelatedCourse = query.ToList();
+
         if (!listRelatedCourse.Any())
         {
-            throw new NotFoundException("There is no Course else");
+            throw new NotFoundException("There is no Course available.");
         }
 
         return _mapper.Map<List<CourseModel>>(listRelatedCourse);
     }
+
 
     public CourseModel GetCourseById(Guid courseId)
     {
@@ -147,7 +129,92 @@ public class CourseService
 
         return _mapper.Map<CourseModel>(neededCourse);
     }
-    
 
+    public bool HasCourse()
+    {
+        var courses = _courseRepositoty.GetAll().ToList();
+        if (courses.Any()) return true;
+        return false;
+    }
+
+ public async Task<List<CourseResponse>> GetAllCoursesWithSearchString(string searchString)
+{
+    searchString = searchString.ToLower();
+    var currentDate = DateTime.UtcNow;
+
+    // Lấy danh sách các khóa học chứa searchString trong tên khóa học từ database
+    var coursesList = await _courseRepositoty
+        .FindByCondition(course => course.courseName.ToLower().Contains(searchString))
+        .Include(course => course.mentor)
+        .ThenInclude(mentor => mentor.user)
+        .Include(course => course.subject)
+        .ToListAsync();
+
+    // Lấy danh sách các mentor có tên chứa searchString từ database
+    var mentorsList = await _mentorRepository
+        .FindByCondition(mentor => mentor.user.userName.ToLower().Contains(searchString))
+        .Include(mentor => mentor.courses)
+        .ThenInclude(course => course.subject)
+        .ToListAsync();
+
+    // Lấy danh sách các khóa học từ danh sách mentor đã tìm thấy
+    var mentorCoursesList = mentorsList
+        .SelectMany(mentor => mentor.courses)
+        .ToList();
+
+    // Kết hợp cả hai danh sách khóa học và loại bỏ trùng lặp bằng courseId
+    var combinedCourses = coursesList
+        .Concat(mentorCoursesList)
+        .GroupBy(course => course.courseId)
+        .Select(group => group.First())
+        .ToList();
+
+    // Chuyển đổi kết quả sang CourseResponse
+    var courseResponses = combinedCourses.Select(course => new CourseResponse
+    {
+        courseId = course.courseId,
+        courseName = course.courseName,
+        mentorName = course.mentor.user.userName,
+        subjectName = course.subject.subjectName,
+        price = course.price,
+        picture = course.picture,
+        startDate = course.startDate,
+        duration = course.duration,
+        schedule = ConvertEnumHelper.ConvertEnumToDayList(course.schedule.ToString()), // Chuyển đổi schedule thành List<string>
+        beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"), // Định dạng thời gian bắt đầu
+        endingClass = course.endingClass.ToString(@"hh\:mm\:ss") // Định dạng thời gian kết thúc
+    }).ToList();
+
+    // Sắp xếp theo trạng thái VIP của mentor (VIP trước, không VIP sau)
+    var sortedCourses = courseResponses
+        .OrderByDescending(c => mentorsList
+            .Any(m => m.mentorDetailsId == combinedCourses
+                .Where(course => course.courseId == c.courseId)
+                .Select(course => course.mentor.mentorDetailsId)
+                .FirstOrDefault() && m.vipExpirationDate > currentDate))
+        .ToList();
+
+    return sortedCourses;
+}
+
+public async Task<List<CourseWithSubject>> GetCoursesGroupedBySubjectWithSearchString(string searchString)
+{
+    var currentDate = DateTime.UtcNow;
+
+    // Sử dụng hàm đã có để lấy danh sách khóa học
+    var combinedCourses = await GetAllCoursesWithSearchString(searchString);
+
+    // Nhóm khóa học theo môn học
+    var courseGroups = combinedCourses
+        .GroupBy(course => course.subjectName)
+        .Select(group => new CourseWithSubject
+        {
+            subjectName = group.Key,
+            listCourse = group.ToList() // Chuyển nhóm thành danh sách
+        })
+        .ToList();
+
+    return courseGroups; // Trả về danh sách CourseWithSubject
+}
 
 }

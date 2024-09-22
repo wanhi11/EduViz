@@ -88,7 +88,7 @@ public class UserService
         {
             mentorDetailsId = Guid.NewGuid(),
             userId = user.userId,
-            vipExpirationDate = DateTime.Now
+            vipExpirationDate = DateTime.Now.AddDays(7)
         };
         foreach (var subjectName in mentor.subject)
         {
@@ -139,5 +139,16 @@ public class UserService
 
         return _mapper.Map<UserModel>(createdUser);
     }
-    
+
+    public List<UserModel> GetUserByName(string name)
+    {
+        var users = _userRepository.FindByCondition(u => u.userName.Contains(name)).ToList();
+        if (!users.Any())
+        {
+            throw new BadRequestException("There is no matching record");
+        }
+
+        return _mapper.Map<List<UserModel>>(users);
+    }
+
 }

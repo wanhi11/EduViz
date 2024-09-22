@@ -50,4 +50,12 @@ public class SubjectService
         return _mapper.Map<SubjectModel>(subject);
     }
 
+    public List<SubjectModel> GetSubjectByIds(List<Guid> subjectIds)
+    {
+        var subjects = _subjectRepository
+            .FindByCondition(s => subjectIds.Contains(s.subjectId))
+            .ToList();
+        return _mapper.Map<List<SubjectModel>>(subjects);
+    }
+
 }

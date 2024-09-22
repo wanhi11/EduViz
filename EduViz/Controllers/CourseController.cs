@@ -34,37 +34,61 @@ public class CourseController:ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllCourse()
     {
-        var result = await _courseService.GetCoursesWithVipMentorFirst();
-        if (!result.Any())
+        if (!_courseService.HasCourse())
         {
             throw new NotFoundException("there is no course");
         }
 
-        var listResult = new List<CourseResponse>();
-        foreach (var course in result)
+        List<CourseWithSubject> result = new List<CourseWithSubject>();
+        
+        var listSubject = _subjectService.GetAllSubject();
+        foreach (var subject in listSubject)
         {
-            var subject = _subjectService.GetSubjectById(course.SubjectId);
-            var mentor = _mentorService.GetById(course.MentorId);
-            var user = _userService.GetUserById(mentor.UserId);
-            listResult.Add(new CourseResponse()
+            var courses = await _courseService.GetCoursesBySubjectWithVipMentorFirst(subject.SubjectName);
+            if (courses is null)
             {
-                schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
-                courseName = course.CourseName,
-                startDate = course.StartDate,
-                duration = course.Duration,
-                price = course.Price,
-                picture = course.Picture,
+                result.Add(new CourseWithSubject()
+                {
+                    subjectName = subject.SubjectName,
+                    listCourse = null
+                });
+                break;
+            }
+
+            List<CourseResponse> courseResponses = new List<CourseResponse>();
+            foreach (var course in courses)
+            {
+                var mentor = _mentorService.GetById(course.MentorId);
+                var user = _userService.GetUserById(mentor.UserId);
+                courseResponses.Add(new CourseResponse()
+                {
+                    schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
+                    courseName = course.CourseName,
+                    startDate = course.StartDate,
+                    duration = course.Duration,
+                    price = course.Price,
+                    picture = course.Picture,
+                    subjectName = subject.SubjectName,
+                    mentorName = user.UserName,
+                    courseId = course.CourseId,
+                    beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
+                    endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
+                });
+            }
+            result.Add(new CourseWithSubject()
+            {
                 subjectName = subject.SubjectName,
-                mentorName = user.UserName,
-                courseId = course.CourseId,
-                beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
-                endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
+                listCourse = courseResponses
             });
+
+            
         }
+
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
         {
-            listCourse = listResult
+            listCourseWithSubjects = result
         }));
+        
     }
     
     [HttpGet]
@@ -172,7 +196,7 @@ public class CourseController:ControllerBase
 
     [HttpGet]
     [Route("detail/{courseId:guid}")]
-    public async Task<IActionResult> GetCourseDetail([FromRoute] Guid courseId )
+    public IActionResult GetCourseDetail([FromRoute] Guid courseId )
     {
         var course = _courseService.GetCourseById(courseId);
         var subject = _subjectService.GetSubjectById(course.SubjectId);
@@ -197,7 +221,7 @@ public class CourseController:ControllerBase
 
     [HttpGet]
     [Route(("relative-courses/{courseId:guid}"))]
-    public async Task<IActionResult> GetRelativeCourses([FromRoute] Guid courseId)
+    public IActionResult GetRelativeCourses([FromRoute] Guid courseId)
     {
         var course = _courseService.GetCourseById(courseId);
         var result = _courseService.GetCourseByMentorId(course.MentorId, courseId);
@@ -228,6 +252,25 @@ public class CourseController:ControllerBase
         }));
     }
 
+    [HttpGet("search/{searchString}")]
+    public async Task<IActionResult> GetAllCoursesWithSearchString([FromRoute] string searchString)
+    {
+        
+            var courses = await _courseService.GetCoursesGroupedBySubjectWithSearchString(searchString);
 
+            if (courses is null || !courses.Any())
+            {
+                throw new NotFoundException("No courses or mentors found matching the provided search string.");
+            };
+            
+            
+
+            return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
+            {
+                listCourseWithSubjects = courses
+            }));
+        
+        
+    }
 
 }
