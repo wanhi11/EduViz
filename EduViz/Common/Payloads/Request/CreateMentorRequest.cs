@@ -4,11 +4,11 @@ namespace EduViz.Common.Payloads.Request;
 
 public class CreateMentorRequest
 {
-    public string Name { get; set; }
+    public string name { get; set; }
 
-    public string Email { get; set; }
+    public string email { get; set; }
 
-    public string Password { get; set; }
-    public List<string> Subject { get; set; }
-    public Gender Gender { get; set; }
+    public string password { get; set; }
+    public List<string> subject { get; set; }
+    public Gender gender { get; set; }
 }

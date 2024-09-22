@@ -5,8 +5,8 @@ namespace EduViz.Common.Payloads.Request;
 
 public class CreateUserRequest
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string email { get; set; }
+    public string password { get; set; }
 }
 
 public static class CreateUserRequestExtensions
@@ -16,8 +16,8 @@ public static class CreateUserRequestExtensions
         var userModel = new UserModel()
         {
             UserId = Guid.NewGuid(),
-            Email = req.Email,
-            Password = SecurityUtil.Hash(req.Password)
+            Email = req.email,
+            Password = SecurityUtil.Hash(req.password)
         };
         return userModel;
     }

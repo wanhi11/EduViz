@@ -6,24 +6,24 @@ namespace EduViz.Common.Payloads.Response;
 
 public class GetAllCourseResponse
 {
-    public List<CourseResponse> ListCourse { get; set; }
+    public List<CourseResponse> listCourse { get; set; }
 }
 
 public class CourseResponse
 {
-    public Guid CourseId { get; set; }
+    public Guid courseId { get; set; }
     
-    public string CourseName { get; set; }
+    public string courseName { get; set; }
     
-    public string MentorName { get; set; }
+    public string mentorName { get; set; }
     
-    public string SubjectName { get; set; }
+    public string subjectName { get; set; }
     
-    public decimal Price { get; set; }
-    public string? Picture { get; set; }
+    public decimal price { get; set; }
+    public string? picture { get; set; }
             
-    public DateTime StartDate { get; set; }
-    public int Duration { get; set; }
+    public DateTime startDate { get; set; }
+    public int duration { get; set; }
             
-    public string Schedule { get; set; }
+    public string schedule { get; set; }
 }

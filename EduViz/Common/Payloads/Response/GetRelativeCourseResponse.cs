@@ -4,5 +4,5 @@ namespace EduViz.Common.Payloads.Response;
 
 public class GetRelativeCourseResponse
 {
-    public List<CourseResponse> ListRelativeCourse { get; set; }
+    public List<CourseResponse> listRelativeCourse { get; set; }
 }

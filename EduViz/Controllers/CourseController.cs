@@ -47,20 +47,20 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                Schedule = course.Schedule.ToString(),
-                CourseName = course.CourseName,
-                StartDate = course.StartDate,
-                Duration = course.Duration,
-                Price = course.Price,
-                Picture = course.Picture,
-                SubjectName = subject.SubjectName,
-                MentorName = user.UserName,
-                CourseId = course.CourseId
+                schedule = course.Schedule.ToString(),
+                courseName = course.CourseName,
+                startDate = course.StartDate,
+                duration = course.Duration,
+                price = course.Price,
+                picture = course.Picture,
+                subjectName = subject.SubjectName,
+                mentorName = user.UserName,
+                courseId = course.CourseId
             });
         }
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
         {
-            ListCourse = listResult
+            listCourse = listResult
         }));
     }
     
@@ -81,21 +81,21 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                Schedule = course.Schedule.ToString(),
-                CourseName = course.CourseName,
-                StartDate = course.StartDate,
-                Duration = course.Duration,
-                Price = course.Price,
-                Picture = course.Picture,
-                SubjectName = subject.SubjectName,
-                MentorName = user.UserName,
-                CourseId = course.CourseId
+                schedule = course.Schedule.ToString(),
+                courseName = course.CourseName,
+                startDate = course.StartDate,
+                duration = course.Duration,
+                price = course.Price,
+                picture = course.Picture,
+                subjectName = subject.SubjectName,
+                mentorName = user.UserName,
+                courseId = course.CourseId
             });
         }
 
         return Ok(ApiResult<GetAllCourseWithName>.Succeed(new GetAllCourseWithName()
         {
-            ListCourse = listResult
+            listCourse = listResult
         }));
     }
 
@@ -109,13 +109,13 @@ public class CourseController:ControllerBase
         var currentUser = _userService.GetUserInToken(token);
         var mentor = _mentorService.GetByMentorId(currentUser.UserId);
         var course = req.ToCourseModel();
-        var subject = _subjectService.GetSubjectByName(req.SubjectName);
+        var subject = _subjectService.GetSubjectByName(req.subjectName);
         course.SubjectId = subject.SubjectId;
         course.MentorId = mentor.MentorDetailsId;
         
-        if (req.Picture != null)
+        if (req.picture != null)
         {
-            var uploadResult = await _cloudinaryService.UploadImageAsync(req.Picture);
+            var uploadResult = await _cloudinaryService.UploadImageAsync(req.picture);
 
             if (uploadResult.Error != null)
             {
@@ -132,15 +132,15 @@ public class CourseController:ControllerBase
 
         var response = new CourseResponse()
         {
-            CourseId = result!.CourseId,
-            Schedule = result.Schedule.ToString(),
-            CourseName = result.CourseName,
-            StartDate = result.StartDate,
-            Duration = result.Duration,
-            Price = result.Duration,
-            MentorName = currentUser.UserName,
-            Picture = result.Picture,
-            SubjectName = subject.SubjectName
+            courseId = result!.CourseId,
+            schedule = result.Schedule.ToString(),
+            courseName = result.CourseName,
+            startDate = result.StartDate,
+            duration = result.Duration,
+            price = result.Duration,
+            mentorName = currentUser.UserName,
+            picture = result.Picture,
+            subjectName = subject.SubjectName
         };
         return Ok(ApiResult<CreateCourseResponse>.Succeed(new CreateCourseResponse()
         {
@@ -154,7 +154,7 @@ public class CourseController:ControllerBase
     {
         return Ok(ApiResult<GetWeekScheduleResponse>.Succeed(new GetWeekScheduleResponse()
         {
-            WeekSchedule = new List<string>()
+            weekSchedule = new List<string>()
             {
                 Schedule.SatSun.ToString(),
                 Schedule.MonWedFri.ToString(),
@@ -174,15 +174,15 @@ public class CourseController:ControllerBase
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
    
         {
-            Schedule = course.Schedule.ToString(),
-            Picture = course.Picture,
-            SubjectName = subject.SubjectName,
-            Duration = course.Duration,
-            Price = course.Price,
-            CourseName = course.CourseName,
-            MentorName = mentorAccount.UserName,
-            StartDate = course.StartDate,
-            Avatar = mentorAccount.Avatar
+            schedule = course.Schedule.ToString(),
+            picture = course.Picture,
+            subjectName = subject.SubjectName,
+            duration = course.Duration,
+            price = course.Price,
+            courseName = course.CourseName,
+            mentorName = mentorAccount.UserName,
+            startDate = course.StartDate,
+            avatar = mentorAccount.Avatar
         }));
     }
 
@@ -200,20 +200,20 @@ public class CourseController:ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                Schedule = courseModel.Schedule.ToString(),
-                CourseName = courseModel.CourseName,
-                StartDate = courseModel.StartDate,
-                Duration = courseModel.Duration,
-                Price = courseModel.Price,
-                Picture = courseModel.Picture,
-                SubjectName = subject.SubjectName,
-                MentorName = user.UserName,
-                CourseId = courseModel.CourseId
+                schedule = courseModel.Schedule.ToString(),
+                courseName = courseModel.CourseName,
+                startDate = courseModel.StartDate,
+                duration = courseModel.Duration,
+                price = courseModel.Price,
+                picture = courseModel.Picture,
+                subjectName = subject.SubjectName,
+                mentorName = user.UserName,
+                courseId = courseModel.CourseId
             });
         }
         return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
         {
-            ListRelativeCourse = listResult
+            listRelativeCourse = listResult
         }));
     }
 

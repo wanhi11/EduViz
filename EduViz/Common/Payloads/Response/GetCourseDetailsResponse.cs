@@ -4,15 +4,15 @@ namespace EduViz.Common.Payloads.Response;
 
 public class GetCourseDetailsResponse
 {
-    public string CourseName { get; set; }
-    public decimal Price { get; set; }
-    public string? Picture { get; set; }
+    public string courseName { get; set; }
+    public decimal price { get; set; }
+    public string? picture { get; set; }
             
-    public DateTime StartDate { get; set; }
-    public int Duration { get; set; }
+    public DateTime startDate { get; set; }
+    public int duration { get; set; }
             
-    public string Schedule { get; set; }
-    public string SubjectName { get; set; }
-    public string MentorName { get; set; }
-    public string Avatar { get; set; }
+    public string schedule { get; set; }
+    public string subjectName { get; set; }
+    public string mentorName { get; set; }
+    public string avatar { get; set; }
 }

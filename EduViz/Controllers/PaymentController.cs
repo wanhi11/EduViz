@@ -38,26 +38,26 @@ public class PaymentController : ControllerBase
     {
         return Ok(ApiResult<GetPremiumPackageResponse>.Succeed(new GetPremiumPackageResponse()
         {
-            PremiumPackageInfos = new List<PremiumPackageInfo>()
+            premiumPackageInfos = new List<PremiumPackageInfo>()
             {
                 new PremiumPackageInfo()
                 {
-                    Amout = 10000,
-                    MonthDuraion = 1,
-                    PackageName = "Goi 1 thang"
+                    amout = 10000,
+                    monthDuraion = 1,
+                    packageName = "Goi 1 thang"
                 },
                 new PremiumPackageInfo()
                 {
-                    Amout = 25000,
-                    MonthDuraion = 3,
-                    PackageName = "Goi 3 thang"
+                    amout = 25000,
+                    monthDuraion = 3,
+                    packageName = "Goi 3 thang"
                 },
 
                 new PremiumPackageInfo()
                 {
-                    Amout = 50000,
-                    MonthDuraion = 6,
-                    PackageName = "Goi 6 thang"
+                    amout = 50000,
+                    monthDuraion = 6,
+                    packageName = "Goi 6 thang"
                 }
             }
         }));
@@ -81,8 +81,8 @@ public class PaymentController : ControllerBase
 
         return Ok(ApiResult<PayOSPaymentData>.Succeed(new PayOSPaymentData()
         {
-            PaymentLink = result.PayOSResult.checkoutUrl,
-            Signature = result.Signature
+            paymentLink = result.payOSResult.checkoutUrl,
+            signature = result.signature
         }));
     }
 
@@ -95,7 +95,7 @@ public class PaymentController : ControllerBase
         string result = await _payOSService.ProcessPaymentWebhookAsync(webhookBody,upgradeOrder.MentorDetailsID);
         return Ok(ApiResult<PayosWebHookReponse>.Succeed(new PayosWebHookReponse()
         {
-            Message = result
+            message = result
         }));
     }
     [HttpPost("confirm-webhook")]

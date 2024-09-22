@@ -39,22 +39,22 @@ public class PayOsPaymentService
         VipUpgradeRequest request)
     {
 
-        int amount = GetAmountByMonth(request.MonthDuration);
+        int amount = GetAmountByMonth(request.monthDuration);
         List<ItemData> items = new List<ItemData>
         {
-            new ItemData("Upgrade Vip "+request.MonthDuration+" Month", 1, GetAmountByMonth(request.MonthDuration))
+            new ItemData("Upgrade Vip "+request.monthDuration+" Month", 1, GetAmountByMonth(request.monthDuration))
         };
         long orderCode = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var result = await CreatePaymentLinkAsync(orderCode, amount, "Upgrade Vip "+request.MonthDuration+" Month", items
-            , request.CancelUrl, request.ReturnUrl);
+        var result = await CreatePaymentLinkAsync(orderCode, amount, "Upgrade Vip "+request.monthDuration+" Month", items
+            , request.cancelUrl, request.returnUrl);
         
         var mentorUpgradeDetail = new UpgradeOrderDetails()
         {
             amount = amount,
             orderCode = orderCode,
             paymentStatus = PaymentStatus.Pending,
-            mentorDetailsID = request.MentorDetailID,
-            packageName = request.MonthDuration+"M"
+            mentorDetailsID = request.mentorDetailID,
+            packageName = request.monthDuration+"M"
         };
         await _upgradeRepository.AddAsync(mentorUpgradeDetail);
         if (!(await _upgradeRepository.Commit() > 0))
@@ -91,8 +91,8 @@ public class PayOsPaymentService
         var payOSResult = await payOS.createPaymentLink(paymentData);
         return new PayOSPaymentResponse()
         {
-            PayOSResult = payOSResult,
-            Signature = GenerateSignature(orderCode,amount,description,cancelUrl,returnUrl)
+            payOSResult = payOSResult,
+            signature = GenerateSignature(orderCode,amount,description,cancelUrl,returnUrl)
         };
     }
 

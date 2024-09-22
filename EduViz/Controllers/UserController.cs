@@ -33,10 +33,10 @@ public class UserController:ControllerBase
         }
         return Ok(ApiResult<CreateMentorResponse>.Succeed(new CreateMentorResponse()
         {
-            Gender = result.Gender is null? null: result.Gender.ToString(),
-            Email = result.Email,
-            Name = result.UserName,
-            Subject = req.Subject
+            gender = result.Gender is null? null: result.Gender.ToString(),
+            email = result.Email,
+            name = result.UserName,
+            subject = req.subject
         }));
     }
 
@@ -48,7 +48,7 @@ public class UserController:ControllerBase
         var result = await _userService.CreateStudent(userModel);
         return Ok(ApiResult<CreateStudentResponse>.Succeed(new CreateStudentResponse()
         {
-            Email = userModel.Email
+            email = userModel.Email
         }));
     }
 

@@ -69,7 +69,7 @@ public class UserService
 
     public async Task<UserModel?> CreateMentor(CreateMentorRequest mentor)
     {
-        var existedMentor = _userRepository.FindByCondition(u => u.email.Equals(mentor.Email)).FirstOrDefault();
+        var existedMentor = _userRepository.FindByCondition(u => u.email.Equals(mentor.email)).FirstOrDefault();
         if (existedMentor is not null)
         {
             throw new BadRequestException("This Email has been used");
@@ -77,10 +77,10 @@ public class UserService
 
         var user = new User()
         {
-            userName = mentor.Name,
-            gender = mentor.Gender,
-            email = mentor.Email,
-            password = SecurityUtil.Hash(mentor.Password),
+            userName = mentor.name,
+            gender = mentor.gender,
+            email = mentor.email,
+            password = SecurityUtil.Hash(mentor.password),
             role = Role.Mentor,
             userId = Guid.NewGuid()
         };
@@ -90,7 +90,7 @@ public class UserService
             userId = user.userId,
             vipExpirationDate = DateTime.Now
         };
-        foreach (var subjectName in mentor.Subject)
+        foreach (var subjectName in mentor.subject)
         {
             var subject = _subjecRepository.FindByCondition(s => s.subjectName.Equals(subjectName)).FirstOrDefault();
             if (subject is null)

@@ -4,16 +4,16 @@ namespace EduViz.Common.Payloads.Request;
 
 public class PayOSPaymentRequest
 {
-    public string OrderCode { get; set; }
-    public int Amount { get; set; }
-    public string Description { get; set; }
-    public List<CreatePaymentItem> Items { get; set; }
-    public string CancelUrl { get; set; }
-    public string ReturnUrl { get; set; }
+    public string orderCode { get; set; }
+    public int amount { get; set; }
+    public string description { get; set; }
+    public List<CreatePaymentItem> items { get; set; }
+    public string cancelUrl { get; set; }
+    public string returnUrl { get; set; }
 }
 public class CreatePaymentItem
 {
-    public string Name { get; set; }
-    public int Quantity { get; set; }
-    public int Price { get; set; }
+    public string name { get; set; }
+    public int quantity { get; set; }
+    public int price { get; set; }
 }

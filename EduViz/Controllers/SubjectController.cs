@@ -24,7 +24,7 @@ public class SubjectController:ControllerBase
         var result = _subjectService.GetAllSubject();
         return Ok(ApiResult<GetAllSubjectResponse>.Succeed(new GetAllSubjectResponse()
         {
-            ListSubject = result
+            listSubject = result
         }));
     }
 }

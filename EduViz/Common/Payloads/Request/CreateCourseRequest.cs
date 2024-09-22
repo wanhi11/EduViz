@@ -8,21 +8,21 @@ namespace EduViz.Common.Payloads.Request;
 public class CreateCourseRequest
 {
     public string courseName { get; set; }
-    public string SubjectName { get; set; }
-    public decimal Price { get; set; }
+    public string subjectName { get; set; }
+    public decimal price { get; set; }
     
-    public string WeekSchedule { get; set; }
+    public string weekSchedule { get; set; }
     
-    public string StartDate { get; set; }
-    public int Duration { get; set; }
-    public IFormFile? Picture { get; set; }
+    public string startDate { get; set; }
+    public int duration { get; set; }
+    public IFormFile? picture { get; set; }
 }
 
 public static class CreateCourseRequestExtensions
 {
     public static CourseModel ToCourseModel(this CreateCourseRequest courseRequest)
     {
-        var currentDate = DateTime.ParseExact(courseRequest.StartDate, "dd/MM/yyyy", null);
+        var currentDate = DateTime.ParseExact(courseRequest.startDate, "dd/MM/yyyy", null);
         if (currentDate < DateTime.Now)
         {
             throw new BadRequestException("StartDate is passed");
@@ -32,10 +32,10 @@ public static class CreateCourseRequestExtensions
         {
             CourseId = Guid.NewGuid(),
             CourseName = courseRequest.courseName,
-            Price = courseRequest.Price,
+            Price = courseRequest.price,
             StartDate = currentDate,
-            Schedule = (Schedule) Enum.Parse(typeof(Schedule), courseRequest.WeekSchedule),
-            Duration = courseRequest.Duration,
+            Schedule = (Schedule) Enum.Parse(typeof(Schedule), courseRequest.weekSchedule),
+            Duration = courseRequest.duration,
         };
         return courseModel;
     }

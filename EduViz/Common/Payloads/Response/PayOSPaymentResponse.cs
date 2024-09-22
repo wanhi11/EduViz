@@ -5,12 +5,12 @@ namespace EduViz.Common.Payloads.Response;
 
 public class PayOSPaymentResponse
 {
-    public CreatePaymentResult PayOSResult;
-    public string Signature;
+    public CreatePaymentResult payOSResult;
+    public string signature;
 }
 
 public class PayOSPaymentData
 {
-    public string PaymentLink { get; set; }
-    public string Signature { get; set; } 
+    public string paymentLink { get; set; }
+    public string signature { get; set; } 
 }
