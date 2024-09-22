@@ -18,7 +18,7 @@ namespace EduViz.Extensions
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ExceptionMiddleware>();
             services.AddControllers();

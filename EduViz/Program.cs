@@ -80,7 +80,8 @@ namespace EduViz
             app.UseCors("CORS");
 
             app.UseHttpsRedirection();
-            
+
+            app.UseMiddleware<StatusCodeMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseAuthentication();
