@@ -33,13 +33,13 @@ public static class CreateCourseRequestExtensions
         DateTime startDate;
         bool success = DateTime.TryParseExact(
             courseRequest.startDate,
-            "dd/MM/yyyy",
+            "yyyy-MM-dd",
             null,
             System.Globalization.DateTimeStyles.None,
             out startDate);
         if (!success)
         {
-            throw new BadRequestException("Wrong format date dd/MM/yyyy");
+            throw new BadRequestException("Wrong format date yyyy-MM-dd");
         }
         
         if (startDate < DateTime.Now)

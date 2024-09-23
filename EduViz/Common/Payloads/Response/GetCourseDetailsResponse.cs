@@ -9,6 +9,7 @@ public class GetCourseDetailsResponse
     public string? picture { get; set; }
             
     public DateTime startDate { get; set; }
+    public string mentorId { get; set; }
     public int duration { get; set; }
             
     public string schedule { get; set; }

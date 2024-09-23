@@ -71,6 +71,7 @@ public class CourseController:ControllerBase
                     subjectName = subject.SubjectName,
                     mentorName = user.UserName,
                     courseId = course.CourseId,
+                    mentorId = course.MentorId.ToString(),
                     beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
                     endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
                 });
@@ -117,6 +118,7 @@ public class CourseController:ControllerBase
                 subjectName = subject.SubjectName,
                 mentorName = user.UserName,
                 courseId = course.CourseId,
+                mentorId = course.MentorId.ToString(),
                 beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
                 endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
@@ -170,6 +172,7 @@ public class CourseController:ControllerBase
             mentorName = currentUser.UserName,
             picture = result.Picture,
             subjectName = subject.SubjectName,
+            mentorId = course.MentorId.ToString(),
             beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
             endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
         };
@@ -214,6 +217,7 @@ public class CourseController:ControllerBase
             mentorName = mentorAccount.UserName,
             startDate = course.StartDate,
             avatar = mentorAccount.Avatar,
+            mentorId = course.MentorId.ToString(),
             beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
             endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
         }));
@@ -242,6 +246,7 @@ public class CourseController:ControllerBase
                 subjectName = subject.SubjectName,
                 mentorName = user.UserName,
                 courseId = courseModel.CourseId,
+                mentorId = mentor.MentorDetailsId.ToString(),
                 beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
                 endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
