@@ -10,12 +10,12 @@ public class CreateCourseRequest
 {
     public string courseName { get; set; }
     public string subjectName { get; set; }
-    public decimal price { get; set; }
+    public string price { get; set; }
     
     public List<string> weekSchedule { get; set; }
     
     public string startDate { get; set; }
-    public int monthDuration { get; set; }
+    public string monthDuration { get; set; }
     public IFormFile? picture { get; set; }
     public string beginingClass { get; set; }
     public string endingClass { get; set; }
@@ -25,10 +25,28 @@ public static class CreateCourseRequestExtensions
 {
     public static CourseModel ToCourseModel(this CreateCourseRequest courseRequest)
     {
-        if (courseRequest.price <= 0)
+        int price;
+        if (!(int.TryParse(courseRequest.price, out price)))
+        {
+            throw new BadRequestException("price must be a number");
+        }
+
+        if ( price <= 10000)
         {
             throw new BadRequestException("Course price must be larger than 0");
         }
+
+        int monthDuration;
+        if (!(int.TryParse(courseRequest.monthDuration, out monthDuration)))
+        {
+            throw new BadRequestException("month Duration must be a number");
+        }
+        
+        if ( monthDuration <= 0)
+        {
+            throw new BadRequestException("Duration must be larger than 0");
+        }
+        
 
         DateTime startDate;
         bool success = DateTime.TryParseExact(
@@ -68,10 +86,10 @@ public static class CreateCourseRequestExtensions
         {
             CourseId = Guid.NewGuid(),
             CourseName = courseRequest.courseName,
-            Price = courseRequest.price,
+            Price =price,
             StartDate = startDate,
             Schedule = (Schedule) Enum.Parse(typeof(Schedule), ConvertEnumHelper.ConvertDayListToEnum(courseRequest.weekSchedule)),
-            Duration = courseRequest.monthDuration,
+            Duration = monthDuration,
             beginingClass = TimeSpan.Parse(courseRequest.beginingClass),
             endingClass = TimeSpan.Parse(courseRequest.endingClass)
         };
