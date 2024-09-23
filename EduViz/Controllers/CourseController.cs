@@ -269,8 +269,7 @@ public class CourseController:ControllerBase
             {
                 listCourseWithSubjects = courses
             }));
-        
-        
+
     }
 
 }

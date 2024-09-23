@@ -19,19 +19,19 @@ public class UpgradeOrderDetailService
         _mapper = mapper;
     }
 
-    public UpgradeOrderDetailModel FindOrderByCode(long code)
+    public UpgradeOrderDetailModel? FindOrderByCode(long code)
     {
         var result = _upgradeOrderRepository.FindByCondition(
             o => o.orderCode == code).FirstOrDefault();
         if (result is null)
         {
-            throw new NotFoundException("Upgrade Order not found");
+            return null;
         }
 
         return _mapper.Map<UpgradeOrderDetailModel>(result);
     }
 
-    public async Task<UpgradeOrderDetailModel> UpdateStatus(long code)
+    public async Task UpdateStatus(long code, PaymentStatus status)
     {
         var order = _upgradeOrderRepository.FindByCondition(
             o => o.orderCode == code).FirstOrDefault();
@@ -40,13 +40,12 @@ public class UpgradeOrderDetailService
             throw new NotFoundException("Upgrade Order not found");
         }
 
-        order.paymentStatus = PaymentStatus.Completed;
+        order.paymentStatus = status;
         _upgradeOrderRepository.Update(order);
         if (!(await _upgradeOrderRepository.Commit() >0))
         {
             throw new BadRequestException("Something went wrong when update order");
         }
-        return _mapper.Map<UpgradeOrderDetailModel>(order);
     }
 
 }   

@@ -7,6 +7,7 @@ using EduViz.Dtos;
 using EduViz.Entities;
 using EduViz.Enums;
 using EduViz.Exceptions;
+using EduViz.Helpers;
 using EduViz.Repositories;
 using Newtonsoft.Json;
 using Net.payOS;
@@ -174,7 +175,7 @@ public class PayOsPaymentService
         };
         long orderCode = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var result = await CreatePaymentLinkAsync(orderCode, amount,
-            "Purchase course" + course.courseName, items,
+            "", items,
             req.cancelUrl, req.returnUrl);
         var payment = new Payment()
         {
@@ -184,7 +185,7 @@ public class PayOsPaymentService
             courseId = course.courseId,
             mentorId = course.mentorId,
             paymentDate = DateTime.Now,
-            paymentId = Guid.NewGuid()
+            paymentId = SecurityUtil.LongToGuid(orderCode)
         };
         await _paymentRepository.AddAsync(payment);
         if (!(await _paymentRepository.Commit() > 0))
@@ -193,4 +194,5 @@ public class PayOsPaymentService
         }
         return result;
     }
+   
 }

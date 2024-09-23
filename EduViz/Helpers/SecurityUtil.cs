@@ -47,4 +47,15 @@ public class SecurityUtil
             return hex;
         }
     }
+    public static Guid LongToGuid(long value)
+    {
+        byte[] guidBytes = new byte[16];
+        byte[] longBytes = BitConverter.GetBytes(value);
+
+        // Copy long bytes into the beginning of the guidBytes array
+        Array.Copy(longBytes, 0, guidBytes, 0, longBytes.Length);
+
+        // Return a new Guid from the byte array
+        return new Guid(guidBytes);
+    }
 }
