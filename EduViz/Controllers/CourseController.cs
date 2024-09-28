@@ -52,9 +52,9 @@ public class CourseController : ControllerBase
                 result.Add(new CourseWithSubject()
                 {
                     subjectName = subject.SubjectName,
-                    listCourse = null
+                    listCourse = new List<CourseResponse>()
                 });
-                break;
+                continue;
             }
 
             List<CourseResponse> courseResponses = new List<CourseResponse>();
