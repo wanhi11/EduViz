@@ -152,7 +152,7 @@ public class CourseController : ControllerBase
         // }
         //
         // course.Picture =uploadResult.SecureUrl.ToString();
-        // course.Picture = req.picture;
+        course.Picture = req.picture;
        
         var result = await _courseService.CreateCourse(course);
         if (course is null)
