@@ -7,6 +7,7 @@ using EduViz.Enums;
 using EduViz.Exceptions;
 using EduViz.Helpers;
 using EduViz.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduViz.Services;
 
@@ -16,14 +17,19 @@ public class UserService
     private readonly IMapper _mapper;
     private readonly IRepository<Subject, Guid> _subjecRepository;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
+    private readonly IRepository<Payment, Guid> _paymentRepository;
+    private readonly IRepository<UserCourse, Guid> _userCourseRepository;
 
     public UserService(IRepository<User,Guid> userRepository,IMapper mapper,
-        IRepository<Subject,Guid> subjecRepository,IRepository<MentorDetails,Guid> mentorRepository)
+        IRepository<Subject,Guid> subjecRepository,IRepository<MentorDetails,Guid> mentorRepository,
+        IRepository<Payment, Guid> paymentRepository, IRepository<UserCourse,Guid> userCourseRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _subjecRepository = subjecRepository;
         _mentorRepository = mentorRepository;
+        _paymentRepository = paymentRepository;
+        _userCourseRepository = userCourseRepository;
     }
 
     public async Task<UserModel> GetUserByEmail(string email)
@@ -149,6 +155,35 @@ public class UserService
         }
 
         return _mapper.Map<List<UserModel>>(users);
+    }
+
+    public async Task<bool> AddStudentToClass(Guid paymentId)
+    {
+        var payment = _paymentRepository.FindByCondition(p => p.paymentId.Equals(paymentId)).FirstOrDefault();
+        if (payment is null)
+        {
+            throw new BadRequestException("there is no payment match");
+        }
+
+        var userCourse = new UserCourse()
+        {
+            userCourseId = Guid.NewGuid(),
+            userId = payment.studentId,
+            courseId = payment.courseId
+        };
+        await _userCourseRepository.AddAsync(userCourse);
+        return await _userRepository.Commit() > 0;
+
+    }
+
+    public async Task<UserModel> GetStudentInCourse(Guid courseId)
+    {
+        var student = _userRepository.GetAll()
+            .Include(u => u.studentQuizScores)
+            .Include(u => u.userCourses)
+            .ThenInclude(c => c.courseId.Equals(courseId))
+            .ToList();
+        
     }
 
 }

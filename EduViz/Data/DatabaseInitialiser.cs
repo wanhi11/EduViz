@@ -64,6 +64,22 @@ public class DatabaseInitialiser : IDataInitialiser
             password = SecurityUtil.Hash("123456"),
             role = Role.Mentor,
         };
+        var mentor2 = new User()
+        {
+            userId = Guid.NewGuid(),
+            email = "mentor2@gmail.com",
+            userName = "Mentor2",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Mentor,
+        };
+        var mentor3 = new User()
+        {
+            userId = Guid.NewGuid(),
+            email = "mentor3@gmail.com",
+            userName = "Mentor3",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Mentor,
+        };
         var admin = new User()
         {
             userId = Guid.NewGuid(),
@@ -88,12 +104,35 @@ public class DatabaseInitialiser : IDataInitialiser
             password = SecurityUtil.Hash("123456"),
             role = Role.Mentor,
         };
+        var vipMentor2 = new User()
+        {
+            userId = Guid.NewGuid(),
+            email = "vipmentor2@gmail.com",
+            userName = "VipMentor2",
+            password = SecurityUtil.Hash("123456"),
+            role = Role.Mentor,
+        };
+        
         List<User> users = new List<User>()
         {
             student,
             admin,
             mentor,
-            vipMentor
+            vipMentor,
+            mentor2,
+            mentor3,
+            vipMentor2
+        };
+        var mentorDetail2 = new MentorDetails(){
+            userId = mentor2.userId,
+            mentorDetailsId = Guid.NewGuid(),
+            vipExpirationDate = DateTime.ParseExact("12/09/2024", "dd/MM/yyyy", null),
+        };
+        
+        var mentorDetail3 = new MentorDetails(){
+            userId = mentor3.userId,
+            mentorDetailsId = Guid.NewGuid(),
+            vipExpirationDate = DateTime.ParseExact("12/09/2024", "dd/MM/yyyy", null),
         };
         var normalMentorDetails = new MentorDetails()
         {
@@ -107,10 +146,17 @@ public class DatabaseInitialiser : IDataInitialiser
             mentorDetailsId = Guid.NewGuid(),
             vipExpirationDate = DateTime.ParseExact("31/03/2025", "dd/MM/yyyy", null)
         };
+        var vipMentorDetails2 = new MentorDetails()
+        {
+            userId = vipMentor2.userId,
+            mentorDetailsId = Guid.NewGuid(),
+            vipExpirationDate = DateTime.ParseExact("31/03/2025", "dd/MM/yyyy", null)
+        };
         List<MentorDetails> mentorDetailList = new List<MentorDetails>()
         {
             normalMentorDetails,
-            vipMentorDetails
+            vipMentorDetails,
+            vipMentorDetails2,mentorDetail3,mentorDetail2
         };
         var math = new Subject()
         {
@@ -127,11 +173,23 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = Guid.NewGuid(),
             subjectName = "Hoa"
         };
+        var publicSpeaking = new Subject()
+        {
+            subjectId = Guid.NewGuid(),
+            subjectName = "Public Speaking"
+        }; 
+        var hoihoa = new Subject()
+        {
+            subjectId = Guid.NewGuid(),
+            subjectName = "Ve"
+        };
         List<Subject> monhoc = new List<Subject>()
         {
             math,
             english,
-            hoa
+            hoa,
+            publicSpeaking,
+            hoihoa
         };
         var course1 = new Course()
         {
@@ -172,11 +230,98 @@ public class DatabaseInitialiser : IDataInitialiser
             beginingClass = new TimeSpan(18,45,00),
             endingClass = new TimeSpan(20,45,00)
         };
+        var course4 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Public Speaking for youth",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = vipMentorDetails2.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        var course5 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Public Speaking for youth 2",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = mentorDetail2.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        var course6 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Public Speaking for youth 3",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = mentorDetail3.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        var course7 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Hoc ve cho tre nho",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = vipMentorDetails.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        var course8 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Hoc ve cho hoc sinh cap 1",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = vipMentorDetails2.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        
+        var course9 = new Course()
+        {
+            subjectId = publicSpeaking.subjectId,
+            duration = 1,
+            schedule = Schedule.SatSun,
+            courseName = "Hoc ve cho hoc sinh cap 2",
+            startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
+            price = 1000,
+            courseId = Guid.NewGuid(),
+            mentorId = vipMentorDetails.mentorDetailsId,
+            beginingClass = new TimeSpan(15,30,00),
+            endingClass = new TimeSpan(17,30,00)
+        };
+        
         List<Course> courseList = new List<Course>()
         {
             course1,
             course2,
-            course3
+            course3,
+            course4,
+            course5,
+            course6,
+            course7,
+            course8,
+            course9,
+            
         };
 
         await _context.Users.AddRangeAsync(users);

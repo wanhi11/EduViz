@@ -9,11 +9,13 @@ using EduViz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EduViz.Controllers;
+
 [ApiController]
 [Route("api/course")]
-public class CourseController:ControllerBase
+public class CourseController : ControllerBase
 {
     private readonly CourseService _courseService;
     private readonly SubjectService _subjectService;
@@ -22,7 +24,7 @@ public class CourseController:ControllerBase
     private readonly CloudinaryService _cloudinaryService;
 
     public CourseController(CourseService courseService, SubjectService subjectService,
-        UserService userService,MentorDetailService mentorService,CloudinaryService cloudinaryService)
+        UserService userService, MentorDetailService mentorService, CloudinaryService cloudinaryService)
     {
         _courseService = courseService;
         _subjectService = subjectService;
@@ -40,7 +42,7 @@ public class CourseController:ControllerBase
         }
 
         List<CourseWithSubject> result = new List<CourseWithSubject>();
-        
+
         var listSubject = _subjectService.GetAllSubject();
         foreach (var subject in listSubject)
         {
@@ -76,22 +78,20 @@ public class CourseController:ControllerBase
                     endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
                 });
             }
+
             result.Add(new CourseWithSubject()
             {
                 subjectName = subject.SubjectName,
                 listCourse = courseResponses
             });
-
-            
         }
 
         return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
         {
             listCourseWithSubjects = result
         }));
-        
     }
-    
+
     [HttpGet]
     [Route("/{subjectName}")]
     public async Task<IActionResult> GetAllCourseWithName([FromRoute] string subjectName)
@@ -101,6 +101,7 @@ public class CourseController:ControllerBase
         {
             throw new NotFoundException("there is no course");
         }
+
         var listResult = new List<CourseResponse>();
         foreach (var course in result)
         {
@@ -143,18 +144,7 @@ public class CourseController:ControllerBase
         var subject = _subjectService.GetSubjectByName(req.subjectName);
         course.SubjectId = subject.SubjectId;
         course.MentorId = mentor.MentorDetailsId;
-        
-        if (req.picture != null)
-        {
-            var uploadResult = await _cloudinaryService.UploadImageAsync(req.picture);
-
-            if (uploadResult.Error != null)
-            {
-                throw new BadRequestException("Failed to upload image.");
-            }
-
-            course.Picture = uploadResult.SecureUrl.ToString(); // Lưu đường dẫn của hình ảnh
-        }
+        course.Picture = req.picture.IsNullOrEmpty() ? null : req.picture;
         var result = await _courseService.CreateCourse(course);
         if (course is null)
         {
@@ -199,14 +189,14 @@ public class CourseController:ControllerBase
 
     [HttpGet]
     [Route("detail/{courseId:guid}")]
-    public IActionResult GetCourseDetail([FromRoute] Guid courseId )
+    public IActionResult GetCourseDetail([FromRoute] Guid courseId)
     {
         var course = _courseService.GetCourseById(courseId);
         var subject = _subjectService.GetSubjectById(course.SubjectId);
         var mentor = _mentorService.GetById(course.MentorId);
         var mentorAccount = _userService.GetUserById(mentor.UserId);
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
-   
+
         {
             schedule = course.Schedule.ToString(),
             picture = course.Picture,
@@ -251,6 +241,7 @@ public class CourseController:ControllerBase
                 endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
             });
         }
+
         return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
         {
             listRelativeCourse = listResult
@@ -260,21 +251,19 @@ public class CourseController:ControllerBase
     [HttpGet("search/{searchString}")]
     public async Task<IActionResult> GetAllCoursesWithSearchString([FromRoute] string searchString)
     {
-        
-            var courses = await _courseService.GetCoursesGroupedBySubjectWithSearchString(searchString);
+        var courses = await _courseService.GetCoursesGroupedBySubjectWithSearchString(searchString);
 
-            if (courses is null || !courses.Any())
-            {
-                throw new NotFoundException("No courses or mentors found matching the provided search string.");
-            };
-            
-            
+        if (courses is null || !courses.Any())
+        {
+            throw new NotFoundException("No courses or mentors found matching the provided search string.");
+        }
 
-            return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
-            {
-                listCourseWithSubjects = courses
-            }));
+        ;
 
+
+        return Ok(ApiResult<GetAllCourseResponse>.Succeed(new GetAllCourseResponse()
+        {
+            listCourseWithSubjects = courses
+        }));
     }
-
 }
