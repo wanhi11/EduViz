@@ -16,7 +16,7 @@ public class CreateCourseRequest
     
     public string startDate { get; set; }
     public string monthDuration { get; set; }
-    public IFormFile picture { get; set; }
+    public IFormFile? picture { get; set; }
     public string beginingClass { get; set; }
     public string endingClass { get; set; }
 }
@@ -25,6 +25,10 @@ public static class CreateCourseRequestExtensions
 {
     public static CourseModel ToCourseModel(this CreateCourseRequest courseRequest)
     {
+        if (courseRequest.picture is null)
+        {
+            throw new BadRequestException("Picture can not be null");
+        }
 
         int price;
         if (!(int.TryParse(courseRequest.price, out price)))
