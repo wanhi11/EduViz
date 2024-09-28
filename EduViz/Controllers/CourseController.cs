@@ -134,7 +134,7 @@ public class CourseController : ControllerBase
     [HttpPost]
     [Route("create-course")]
     [Authorize(Roles = "Mentor")]
-    public async Task<IActionResult> CreateNewCourse([FromForm] CreateCourseRequest req)
+    public async Task<IActionResult> CreateNewCourse([FromBody] CreateCourseRequest req)
     {
         Request.Headers.TryGetValue("Authorization", out var token);
         token = token.ToString().Split()[1];
