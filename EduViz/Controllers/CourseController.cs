@@ -144,14 +144,15 @@ public class CourseController : ControllerBase
         var subject = _subjectService.GetSubjectByName(req.subjectName);
         course.SubjectId = subject.SubjectId;
         course.MentorId = mentor.MentorDetailsId;
-        var uploadResult = await _cloudinaryService.UploadImageAsync(req.picture);
-
-        if (uploadResult.Error != null)
-        {
-            throw new BadRequestException("Failed to upload image.");
-        }
-
-        course.Picture =uploadResult.SecureUrl.ToString();
+        // var uploadResult = await _cloudinaryService.UploadImageAsync(req.picture);
+        //
+        // if (uploadResult.Error != null)
+        // {
+        //     throw new BadRequestException("Failed to upload image.");
+        // }
+        //
+        // course.Picture =uploadResult.SecureUrl.ToString();
+        // course.Picture = req.picture;
        
         var result = await _courseService.CreateCourse(course);
         if (course is null)
