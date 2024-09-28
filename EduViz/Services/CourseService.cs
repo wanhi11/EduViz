@@ -181,7 +181,7 @@ public class CourseService
         startDate = course.startDate,
         duration = course.duration,
         mentorId = course.mentorId.ToString(),
-        schedule = ConvertEnumHelper.ConvertEnumToDayList(course.schedule.ToString()), // Chuyển đổi schedule thành List<string>
+        weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.schedule.ToString()), // Chuyển đổi schedule thành List<string>
         beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"), // Định dạng thời gian bắt đầu
         endingClass = course.endingClass.ToString(@"hh\:mm\:ss") // Định dạng thời gian kết thúc
     }).ToList();

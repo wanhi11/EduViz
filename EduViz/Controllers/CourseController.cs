@@ -64,7 +64,7 @@ public class CourseController : ControllerBase
                 var user = _userService.GetUserById(mentor.UserId);
                 courseResponses.Add(new CourseResponse()
                 {
-                    schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
+                    weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                     courseName = course.CourseName,
                     startDate = course.StartDate,
                     duration = course.Duration,
@@ -110,7 +110,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                schedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
+                weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                 courseName = course.CourseName,
                 startDate = course.StartDate,
                 duration = course.Duration,
@@ -154,7 +154,7 @@ public class CourseController : ControllerBase
         var response = new CourseResponse()
         {
             courseId = result!.CourseId,
-            schedule = ConvertEnumHelper.ConvertEnumToDayList(result.Schedule.ToString()),
+            weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(result.Schedule.ToString()),
             courseName = result.CourseName,
             startDate = result.StartDate,
             duration = result.Duration,
@@ -180,9 +180,9 @@ public class CourseController : ControllerBase
         {
             weekSchedule = new List<List<string>>()
             {
+                ConvertEnumHelper.ConvertEnumToDayList(Schedule.MonWedFri.ToString()),
                 ConvertEnumHelper.ConvertEnumToDayList(Schedule.TueThuSat.ToString()),
                 ConvertEnumHelper.ConvertEnumToDayList(Schedule.SatSun.ToString()),
-                ConvertEnumHelper.ConvertEnumToDayList(Schedule.MonWedFri.ToString()),
             }
         }));
     }
@@ -198,7 +198,7 @@ public class CourseController : ControllerBase
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
 
         {
-            schedule = course.Schedule.ToString(),
+            weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
             picture = course.Picture,
             subjectName = subject.SubjectName,
             duration = course.Duration,
@@ -227,7 +227,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
-                schedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
+                weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,
                 startDate = courseModel.StartDate,
                 duration = courseModel.Duration,
@@ -266,4 +266,5 @@ public class CourseController : ControllerBase
             listCourseWithSubjects = courses
         }));
     }
+    
 }

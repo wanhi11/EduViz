@@ -12,7 +12,7 @@ public class GetCourseDetailsResponse
     public string mentorId { get; set; }
     public int duration { get; set; }
             
-    public string schedule { get; set; }
+    public List<string> weekSchedule { get; set; }
     public string subjectName { get; set; }
     public string mentorName { get; set; }
     public string avatar { get; set; }
