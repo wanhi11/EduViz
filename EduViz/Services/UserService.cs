@@ -176,14 +176,14 @@ public class UserService
 
     }
 
-    public async Task<UserModel> GetStudentInCourse(Guid courseId)
-    {
-        var student = _userRepository.GetAll()
-            .Include(u => u.studentQuizScores)
-            .Include(u => u.userCourses)
-            .ThenInclude(c => c.courseId.Equals(courseId))
-            .ToList();
-        
-    }
+    // public async Task<UserModel> GetStudentInCourse(Guid courseId)
+    // {
+    //     var student = _userRepository.GetAll()
+    //         .Include(u => u.studentQuizScores)
+    //         .Include(u => u.userCourses)
+    //         .ThenInclude(c => c.courseId.Equals(courseId))
+    //         .ToList();
+    //     
+    // }
 
 }
