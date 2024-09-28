@@ -266,5 +266,38 @@ public class CourseController : ControllerBase
             listCourseWithSubjects = courses
         }));
     }
-    
+
+    [HttpGet("{mentorId:guid}/get-by-mentor")]
+    public IActionResult GetAllCourseByMentor([FromRoute] Guid mentorId)
+    {
+        var result = _courseService.GetCourseByMentorId(mentorId,null);
+        var listResult = new List<CourseResponse>();
+        foreach (var courseModel in result)
+        {
+            var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
+            var mentor = _mentorService.GetById(courseModel.MentorId);
+            var user = _userService.GetUserById(mentor.UserId);
+            listResult.Add(new CourseResponse()
+            {
+                weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
+                courseName = courseModel.CourseName,
+                startDate = courseModel.StartDate,
+                duration = courseModel.Duration,
+                price = courseModel.Price,
+                picture = courseModel.Picture,
+                subjectName = subject.SubjectName,
+                mentorName = user.UserName,
+                courseId = courseModel.CourseId,
+                mentorId = mentor.MentorDetailsId.ToString(),
+                beginingClass = courseModel.beginingClass.ToString(@"hh\:mm\:ss"),
+                endingClass = courseModel.endingClass.ToString(@"hh\:mm\:ss")
+            });
+        }
+
+        return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
+        {
+            listRelativeCourse = listResult
+        }));
+    }
+
 }
