@@ -14,5 +14,6 @@ public class ApplicationMapper : Profile
         CreateMap<Course, CourseModel>().ReverseMap();
         CreateMap<UpgradeOrderDetails, UpgradeOrderDetailModel>().ReverseMap();
         CreateMap<Subject, SubjectModel>().ReverseMap();
+        CreateMap<Class, ClassModel>().ReverseMap();
     }
 }

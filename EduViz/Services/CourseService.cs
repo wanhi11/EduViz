@@ -19,10 +19,12 @@ public class CourseService
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
     private readonly CloudinaryService _cloudinaryService;
     private readonly IRepository<Class, Guid> _classRepository;
+    private readonly IRepository<StudentClass, Guid> _studentClassRepository;
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
         IMapper mapper, IRepository<Course, Guid> courseRepository, IRepository<MentorDetails, Guid> mentorRepository,
-        CloudinaryService cloudinaryService,IRepository<Class,Guid> classRepository)
+        CloudinaryService cloudinaryService,IRepository<Class,Guid> classRepository,
+        IRepository<StudentClass,Guid>studentClassRepository)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
@@ -31,6 +33,7 @@ public class CourseService
         _mentorRepository = mentorRepository;
         _cloudinaryService = cloudinaryService;
         _classRepository = classRepository;
+        _studentClassRepository = studentClassRepository;
     }
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
@@ -156,7 +159,7 @@ public class CourseService
 {
     searchString = searchString.ToLower();
     var currentDate = DateTime.UtcNow;
-
+    
     // Lấy danh sách các khóa học chứa searchString trong tên khóa học từ database
     var coursesList = await _courseRepositoty
         .FindByCondition(course => course.courseName.ToLower().Contains(searchString))
@@ -184,9 +187,21 @@ public class CourseService
         .Select(group => group.First())
         .ToList();
 
+    var studentCounts = await _studentClassRepository
+        .FindByCondition(sc => combinedCourses.Select(c => c.courseId).Contains(sc.classId))
+        .GroupBy(sc => sc.classId)
+        .Select(group => new 
+        {
+            CourseId = group.Key,
+            StudentCount = group.Count()
+        })
+        .ToListAsync();
+        
+        
     // Chuyển đổi kết quả sang CourseResponse
     var courseResponses = combinedCourses.Select(course => new CourseResponse
     {
+        numOfStudents = studentCounts.FirstOrDefault(sc => sc.CourseId == course.courseId)?.StudentCount ?? 0,
         courseId = course.courseId,
         courseName = course.courseName,
         mentorName = course.mentor.user.userName,

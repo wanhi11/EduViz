@@ -35,4 +35,5 @@ public class CourseWithSubject
         public List<string> weekSchedule { get; set; }
         public string beginingClass { get; set; }
         public string endingClass { get; set; }
+        public int numOfStudents { get; set; }
     }

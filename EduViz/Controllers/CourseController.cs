@@ -2,9 +2,11 @@ using Azure.Core;
 using EduViz.Common.Payloads;
 using EduViz.Common.Payloads.Request;
 using EduViz.Common.Payloads.Response;
+using EduViz.Entities;
 using EduViz.Enums;
 using EduViz.Exceptions;
 using EduViz.Helpers;
+using EduViz.Repositories;
 using EduViz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -22,15 +24,18 @@ public class CourseController : ControllerBase
     private readonly UserService _userService;
     private readonly MentorDetailService _mentorService;
     private readonly CloudinaryService _cloudinaryService;
+    private readonly ClassService _classService;
 
     public CourseController(CourseService courseService, SubjectService subjectService,
-        UserService userService, MentorDetailService mentorService, CloudinaryService cloudinaryService)
+        UserService userService, MentorDetailService mentorService, CloudinaryService cloudinaryService,
+        ClassService classService)
     {
         _courseService = courseService;
         _subjectService = subjectService;
         _userService = userService;
         _mentorService = mentorService;
         _cloudinaryService = cloudinaryService;
+        _classService = classService;
     }
 
     [HttpGet]
@@ -60,6 +65,7 @@ public class CourseController : ControllerBase
             List<CourseResponse> courseResponses = new List<CourseResponse>();
             foreach (var course in courses)
             {
+                int numOfStudent = _classService.GetNumbOfStuByClassId(course.CourseId);
                 var mentor = _mentorService.GetById(course.MentorId);
                 var user = _userService.GetUserById(mentor.UserId);
                 courseResponses.Add(new CourseResponse()
@@ -75,7 +81,8 @@ public class CourseController : ControllerBase
                     courseId = course.CourseId,
                     mentorId = course.MentorId.ToString(),
                     beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
-                    endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
+                    endingClass = course.endingClass.ToString(@"hh\:mm\:ss"),
+                    numOfStudents = numOfStudent
                 });
             }
 
@@ -105,6 +112,7 @@ public class CourseController : ControllerBase
         var listResult = new List<CourseResponse>();
         foreach (var course in result)
         {
+            int numOfStudent = _classService.GetNumbOfStuByClassId(course.CourseId);
             var subject = _subjectService.GetSubjectById(course.SubjectId);
             var mentor = _mentorService.GetById(course.MentorId);
             var user = _userService.GetUserById(mentor.UserId);
@@ -121,7 +129,8 @@ public class CourseController : ControllerBase
                 courseId = course.CourseId,
                 mentorId = course.MentorId.ToString(),
                 beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"),
-                endingClass = course.endingClass.ToString(@"hh\:mm\:ss")
+                endingClass = course.endingClass.ToString(@"hh\:mm\:ss"),
+                numOfStudents = numOfStudent
             });
         }
 
@@ -204,9 +213,11 @@ public class CourseController : ControllerBase
         var subject = _subjectService.GetSubjectById(course.SubjectId);
         var mentor = _mentorService.GetById(course.MentorId);
         var mentorAccount = _userService.GetUserById(mentor.UserId);
+        int numOfStudent = _classService.GetNumbOfStuByClassId(course.CourseId);
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
 
         {
+            numOfStudents = numOfStudent,
             weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
             picture = course.Picture,
             subjectName = subject.SubjectName,
@@ -231,11 +242,13 @@ public class CourseController : ControllerBase
         var listResult = new List<CourseResponse>();
         foreach (var courseModel in result)
         {
+            int numOfStudent = _classService.GetNumbOfStuByClassId(course.CourseId);
             var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
             var mentor = _mentorService.GetById(courseModel.MentorId);
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,
                 startDate = courseModel.StartDate,
@@ -283,11 +296,13 @@ public class CourseController : ControllerBase
         var listResult = new List<CourseResponse>();
         foreach (var courseModel in result)
         {
+            int numOfStudent = _classService.GetNumbOfStuByClassId(courseModel.CourseId);
             var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
             var mentor = _mentorService.GetById(courseModel.MentorId);
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,
                 startDate = courseModel.StartDate,
