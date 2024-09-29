@@ -70,6 +70,7 @@ public class CourseController : ControllerBase
                 var user = _userService.GetUserById(mentor.UserId);
                 courseResponses.Add(new CourseResponse()
                 {
+                    userId = user.UserId.ToString(),
                     weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                     courseName = course.CourseName,
                     startDate = course.StartDate,
@@ -118,6 +119,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                userId = user.UserId.ToString(),
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                 courseName = course.CourseName,
                 startDate = course.StartDate,
@@ -217,6 +219,7 @@ public class CourseController : ControllerBase
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
 
         {
+            userId = mentorAccount.UserId.ToString(),
             numOfStudents = numOfStudent,
             weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
             picture = course.Picture,
@@ -248,6 +251,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                userId = user.UserId.ToString(),
                 numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,
@@ -302,6 +306,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                userId = user.UserId.ToString(),
                 numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
                 courseName = courseModel.CourseName,

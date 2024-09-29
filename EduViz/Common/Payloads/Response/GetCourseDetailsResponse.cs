@@ -7,7 +7,7 @@ public class GetCourseDetailsResponse
     public string courseName { get; set; }
     public decimal price { get; set; }
     public string? picture { get; set; }
-            
+    public string userId { get; set; }
     public DateTime startDate { get; set; }
     public string mentorId { get; set; }
     public int duration { get; set; }
