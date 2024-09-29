@@ -13,6 +13,7 @@
 
             [Required]
             [MaxLength(200)]
+            [Column(TypeName = "NVARCHAR")]
             public string courseName { get; set; }
 
             [ForeignKey("Mentor")]

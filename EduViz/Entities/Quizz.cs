@@ -11,6 +11,7 @@ namespace EduViz.Entities
 
         [Required]
         [MaxLength(200)]
+        [Column(TypeName = "NVARCHAR")]
         public string quizTitle { get; set; }
 
         [ForeignKey("Class")]

@@ -9,6 +9,7 @@ namespace EduViz.Entities
         public Guid commentId { get; set; }
 
         [Required]
+        [Column(TypeName = "NVARCHAR")]
         public string content { get; set; }
 
         [ForeignKey("Post")]

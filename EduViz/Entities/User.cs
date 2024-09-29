@@ -11,6 +11,7 @@ namespace EduViz.Entities
         public Guid userId { get; set; }
         
         [MaxLength(100)]
+        [Column(TypeName = "NVARCHAR")]
         public string? userName { get; set; }
 
         [Required]

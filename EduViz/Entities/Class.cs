@@ -10,6 +10,7 @@ namespace EduViz.Entities
 
         [Required]
         [MaxLength(150)]
+        [Column(TypeName = "NVARCHAR")]
         public string className { get; set; }
 
         [ForeignKey("Course")]

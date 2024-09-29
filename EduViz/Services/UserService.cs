@@ -19,10 +19,13 @@ public class UserService
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
     private readonly IRepository<Payment, Guid> _paymentRepository;
     private readonly IRepository<UserCourse, Guid> _userCourseRepository;
+    private readonly IRepository<Class, Guid> _classRepository;
+    private readonly IRepository<StudentClass, Guid> _studentClassRepository;
 
     public UserService(IRepository<User,Guid> userRepository,IMapper mapper,
         IRepository<Subject,Guid> subjecRepository,IRepository<MentorDetails,Guid> mentorRepository,
-        IRepository<Payment, Guid> paymentRepository, IRepository<UserCourse,Guid> userCourseRepository)
+        IRepository<Payment, Guid> paymentRepository, IRepository<UserCourse,Guid> userCourseRepository,
+        IRepository<Class,Guid> classRepository,IRepository<StudentClass,Guid> studentClassRepository)
     {
         _userRepository = userRepository;
         _mapper = mapper;
@@ -30,6 +33,8 @@ public class UserService
         _mentorRepository = mentorRepository;
         _paymentRepository = paymentRepository;
         _userCourseRepository = userCourseRepository;
+        _classRepository = classRepository;
+        _studentClassRepository = studentClassRepository;
     }
 
     public async Task<UserModel> GetUserByEmail(string email)
@@ -172,7 +177,24 @@ public class UserService
             courseId = payment.courseId
         };
         await _userCourseRepository.AddAsync(userCourse);
-        return await _userRepository.Commit() > 0;
+        if (!(await _userRepository.Commit() > 0))
+        {
+            throw new BadRequestException("Can not add student to course");
+        }
+
+        var studentClass = new StudentClass()
+        {
+            userId = payment.studentId,
+            studentClassId = Guid.NewGuid(),
+            classId = payment.courseId
+        };
+        await _studentClassRepository.AddAsync(studentClass);
+        if (!(await _studentClassRepository.Commit() > 0))
+        {
+            throw new BadRequestException("Can not add student to class");
+        }
+        
+        return true;
 
     }
 

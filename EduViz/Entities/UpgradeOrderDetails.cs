@@ -12,6 +12,7 @@ public class UpgradeOrderDetails
     public long orderCode { get; set; }
     public int amount { get; set; }
     public string packageName { get; set; }
+    public DateTime UpgradeDate { get; set; }
 
     [ForeignKey("MentorDetails")] 
     public Guid mentorDetailsID { get; set; }

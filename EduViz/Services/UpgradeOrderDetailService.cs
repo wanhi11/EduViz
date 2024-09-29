@@ -43,6 +43,7 @@ public class UpgradeOrderDetailService
             throw new NotFoundException("Upgrade Order not found");
         }
 
+        order.UpgradeDate = DateTime.Now;
         order.paymentStatus = status;
         _upgradeOrderRepository.Update(order);
         if (!(await _upgradeOrderRepository.Commit() >0))

@@ -51,7 +51,7 @@ public class DatabaseInitialiser : IDataInitialiser
     public async Task TrySeedAsync()
     {
         if (_context.Users.Any() && _context.MentorDetails.Any() && _context.Subjects.Any()
-            && _context.Courses.Any())
+            && _context.Courses.Any() && _context.Classes.Any())
         {
             return;
         }
@@ -161,17 +161,17 @@ public class DatabaseInitialiser : IDataInitialiser
         var math = new Subject()
         {
             subjectId = Guid.NewGuid(),
-            subjectName = "Toan"
+            subjectName = "Toán"
         };
         var english = new Subject()
         {
             subjectId = Guid.NewGuid(),
-            subjectName = "Tieng Anh"
+            subjectName = "Tiếng Anh"
         };
         var hoa = new Subject()
         {
             subjectId = Guid.NewGuid(),
-            subjectName = "Hoa"
+            subjectName = "Hóa"
         };
         var publicSpeaking = new Subject()
         {
@@ -181,7 +181,7 @@ public class DatabaseInitialiser : IDataInitialiser
         var hoihoa = new Subject()
         {
             subjectId = Guid.NewGuid(),
-            subjectName = "Ve"
+            subjectName = "Vẽ"
         };
         List<Subject> monhoc = new List<Subject>()
         {
@@ -235,7 +235,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Public Speaking for youth",
+            courseName = "Public Speaking cho trẻ",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -248,7 +248,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Public Speaking for youth 2",
+            courseName = "Public Speaking cho trẻ 2",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -261,7 +261,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Public Speaking for youth 3",
+            courseName = "Public Speaking cho trẻ 3",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -274,7 +274,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Hoc ve cho tre nho",
+            courseName = "Học vẽ cho trẻ nhỏ",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -287,7 +287,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Hoc ve cho hoc sinh cap 1",
+            courseName = "Học vẽ cho học sinh cấp 1",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -301,7 +301,7 @@ public class DatabaseInitialiser : IDataInitialiser
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
-            courseName = "Hoc ve cho hoc sinh cap 2",
+            courseName = "Học vẽ cho học sinh cấp 2",
             startDate = DateTime.ParseExact("12/10/2024", "dd/MM/yyyy", null),
             price = 1000,
             courseId = Guid.NewGuid(),
@@ -323,11 +323,87 @@ public class DatabaseInitialiser : IDataInitialiser
             course9,
             
         };
+        var class1 = new Class()
+        {
+            mentorId = course1.mentorId,
+            classId = course1.courseId,
+            courseId = course1.courseId,
+            className = course1.courseName
+        };
+        var class2 = new Class()
+        {
+            mentorId = course2.mentorId,
+            classId = course2.courseId,
+            courseId = course2.courseId,
+            className = course2.courseName
+        };
+        var class3 = new Class()
+        {
+            mentorId = course3.mentorId,
+            classId = course3.courseId,
+            courseId = course3.courseId,
+            className = course3.courseName
+        };
+        var class4 = new Class()
+        {
+            mentorId = course4.mentorId,
+            classId = course4.courseId,
+            courseId = course4.courseId,
+            className = course4.courseName
+        };
+        var class5 = new Class()
+        {
+            mentorId = course5.mentorId,
+            classId = course5.courseId,
+            courseId = course5.courseId,
+            className = course5.courseName
+        };
+        var class6= new Class()
+        {
+            mentorId = course6.mentorId,
+            classId = course6.courseId,
+            courseId = course6.courseId,
+            className = course6.courseName
+        };
+        var class7 = new Class()
+        {
+            mentorId = course7.mentorId,
+            classId = course7.courseId,
+            courseId = course7.courseId,
+            className = course7.courseName
+        };
+        var class8 = new Class()
+        {
+            mentorId = course8.mentorId,
+            classId = course8.courseId,
+            courseId = course8.courseId,
+            className = course8.courseName
+        };
+        var class9 = new Class()
+        {
+            mentorId = course9.mentorId,
+            classId = course9.courseId,
+            courseId = course9.courseId,
+            className = course9.courseName
+        };
 
+        List<Class> classes = new List<Class>()
+        {
+            class1,
+            class2,
+            class3,
+            class4,
+            class5,
+            class6,
+            class7,
+            class8,
+            class9,
+        }; 
         await _context.Users.AddRangeAsync(users);
         await _context.MentorDetails.AddRangeAsync(mentorDetailList);
         await _context.Subjects.AddRangeAsync(monhoc);
         await _context.Courses.AddRangeAsync(courseList);
+        await _context.Classes.AddRangeAsync(classes);
         await _context.SaveChangesAsync();
     }
     

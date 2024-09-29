@@ -18,10 +18,11 @@ public class CourseService
     private readonly IRepository<Course, Guid> _courseRepositoty;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
     private readonly CloudinaryService _cloudinaryService;
+    private readonly IRepository<Class, Guid> _classRepository;
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
         IMapper mapper, IRepository<Course, Guid> courseRepository, IRepository<MentorDetails, Guid> mentorRepository,
-        CloudinaryService cloudinaryService)
+        CloudinaryService cloudinaryService,IRepository<Class,Guid> classRepository)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
@@ -29,6 +30,7 @@ public class CourseService
         _courseRepositoty = courseRepository;
         _mentorRepository = mentorRepository;
         _cloudinaryService = cloudinaryService;
+        _classRepository = classRepository;
     }
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
@@ -54,6 +56,19 @@ public class CourseService
 
         if (await _courseRepositoty.Commit() > 0)
         {
+            var newClass = new Class()
+            {
+                courseId = course.courseId,
+                classId = course.courseId,
+                className = course.courseName,
+                mentorId = course.mentorId
+            };
+            await _classRepository.AddAsync(newClass);
+            if (!(await _classRepository.Commit() > 0))
+            {
+                throw new BadRequestException("Can not create class");
+            }
+
             return newCourse;
         }
 

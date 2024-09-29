@@ -7,6 +7,7 @@ namespace EduViz.Entities
     public class Subject
     {
         [Key]
+        [Column(TypeName = "NVARCHAR")]
         public Guid subjectId { get; set; }
 
         [Required]

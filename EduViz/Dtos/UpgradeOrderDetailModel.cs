@@ -9,6 +9,7 @@ public class UpgradeOrderDetailModel
     public long OrderCode { get; set; }
     public int Amount { get; set; }
     public string PackageName { get; set; }
+    public DateTime UpgradeDate { get; set; }
     
     public Guid MentorDetailsID { get; set; }
     

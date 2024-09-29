@@ -10,6 +10,7 @@ namespace EduViz.Entities
         public Guid postId { get; set; }
 
         [Required]
+        [Column(TypeName = "NVARCHAR")]
         public string content { get; set; }
 
         [ForeignKey("Class")]
