@@ -176,6 +176,17 @@ public class UserService
 
     }
 
+    public List<UserModel> GetAllUser()
+    {
+        var userList = _userRepository.FindByCondition(u => !u.role.ToString().Equals("Admin")).ToList();
+        if (!userList.Any())
+        {
+            throw new BadRequestException("There is no account");
+        }
+
+        return _mapper.Map<List<UserModel>>(userList);
+    }
+
     // public async Task<UserModel> GetStudentInCourse(Guid courseId)
     // {
     //     var student = _userRepository.GetAll()

@@ -87,4 +87,16 @@ public class UserController:ControllerBase
             name = user.UserName,
         }));
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult GetAllAccount()
+    {
+        var listResult = _userService.GetAllUser();
+        return Ok(ApiResult<GetAllAccountResponse>.Succeed(new GetAllAccountResponse()
+        {
+            userList = listResult
+        }));
+    }
+
 }
