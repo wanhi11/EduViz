@@ -178,7 +178,7 @@ public class UserService
 
     public List<UserModel> GetAllUser()
     {
-        var userList = _userRepository.FindByCondition(u => !u.role.ToString().Equals("Admin")).ToList();
+        var userList = _userRepository.FindByCondition(u => u.role!=0).ToList();
         if (!userList.Any())
         {
             throw new BadRequestException("There is no account");
