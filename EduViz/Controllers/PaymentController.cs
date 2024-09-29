@@ -169,6 +169,11 @@ public class PaymentController : ControllerBase
             }
 
             await _paymentService.UpdateStatus(paymentCode, paymentStatus);
+            if (!(await _userService.AddStudentToClass(paymentCode)))
+            {
+                throw new BadRequestException("Can not add Student to class");
+            }
+
             _logger.LogInformation("Payment status updated successfully for Payment:", code);
 
             return Ok(ApiResult<WebhookResponse>.Succeed(new WebhookResponse()
