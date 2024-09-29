@@ -18,6 +18,8 @@ public class CreateCourseRequest
     public string monthDuration { get; set; }
     // public IFormFile? picture { get; set; }
     public string picture { get; set; }
+    [Required(ErrorMessage = "Course must have meetUrl")]
+    public string meetUrl { get; set; }
     
     public string beginingClass { get; set; }
     public string endingClass { get; set; }
@@ -91,6 +93,7 @@ public static class CreateCourseRequestExtensions
 
         var courseModel = new CourseModel()
         {
+            meetUrl = courseRequest.meetUrl,
             CourseId = Guid.NewGuid(),
             CourseName = courseRequest.courseName,
             Price =price,

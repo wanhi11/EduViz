@@ -24,6 +24,7 @@
 
             [Required]
             public decimal price { get; set; }
+            public string meetUrl { get; set; }
             
             public string? picture { get; set; }
             

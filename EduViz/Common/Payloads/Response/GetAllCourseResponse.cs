@@ -32,6 +32,7 @@ public class CourseWithSubject
                 
         public DateTime startDate { get; set; }
         public int duration { get; set; }
+        public string meetUrl { get; set; }
                 
         public List<string> weekSchedule { get; set; }
         public string beginingClass { get; set; }

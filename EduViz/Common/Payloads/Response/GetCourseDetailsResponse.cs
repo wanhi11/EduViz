@@ -12,6 +12,7 @@ public class GetCourseDetailsResponse
     public string mentorId { get; set; }
     public int duration { get; set; }
     public int numOfStudents { get; set; }
+    public string meetUrl { get; set; }
             
     public List<string> weekSchedule { get; set; }
     public string subjectName { get; set; }

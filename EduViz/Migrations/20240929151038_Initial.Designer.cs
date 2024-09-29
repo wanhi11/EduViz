@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240929063710_Initial")]
+    [Migration("20240929151038_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -100,6 +100,10 @@ namespace EduViz.Migrations
 
                     b.Property<TimeSpan>("endingClass")
                         .HasColumnType("time");
+
+                    b.Property<string>("meetUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");

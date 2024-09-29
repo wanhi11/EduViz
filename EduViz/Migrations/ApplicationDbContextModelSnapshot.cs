@@ -98,6 +98,10 @@ namespace EduViz.Migrations
                     b.Property<TimeSpan>("endingClass")
                         .HasColumnType("time");
 
+                    b.Property<string>("meetUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("mentorId")
                         .HasColumnType("uniqueidentifier");
 

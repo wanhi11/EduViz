@@ -68,6 +68,7 @@ namespace EduViz.Migrations
                     mentorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     subjectId = table.Column<string>(type: "NVARCHAR(36)", nullable: false),
                     price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    meetUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     picture = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     startDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     duration = table.Column<int>(type: "int", nullable: false),

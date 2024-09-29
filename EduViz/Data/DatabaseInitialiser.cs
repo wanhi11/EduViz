@@ -193,6 +193,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course1 = new Course()
         {
+            meetUrl = "meet.google.com/wev-rpts-kzo",
             subjectId = math.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -206,6 +207,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course2 = new Course()
         {
+            meetUrl = "meet.google.com/hyt-kxci-cim",
             subjectId = hoa.subjectId,
             duration = 2,
             schedule = Schedule.MonWedFri,
@@ -219,6 +221,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course3 = new Course()
         {
+            meetUrl = "meet.google.com/ipg-vdqg-rtg",
             subjectId = english.subjectId,
             duration = 3,
             schedule = Schedule.MonWedFri,
@@ -232,6 +235,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course4 = new Course()
         {
+            meetUrl = "meet.google.com/vds-vcob-tti",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -245,6 +249,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course5 = new Course()
         {
+            meetUrl = "meet.google.com/tna-edsn-qjp",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -258,6 +263,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course6 = new Course()
         {
+            meetUrl = "meet.google.com/hpq-sdnd-wco",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -271,6 +277,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course7 = new Course()
         {
+            meetUrl = "meet.google.com/bdy-wdox-pur",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -284,6 +291,7 @@ public class DatabaseInitialiser : IDataInitialiser
         };
         var course8 = new Course()
         {
+            meetUrl = "meet.google.com/abv-bobd-gdq",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,
@@ -298,6 +306,7 @@ public class DatabaseInitialiser : IDataInitialiser
         
         var course9 = new Course()
         {
+            meetUrl = "meet.google.com/brk-rfgy-tzt",
             subjectId = publicSpeaking.subjectId,
             duration = 1,
             schedule = Schedule.SatSun,

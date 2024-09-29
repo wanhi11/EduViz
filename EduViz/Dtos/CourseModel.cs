@@ -16,7 +16,7 @@ public class CourseModel
     
     public decimal Price { get; set; }
     public string? Picture { get; set; }
-            
+    public string meetUrl { get; set; }
     public DateTime StartDate { get; set; }
     public int Duration { get; set; }
             

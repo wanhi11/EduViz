@@ -70,6 +70,7 @@ public class CourseController : ControllerBase
                 var user = _userService.GetUserById(mentor.UserId);
                 courseResponses.Add(new CourseResponse()
                 {
+                    meetUrl = course.meetUrl,
                     userId = user.UserId.ToString(),
                     weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                     courseName = course.CourseName,
@@ -119,6 +120,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                meetUrl = course.meetUrl,
                 userId = user.UserId.ToString(),
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
                 courseName = course.CourseName,
@@ -147,6 +149,11 @@ public class CourseController : ControllerBase
     [Authorize(Roles = "Mentor")]
     public async Task<IActionResult> CreateNewCourse([FromBody] CreateCourseRequest req)
     {
+        if(!ModelState.IsValid)
+        {
+            var errorMessage = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            throw new BadRequestException(string.Join("; ", errorMessage));
+        }
         Request.Headers.TryGetValue("Authorization", out var token);
         token = token.ToString().Split()[1];
         var currentUser = _userService.GetUserInToken(token);
@@ -173,6 +180,7 @@ public class CourseController : ControllerBase
 
         var response = new CourseResponse()
         {
+            meetUrl = course.meetUrl,
             courseId = result!.CourseId,
             weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(result.Schedule.ToString()),
             courseName = result.CourseName,
@@ -219,6 +227,7 @@ public class CourseController : ControllerBase
         return Ok(ApiResult<GetCourseDetailsResponse>.Succeed(new GetCourseDetailsResponse()
 
         {
+            meetUrl = course.meetUrl,
             userId = mentorAccount.UserId.ToString(),
             numOfStudents = numOfStudent,
             weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.Schedule.ToString()),
@@ -251,6 +260,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                meetUrl = courseModel.meetUrl,
                 userId = user.UserId.ToString(),
                 numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
@@ -306,6 +316,7 @@ public class CourseController : ControllerBase
             var user = _userService.GetUserById(mentor.UserId);
             listResult.Add(new CourseResponse()
             {
+                meetUrl = courseModel.meetUrl,
                 userId = user.UserId.ToString(),
                 numOfStudents = numOfStudent,
                 weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),

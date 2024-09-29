@@ -201,6 +201,7 @@ public class CourseService
     // Chuyển đổi kết quả sang CourseResponse
     var courseResponses = combinedCourses.Select(course => new CourseResponse
     {
+        meetUrl = course.meetUrl,
         userId = course.mentor.user.userId.ToString(),
         numOfStudents = studentCounts.FirstOrDefault(sc => sc.CourseId == course.courseId)?.StudentCount ?? 0,
         courseId = course.courseId,
