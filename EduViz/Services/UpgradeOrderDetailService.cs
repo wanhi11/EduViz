@@ -16,7 +16,7 @@ public class UpgradeOrderDetailService
     private readonly ILogger _logger;
 
     public UpgradeOrderDetailService(IRepository<UpgradeOrderDetails, Guid> upgradeOrderRepository, IMapper mapper,
-        IRepository<MentorDetails,Guid> mentorDetailsRepository,ILogger logger)
+        IRepository<MentorDetails,Guid> mentorDetailsRepository,ILogger<UpgradeOrderDetailService> logger)
     {
         _upgradeOrderRepository = upgradeOrderRepository;
         _mapper = mapper;
