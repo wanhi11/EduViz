@@ -13,15 +13,13 @@ public class UpgradeOrderDetailService
     private readonly IRepository<UpgradeOrderDetails, Guid> _upgradeOrderRepository;
     private readonly IMapper _mapper;
     private readonly IRepository<MentorDetails, Guid> _mentorDetailsRepository;
-    private readonly ILogger _logger;
 
     public UpgradeOrderDetailService(IRepository<UpgradeOrderDetails, Guid> upgradeOrderRepository, IMapper mapper,
-        IRepository<MentorDetails,Guid> mentorDetailsRepository,ILogger<UpgradeOrderDetailService> logger)
+        IRepository<MentorDetails,Guid> mentorDetailsRepository)
     {
         _upgradeOrderRepository = upgradeOrderRepository;
         _mapper = mapper;
         _mentorDetailsRepository = mentorDetailsRepository;
-        _logger = logger;
     }
 
     public UpgradeOrderDetailModel? FindOrderByCode(long code)
@@ -54,9 +52,7 @@ public class UpgradeOrderDetailService
 
         var mentor = _mentorDetailsRepository.FindByCondition(m => m.mentorDetailsId.Equals(order.mentorDetailsID))
             .First();
-        int month = (int)order.packageName[0];
-        _logger.LogInformation("date :"+DateTime.Now);
-        _logger.LogInformation("month to add :"+month);
+        int month = int.Parse(order.packageName.Substring(0,1));
         mentor.vipExpirationDate = DateTime.Now.AddMonths(month);
         _mentorDetailsRepository.Update(mentor);
         if (!(await _mentorDetailsRepository.Commit() > 0))
