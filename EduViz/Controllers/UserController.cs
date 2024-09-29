@@ -93,9 +93,22 @@ public class UserController:ControllerBase
     public IActionResult GetAllAccount()
     {
         var listResult = _userService.GetAllUser();
+        var listResponse = new List<GetAccountModel>();
+        foreach (var result in listResult)
+        {
+            listResponse.Add(new GetAccountModel()
+            {
+                Email = result.Email,
+                Gender = result.Gender is null ? "": result.Gender.ToString() ,
+                Role = result.Role.ToString(),
+                Avatar = result.Avatar is null ? "": result.Avatar.ToString(),
+                UserId = result.UserId,
+                UserName = result.UserName
+            });
+        }
         return Ok(ApiResult<GetAllAccountResponse>.Succeed(new GetAllAccountResponse()
         {
-            userList = listResult
+            userList = listResponse
         }));
     }
 

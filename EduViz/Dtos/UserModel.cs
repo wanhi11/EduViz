@@ -6,16 +6,14 @@ namespace EduViz.Dtos;
 public class UserModel
 {
     public Guid UserId { get; set; }
-
-    [Required] [MaxLength(100)] 
+    
     public string? UserName { get; set; }
-
-    [Required] [EmailAddress] 
+    
     public string Email { get; set; }
 
-    [Required] public string Password { get; set; }
+    public string Password { get; set; }
 
-    [Required] public Role Role { get; set; }
-    public Gender? Gender { get; set; }
+    public string Role { get; set; }
+    public string? Gender { get; set; }
     public string? Avatar { get; set; }
 }
