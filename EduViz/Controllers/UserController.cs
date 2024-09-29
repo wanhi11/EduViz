@@ -114,5 +114,41 @@ public class UserController:ControllerBase
             userList = listResponse
         }));
     }
+    [HttpGet]
+    [Route("/{userId}")]
+    [Authorize]
+    public async Task<IActionResult> GetUserDetailsById(Guid userId)
+    {
+        
+        var user = _userService.GetUserById(userId);
+
+        if (user.Role.ToString().Equals("Mentor"))
+        {
+            var mentor = _mentorService.GetByMentorId(user.UserId);
+            
+            return Ok(ApiResult<UserDetailMentorResponse>.Succeed(new UserDetailMentorResponse()
+            {
+                userId = user.UserId.ToString(),
+                mentorId = mentor.MentorDetailsId.ToString(),
+                email = user.Email,
+                gender = user.Gender is null? null :user.Gender.ToString(),
+                role = user.Role.ToString(),
+                avatar = user.Avatar,
+                name = user.UserName,
+                expiredDate = mentor.VipExpirationDate,
+                isVip = mentor.VipExpirationDate > DateTime.Now ? true : false  
+            }));
+        }
+
+        return Ok(ApiResult<UserDetailStudentResponse>.Succeed(new UserDetailStudentResponse()
+        {
+            userId = user.UserId.ToString(),
+            email = user.Email,
+            gender = user.Gender is null?null:user.Gender.ToString(),
+            role = user.Role.ToString(),
+            avatar = user.Avatar,
+            name = user.UserName,
+        }));
+    }
 
 }

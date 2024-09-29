@@ -289,7 +289,7 @@ public class CourseController : ControllerBase
         }));
     }
 
-    [HttpGet("{mentorId:guid}/get-by-mentor")]
+    [HttpGet("/mentor/{mentorId:guid}")]
     public IActionResult GetAllCourseByMentor([FromRoute] Guid mentorId)
     {
         var result = _courseService.GetCourseByMentorId(mentorId,null);
