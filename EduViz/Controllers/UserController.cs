@@ -115,7 +115,7 @@ public class UserController:ControllerBase
         }));
     }
     [HttpGet]
-    [Route("/{userId}")]
+    [Route("{userId}")]
     [Authorize]
     public async Task<IActionResult> GetUserDetailsById(Guid userId)
     {
