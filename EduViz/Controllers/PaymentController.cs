@@ -183,6 +183,7 @@ public class PaymentController : ControllerBase
         }
 
         await _upgradeService.UpdateStatus(code, paymentStatus);
+        
         _logger.LogInformation("Payment status updated successfully for updateorder:", code);
 
         return Ok(ApiResult<WebhookResponse>.Succeed(new WebhookResponse()

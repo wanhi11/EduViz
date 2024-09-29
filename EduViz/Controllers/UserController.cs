@@ -69,6 +69,7 @@ public class UserController:ControllerBase
             return Ok(ApiResult<UserDetailMentorResponse>.Succeed(new UserDetailMentorResponse()
             {
                 userId = user.UserId.ToString(),
+                mentorId = mentor.MentorDetailsId.ToString(),
                 email = user.Email,
                 gender = user.Gender is null? null :user.Gender.ToString(),
                 role = user.Role.ToString(),
