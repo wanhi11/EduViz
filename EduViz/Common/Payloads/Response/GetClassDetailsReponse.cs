@@ -22,6 +22,7 @@ public class GetClassDetailsReponse
 
 public class StudentInfoInClass
 {
+    public string studentId { get; set; }
     public string name { get; set; }
     public string gender { get; set; }
     public double? score { get; set; }

@@ -38,6 +38,7 @@ public class ClassService
             .ThenInclude(q => q.studentQuizScores)
             .SelectMany(c => c.studentClasses.Select(sc => new StudentInfoInClass
             {
+                studentId = sc.user.userId.ToString(),
                 name = sc.user.userName,
                 gender = sc.user.gender.HasValue ? sc.user.gender.Value.ToString() : "",
                 // Tính toán số lần làm bài (numOfTry)
