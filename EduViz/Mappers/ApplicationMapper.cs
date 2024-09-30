@@ -1,6 +1,7 @@
 using AutoMapper;
 using EduViz.Dtos;
 using EduViz.Entities;
+using EduViz.Helpers;
 
 namespace EduViz.Mappers;
 

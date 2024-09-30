@@ -340,4 +340,21 @@ public class CourseController : ControllerBase
         }));
     }
 
+    [HttpGet("class-detail/{classId:guid}")]
+    public IActionResult GetClassDetails([FromRoute] Guid classId)
+    {
+        var classInfo = _classService.GetStudentsInClass(classId);
+        var courseInfo = _courseService.GetCourseById(classId);
+        var subject = _subjectService.GetSubjectById(courseInfo.SubjectId);
+        return Ok(ApiResult<GetClassDetailsReponse>.Succeed(new GetClassDetailsReponse()
+        {
+            meetUrl = courseInfo.meetUrl,
+            beginingClass = courseInfo.beginingClass.ToString(@"hh\:mm\:ss"),
+            endingClass = courseInfo.endingClass.ToString(@"hh\:mm\:ss"),
+            subjectName = subject.SubjectName,
+            monthDuration = courseInfo.Duration,
+            weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseInfo.Schedule.ToString()),
+            studentInfoList = classInfo,
+        }));
+    }
 }
