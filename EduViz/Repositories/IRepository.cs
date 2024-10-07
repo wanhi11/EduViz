@@ -11,7 +11,7 @@ public interface IRepository<TEntity, in TKey>
     Task<TEntity?> GetByIdCompositeKeyAsync(TKey id1, TKey id2);
     Task<TEntity> AddAsync(TEntity entity);
     Task AddRangeAsync(IEnumerable<TEntity> entities);
-
+    Task ExecuteInTransactionAsync(Func<Task> action);
     TEntity Update(TEntity entity);
     TEntity Remove(TKey id);
     public TEntity RemoveCompositeKey(TKey id1, TKey id2);

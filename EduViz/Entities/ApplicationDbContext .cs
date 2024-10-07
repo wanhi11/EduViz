@@ -20,6 +20,7 @@ namespace EduViz.Entities
         public DbSet<MentorSubject> MentorSubjects { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<UpgradeOrderDetails> UpgradeOrderDetails { get; set; }
+        public DbSet<StudentAnswer> StudentAnswers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -131,6 +132,19 @@ namespace EduViz.Entities
                 .HasOne(p => p.course)
                 .WithMany(c => c.payments)
                 .HasForeignKey(p => p.courseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // StudentAnswer and Quiz
+            modelBuilder.Entity<StudentAnswer>()
+                .HasOne(sa => sa.quiz)
+                .WithMany(q => q.studentAnswers)
+                .HasForeignKey(sa => sa.quizId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // StudentAnswer and Question
+            modelBuilder.Entity<StudentAnswer>()
+                .HasOne(sa => sa.question)
+                .WithMany(q => q.studentAnswers) // Giả sử bạn muốn có một thuộc tính ICollection<StudentAnswer> trong Question
+                .HasForeignKey(sa => sa.questionId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

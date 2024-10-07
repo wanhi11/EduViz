@@ -328,13 +328,13 @@ namespace EduViz.Migrations
                 columns: table => new
                 {
                     questionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    questionText = table.Column<string>(type: "NVARCHAR", nullable: false),
-                    answerA = table.Column<string>(type: "NVARCHAR", nullable: false),
-                    answerB = table.Column<string>(type: "NVARCHAR", nullable: false),
-                    answerC = table.Column<string>(type: "NVARCHAR", nullable: true),
-                    answerD = table.Column<string>(type: "NVARCHAR", nullable: true),
-                    picture = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    correctAnswer = table.Column<string>(type: "NVARCHAR", nullable: false),
+                    questionText = table.Column<string>(type: "NVARCHAR(500)", maxLength: 500, nullable: false),
+                    answerA = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
+                    answerB = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
+                    answerC = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: true),
+                    answerD = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: true),
+                    picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    correctAnswer = table.Column<string>(type: "NVARCHAR(1)", maxLength: 1, nullable: false),
                     quizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -355,6 +355,8 @@ namespace EduViz.Migrations
                     studentQuizScoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     quizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    dateTaken = table.Column<DateTime>(type: "datetime2", nullable: false),
                     score = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -372,6 +374,32 @@ namespace EduViz.Migrations
                         principalTable: "Users",
                         principalColumn: "userId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentAnswers",
+                columns: table => new
+                {
+                    studentAnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    quizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    questionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    selectedAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentAnswers", x => x.studentAnswerId);
+                    table.ForeignKey(
+                        name: "FK_StudentAnswers_Questions_questionId",
+                        column: x => x.questionId,
+                        principalTable: "Questions",
+                        principalColumn: "questionId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentAnswers_Quizzes_quizId",
+                        column: x => x.quizId,
+                        principalTable: "Quizzes",
+                        principalColumn: "quizId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -456,6 +484,16 @@ namespace EduViz.Migrations
                 column: "classId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudentAnswers_questionId",
+                table: "StudentAnswers",
+                column: "questionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentAnswers_quizId",
+                table: "StudentAnswers",
+                column: "quizId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentClasses_classId",
                 table: "StudentClasses",
                 column: "classId");
@@ -504,7 +542,7 @@ namespace EduViz.Migrations
                 name: "Payments");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "StudentAnswers");
 
             migrationBuilder.DropTable(
                 name: "StudentClasses");
@@ -520,6 +558,9 @@ namespace EduViz.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Quizzes");

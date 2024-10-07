@@ -66,6 +66,7 @@ namespace EduViz.Extensions
             services.AddScoped<SubjectService>();
             services.AddScoped<CourseService>();
             services.AddScoped<ClassService>();
+            services.AddScoped<QuizService>();
             return services;
         }
     }

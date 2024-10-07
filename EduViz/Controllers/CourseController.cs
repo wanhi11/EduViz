@@ -25,10 +25,11 @@ public class CourseController : ControllerBase
     private readonly MentorDetailService _mentorService;
     private readonly CloudinaryService _cloudinaryService;
     private readonly ClassService _classService;
+    private readonly QuizService _quizService;
 
     public CourseController(CourseService courseService, SubjectService subjectService,
         UserService userService, MentorDetailService mentorService, CloudinaryService cloudinaryService,
-        ClassService classService)
+        ClassService classService,QuizService quizService)
     {
         _courseService = courseService;
         _subjectService = subjectService;
@@ -36,6 +37,7 @@ public class CourseController : ControllerBase
         _mentorService = mentorService;
         _cloudinaryService = cloudinaryService;
         _classService = classService;
+        _quizService = quizService;
     }
 
     [HttpGet]
@@ -356,5 +358,15 @@ public class CourseController : ControllerBase
             weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseInfo.Schedule.ToString()),
             studentInfoList = classInfo,
         }));
+    }
+    [HttpGet("{classId:guid}/quizzes")]
+    public async Task<IActionResult> GetAllQuizByCourse([FromRoute] Guid classId)
+    {
+        var result = await _quizService.GetAllQuizzesByCourse(classId);
+        if (!result.quizzes.Any())
+        {
+            throw new BadRequestException("There is no Quiz yet");
+        }
+        return Ok(ApiResult<GetAllQuizByCourseResponse>.Succeed(result));
     }
 }

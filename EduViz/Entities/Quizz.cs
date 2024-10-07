@@ -23,5 +23,6 @@ namespace EduViz.Entities
         public virtual Class mentorClass { get; set; }
         public virtual ICollection<Question> questions { get; set; }
         public virtual ICollection<StudentQuizScore> studentQuizScores { get; set; }
+        public virtual ICollection<StudentAnswer> studentAnswers { get; set; }
     }
 }

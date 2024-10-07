@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240929151038_Initial")]
+    [Migration("20241007124812_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -238,27 +238,33 @@ namespace EduViz.Migrations
 
                     b.Property<string>("answerA")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
 
                     b.Property<string>("answerB")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
 
                     b.Property<string>("answerC")
+                        .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
 
                     b.Property<string>("answerD")
+                        .HasMaxLength(100)
                         .HasColumnType("NVARCHAR");
 
                     b.Property<string>("correctAnswer")
                         .IsRequired()
+                        .HasMaxLength(1)
                         .HasColumnType("NVARCHAR");
 
-                    b.Property<string>("picture")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("picture")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("questionText")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("NVARCHAR");
 
                     b.Property<Guid>("quizId")
@@ -295,6 +301,31 @@ namespace EduViz.Migrations
                     b.ToTable("Quizzes");
                 });
 
+            modelBuilder.Entity("EduViz.Entities.StudentAnswer", b =>
+                {
+                    b.Property<Guid>("studentAnswerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("questionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("quizId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("selectedAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("studentAnswerId");
+
+                    b.HasIndex("questionId");
+
+                    b.HasIndex("quizId");
+
+                    b.ToTable("StudentAnswers");
+                });
+
             modelBuilder.Entity("EduViz.Entities.StudentClass", b =>
                 {
                     b.Property<Guid>("studentClassId")
@@ -321,6 +352,12 @@ namespace EduViz.Migrations
                     b.Property<Guid>("studentQuizScoreId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("dateTaken")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("duration")
+                        .HasColumnType("time");
 
                     b.Property<Guid>("quizId")
                         .HasColumnType("uniqueidentifier");
@@ -594,6 +631,25 @@ namespace EduViz.Migrations
                     b.Navigation("mentorClass");
                 });
 
+            modelBuilder.Entity("EduViz.Entities.StudentAnswer", b =>
+                {
+                    b.HasOne("EduViz.Entities.Question", "question")
+                        .WithMany("studentAnswers")
+                        .HasForeignKey("questionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EduViz.Entities.Quiz", "quiz")
+                        .WithMany("studentAnswers")
+                        .HasForeignKey("quizId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("question");
+
+                    b.Navigation("quiz");
+                });
+
             modelBuilder.Entity("EduViz.Entities.StudentClass", b =>
                 {
                     b.HasOne("EduViz.Entities.Class", "mentorClass")
@@ -703,9 +759,16 @@ namespace EduViz.Migrations
                     b.Navigation("comments");
                 });
 
+            modelBuilder.Entity("EduViz.Entities.Question", b =>
+                {
+                    b.Navigation("studentAnswers");
+                });
+
             modelBuilder.Entity("EduViz.Entities.Quiz", b =>
                 {
                     b.Navigation("questions");
+
+                    b.Navigation("studentAnswers");
 
                     b.Navigation("studentQuizScores");
                 });

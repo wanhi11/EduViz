@@ -34,6 +34,23 @@ where TEntity : class
         return entityEntry.Entity;
     }
 
+    public async Task ExecuteInTransactionAsync(Func<Task> action)
+    {
+        using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+        {
+            try
+            {
+                await action(); // Thực thi hành động truyền vào
+                await transaction.CommitAsync(); // Commit giao dịch
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync(); // Rollback nếu có lỗi
+                throw; // Ném lỗi ra ngoài để xử lý
+            }
+        }
+    }
+
     public TEntity Update(TEntity entity)
     {
         var entityEntry = _dbContext.Set<TEntity>().Update(entity);
