@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduViz.Controllers;
+
 [ApiController]
 [Route("api/quiz")]
-public class QuizController: ControllerBase
+public class QuizController : ControllerBase
 {
     private readonly QuizService _quizService;
 
@@ -33,6 +34,7 @@ public class QuizController: ControllerBase
         {
             throw new BadRequestException("Invalid file type. Please upload a .docx file.");
         }
+
         var quiz = await _quizService.CreateQuiz(file.ToQuizModel());
         if (quiz is null)
         {
@@ -46,9 +48,14 @@ public class QuizController: ControllerBase
 
         return Ok(ApiResult<UploadQuestionsReponse>.Succeed(result));
     }
-    //
+
+    // [HttpGet("{quizId:guid}")]
+    // public async Task<IActionResult> GetQuizDetail([FromRoute] Guid quizId)
+    // {
+    //     
+    // }
+//
     // [HttpPost("submit-quiz")]
     // [Authorize(Roles = "Student")]
     // public async Task<IActionResult> SubmitQuiz([FromBody] )
-    
 }

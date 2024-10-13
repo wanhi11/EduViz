@@ -24,11 +24,15 @@ public class QuizService
     private readonly IRepository<Class, Guid> _classRepository;
     private readonly IRepository<StudentQuizScore, Guid> _studentQuizScoreRepository;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
+    private readonly IRepository<Course, Guid> _courseRepository;
 
 
     public QuizService(IRepository<Quiz, Guid> quizRepository, IMapper mapper,
-        IRepository<Question, Guid> questionRepository, IRepository<Class, Guid>classRepository,
-        IRepository<StudentQuizScore,Guid> studentQuizScoreRepository,IRepository<MentorDetails,Guid> mentorRepository)
+        IRepository<Question, Guid> questionRepository, IRepository<Class, Guid> classRepository,
+        IRepository<StudentQuizScore, Guid> studentQuizScoreRepository,
+        IRepository<MentorDetails, Guid> mentorRepository,
+        IRepository<Course, Guid> courseRepository
+    )
     {
         _mapper = mapper;
         _quizRepository = quizRepository;
@@ -36,6 +40,7 @@ public class QuizService
         _classRepository = classRepository;
         _studentQuizScoreRepository = studentQuizScoreRepository;
         _mentorRepository = mentorRepository;
+        _courseRepository = courseRepository;
     }
 
     public async Task<QuizModel?> CreateQuiz(QuizModel quiz)
@@ -59,7 +64,7 @@ public class QuizService
         return _mapper.Map<QuizModel>(quizEntity);
     }
 
-    public async Task<UploadQuestionsReponse> ImportQuestionsAsync(IFormFile file,Guid quizId)
+    public async Task<UploadQuestionsReponse> ImportQuestionsAsync(IFormFile file, Guid quizId)
     {
         var questions = new List<Question>();
         var duplicateCount = 0;
@@ -72,8 +77,9 @@ public class QuizService
             foreach (var parsedQuestion in parsedQuestions)
             {
                 // Check if the question already exists in the DB
-                var existingQuestion = _questionRepository.FirstOrDefault(q => q.questionText == parsedQuestion.QuestionText 
-                                                                               && q.quizId.Equals(quizId));
+                var existingQuestion = _questionRepository.FirstOrDefault(q =>
+                    q.questionText == parsedQuestion.QuestionText
+                    && q.quizId.Equals(quizId));
                 if (existingQuestion != null)
                 {
                     duplicateCount++;
@@ -201,15 +207,18 @@ public class QuizService
             }
         }
     }
+
     public async Task<GetAllQuizByCourseResponse> GetAllQuizzesByMentor(Guid mentorId)
     {
         // Lấy thông tin mentor
         var mentorDetails = await _mentorRepository
             .FindByCondition(m => m.mentorDetailsId == mentorId)
             .Include(m => m.courses)
-            .ThenInclude(c => c.classes)
-            .ThenInclude(cl => cl.quizzes)
-            .ThenInclude(q => q.questions) // Bao gồm thông tin về câu hỏi của mỗi quiz
+                .ThenInclude(c => c.classes)
+                .ThenInclude(cl => cl.quizzes)
+                .ThenInclude(q => q.questions)
+            .Include(c => c.classes)
+            .ThenInclude(cl => cl.studentClasses)
             .FirstOrDefaultAsync();
 
         if (mentorDetails == null)
@@ -224,14 +233,25 @@ public class QuizService
         {
             foreach (var classInfo in course.classes)
             {
+
+                if (!classInfo.quizzes.Any())
+                {
+                    continue;
+                }
+
                 foreach (var quiz in classInfo.quizzes)
                 {
-                    var totalStudent = classInfo.studentClasses.Count(); // Tổng số học viên trong lớp
-
-                    var numOfStuAttempt = await _studentQuizScoreRepository.FindByCondition(sqs => sqs.quizId == quiz.quizId)
-                        .Select(sqs => sqs.userId)
-                        .Distinct()
-                        .CountAsync(); // Số lượng học viên đã làm quiz
+                    int totalStudent = 0;
+                    int numOfStuAttempt = 0;
+                    if (classInfo.studentClasses.Any())
+                    {
+                        totalStudent = classInfo.studentClasses.Count(); // Tổng số học viên trong lớp    
+                        numOfStuAttempt = await _studentQuizScoreRepository
+                            .FindByCondition(sqs => sqs.quizId == quiz.quizId)
+                            .Select(sqs => sqs.userId)
+                            .Distinct()
+                            .CountAsync(); // Số lượng học viên đã làm quiz
+                    }
 
                     var quizInClass = new QuizInCourse
                     {
@@ -252,6 +272,7 @@ public class QuizService
             quizzes = quizList
         };
     }
+
     public async Task<GetAllQuizByCourseResponse> GetAllQuizzesByCourse(Guid classId)
     {
         // Lấy thông tin lớp học
@@ -295,10 +316,19 @@ public class QuizService
             quizzes = quizList
         };
     }
-    
-    
-    
+
+    public async Task<List<QuestionModel>> GetQuestionsByQuizId(Guid quizId)
+    {
+        var questions = _questionRepository.FindByCondition(q => q.quizId.Equals(quizId)).ToList();
+        if (!questions.Any())
+        {
+            throw new BadRequestException("This Quiz do not have any question yet");
+        }
+
+        return _mapper.Map<List<QuestionModel>>(questions);
+    }
 }
+
 public class ParsedQuestion
 {
     public string QuestionText { get; set; }
