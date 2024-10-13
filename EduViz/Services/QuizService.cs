@@ -261,6 +261,7 @@ public class QuizService
 
                     var quizInClass = new QuizInCourse
                     {
+                        quizId = quiz.quizId,
                         quizTitle = quiz.quizTitle,
                         duration = quiz.duration.ToString(@"hh\:mm\:ss"),
                         totalStudent = totalStudent,

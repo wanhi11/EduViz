@@ -380,4 +380,43 @@ public class CourseController : ControllerBase
         }
         return Ok(ApiResult<GetAllQuizByCourseResponse>.Succeed(result));
     }
+
+    [HttpGet("student/{studentId:guid}")]
+    [Authorize(Roles = "Student")]
+    public IActionResult GetAllPaidCourseOfStudent([FromRoute] Guid studentId)
+    {
+        var courses = _courseService.GetCourseByStudentId(studentId);
+        if(courses is null) throw new BadRequestException("You have joined no courses");        var listResult = new List<CourseResponse>();
+        foreach (var courseModel in courses)
+        {
+            int numOfStudent = _classService.GetNumbOfStuByClassId(courseModel.CourseId);
+            var subject = _subjectService.GetSubjectById(courseModel.SubjectId);
+            var mentor = _mentorService.GetById(courseModel.MentorId);
+            var user = _userService.GetUserById(mentor.UserId);
+            listResult.Add(new CourseResponse()
+            {
+                meetUrl = courseModel.meetUrl,
+                userId = user.UserId.ToString(),
+                numOfStudents = numOfStudent,
+                weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(courseModel.Schedule.ToString()),
+                courseName = courseModel.CourseName,
+                startDate = courseModel.StartDate,
+                duration = courseModel.Duration,
+                price = courseModel.Price,
+                picture = courseModel.Picture,
+                subjectName = subject.SubjectName,
+                mentorName = user.UserName,
+                courseId = courseModel.CourseId,
+                mentorId = mentor.MentorDetailsId.ToString(),
+                beginingClass = courseModel.beginingClass.ToString(@"hh\:mm\:ss"),
+                endingClass = courseModel.endingClass.ToString(@"hh\:mm\:ss")
+            });
+            
+        }
+        return Ok(ApiResult<GetRelativeCourseResponse>.Succeed(new GetRelativeCourseResponse()
+        {
+            listRelativeCourse = listResult
+        }));
+    }
+
 }

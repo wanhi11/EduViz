@@ -20,11 +20,12 @@ public class CourseService
     private readonly CloudinaryService _cloudinaryService;
     private readonly IRepository<Class, Guid> _classRepository;
     private readonly IRepository<StudentClass, Guid> _studentClassRepository;
+    private readonly IRepository<UserCourse, Guid> _userCourseRepository;
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
         IMapper mapper, IRepository<Course, Guid> courseRepository, IRepository<MentorDetails, Guid> mentorRepository,
         CloudinaryService cloudinaryService,IRepository<Class,Guid> classRepository,
-        IRepository<StudentClass,Guid>studentClassRepository)
+        IRepository<StudentClass,Guid>studentClassRepository,IRepository<UserCourse,Guid> userCourseRepository)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
@@ -34,6 +35,7 @@ public class CourseService
         _cloudinaryService = cloudinaryService;
         _classRepository = classRepository;
         _studentClassRepository = studentClassRepository;
+        _userCourseRepository = userCourseRepository;
     }
 
     public async Task<CourseModel?> CreateCourse(CourseModel newCourse)
@@ -114,6 +116,21 @@ public class CourseService
 
         // Map the combined courses to the desired model
         return _mapper.Map<List<CourseModel>>(combinedCourses);
+    }
+
+    public List<CourseModel>? GetCourseByStudentId(Guid studentId)
+    {
+        var userCourses =  _userCourseRepository
+            .FindByCondition(uc => uc.userId == studentId)
+            .ToList();
+        
+        var courseIds = userCourses.Select(uc => uc.courseId).ToList();
+        
+        var courses =  _courseRepositoty
+            .FindByCondition(c => courseIds.Contains(c.courseId))
+            .ToList();
+        if (!courses.Any()) return null;
+        return _mapper.Map<List<CourseModel>>(courses);
     }
 
 
@@ -249,5 +266,8 @@ public async Task<List<CourseWithSubject>> GetCoursesGroupedBySubjectWithSearchS
 
     return courseGroups; // Trả về danh sách CourseWithSubject
 }
+
+
+
 
 }

@@ -7,6 +7,7 @@ public class GetAllQuizByCourseResponse
 
 public class QuizInCourse
 {
+    public Guid quizId { get; set; }
     public string quizTitle { get; set; }
     public string duration { get; set; }
     public int totalStudent { get; set; }
