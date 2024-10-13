@@ -49,13 +49,41 @@ public class QuizController : ControllerBase
         return Ok(ApiResult<UploadQuestionsReponse>.Succeed(result));
     }
 
-    // [HttpGet("{quizId:guid}")]
-    // public async Task<IActionResult> GetQuizDetail([FromRoute] Guid quizId)
-    // {
-    //     
-    // }
-//
-    // [HttpPost("submit-quiz")]
-    // [Authorize(Roles = "Student")]
-    // public async Task<IActionResult> SubmitQuiz([FromBody] )
+    [HttpGet("{quizId:guid}")]
+    public async Task<IActionResult> GetQuizDetail([FromRoute] Guid quizId)
+    {
+        var questions = await _quizService.GetQuestionsByQuizId(quizId);
+        var quiz = await _quizService.GetQuizByQuizId(quizId);
+        if (quiz is null)
+        {
+            throw new BadRequestException("There is no quiz");
+        }
+
+        return Ok(ApiResult<QuizzDetailResponse>.Succeed(new QuizzDetailResponse()
+        {
+            quizTitle = quiz.quizTitle,
+            quizId = quizId,
+            questionList = questions
+        }));
+    }
+
+    [HttpPost("submit-quiz")]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> SubmitQuiz([FromBody] QuizSubmitRequest req)
+    {
+        var result = await _quizService.CalScoreStudent(req.answerList,req.quizId);
+        var score = req.ToScoreModel();
+        score.score = result;
+        var addValue = await _quizService.SaveStudentScore(score);
+        if (addValue is null)
+        {
+            throw new BadRequestException("Something went wrong");
+        }
+
+        return Ok(ApiResult<QuizSubmitResponse>.Succeed(new QuizSubmitResponse()
+        {
+            score = result,
+            message = "Submit successfully"
+        }));
+    }
 }

@@ -8,6 +8,7 @@ using EduViz.Entities;
 using EduViz.Repositories;
 using Microsoft.EntityFrameworkCore;
 using DocumentFormat.OpenXml.Wordprocessing;
+using EduViz.Common.Payloads.Request;
 using EduViz.Common.Payloads.Response;
 using EduViz.Exceptions;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -25,14 +26,17 @@ public class QuizService
     private readonly IRepository<StudentQuizScore, Guid> _studentQuizScoreRepository;
     private readonly IRepository<MentorDetails, Guid> _mentorRepository;
     private readonly IRepository<Course, Guid> _courseRepository;
+    private readonly IRepository<StudentQuizScore, Guid> _scoreRepository;
+    private readonly IRepository<StudentAnswer, Guid> _quizHistoryRepository;
 
 
     public QuizService(IRepository<Quiz, Guid> quizRepository, IMapper mapper,
         IRepository<Question, Guid> questionRepository, IRepository<Class, Guid> classRepository,
         IRepository<StudentQuizScore, Guid> studentQuizScoreRepository,
         IRepository<MentorDetails, Guid> mentorRepository,
-        IRepository<Course, Guid> courseRepository
-    )
+        IRepository<Course, Guid> courseRepository,
+        IRepository<StudentQuizScore,Guid> scoreRepository,
+        IRepository<StudentAnswer,Guid> quizHistoryRepository)
     {
         _mapper = mapper;
         _quizRepository = quizRepository;
@@ -41,6 +45,8 @@ public class QuizService
         _studentQuizScoreRepository = studentQuizScoreRepository;
         _mentorRepository = mentorRepository;
         _courseRepository = courseRepository;
+        _scoreRepository = scoreRepository;
+        _quizHistoryRepository = quizHistoryRepository;
     }
 
     public async Task<QuizModel?> CreateQuiz(QuizModel quiz)
@@ -319,7 +325,7 @@ public class QuizService
 
     public async Task<List<QuestionModel>> GetQuestionsByQuizId(Guid quizId)
     {
-        var questions = _questionRepository.FindByCondition(q => q.quizId.Equals(quizId)).ToList();
+        var questions = await _questionRepository.FindByCondition(q => q.quizId.Equals(quizId)).ToListAsync();
         if (!questions.Any())
         {
             throw new BadRequestException("This Quiz do not have any question yet");
@@ -327,6 +333,58 @@ public class QuizService
 
         return _mapper.Map<List<QuestionModel>>(questions);
     }
+
+    public async Task<QuizModel?> GetQuizByQuizId(Guid quizId)
+    {
+        var quiz = await _quizRepository.FindByCondition(q => q.quizId.Equals(quizId)).FirstOrDefaultAsync();
+        if (quiz is null) return null; 
+        return _mapper.Map<QuizModel>(quiz);
+    }
+
+    public async Task<double> CalScoreStudent(List<QuestionWithAnswer> qaaList, Guid quizId)
+    {
+        int totalScore = 0;
+        List<StudentAnswer> listChosenAnswer = new List<StudentAnswer>();
+        var questions  = await _questionRepository.FindByCondition(q => q.quizId.Equals(quizId)).ToListAsync();
+        if (!questions.Any())
+        {
+            throw new BadRequestException("Quiz has no questions");
+        }
+
+        foreach (var qaa in qaaList)
+        {
+            var question = await _questionRepository.FindByCondition(q => q.questionId.Equals(qaa.questionId))
+                .FirstAsync();
+            var historyEntity = new StudentAnswer()
+            {
+                selectedAnswer = qaa.chosenAnswer,
+                quizId = quizId,
+                questionId = qaa.questionId,
+                studentAnswerId = Guid.NewGuid()
+            };
+            listChosenAnswer.Add(historyEntity);
+            if (qaa.chosenAnswer.Equals(question.correctAnswer))
+            {
+                totalScore++;
+            }
+        }
+
+        await _quizHistoryRepository.AddRangeAsync(listChosenAnswer);
+        
+        return Math.Round(10*((double)totalScore/questions.Count),2);
+    }
+
+    public async Task<StudentQuizScoreModel> SaveStudentScore(StudentQuizScoreModel req)
+    {
+       var result = await _studentQuizScoreRepository.AddAsync(_mapper.Map<StudentQuizScore>(req));
+       if (!(await _studentQuizScoreRepository.Commit() > 0))
+       {
+           throw new BadRequestException("Can not add student quiz result");
+       }
+       return _mapper.Map<StudentQuizScoreModel>(result);
+    }
+
+
 }
 
 public class ParsedQuestion

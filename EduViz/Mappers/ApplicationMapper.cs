@@ -20,5 +20,6 @@ public class ApplicationMapper : Profile
         CreateMap<Quiz, QuizModel>().ReverseMap();
         CreateMap<Question, QuestionModel>()
             .ForMember(dest => dest.picture, opt => opt.MapFrom<PictureToBase64Resolver>());
+        CreateMap<StudentQuizScore, StudentQuizScoreModel>().ReverseMap();
     }
 }

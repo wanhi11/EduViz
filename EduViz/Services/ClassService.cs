@@ -33,9 +33,9 @@ public class ClassService
         var studentsInClass = _classRepository
             .FindByCondition(c => c.classId == classId)
             .Include(c => c.studentClasses)
-            .ThenInclude(sc => sc.user)
+                .ThenInclude(sc => sc.user)
             .Include(c => c.quizzes) // Lấy danh sách quiz của lớp
-            .ThenInclude(q => q.studentQuizScores)
+                .ThenInclude(q => q.studentQuizScores)
             .SelectMany(c => c.studentClasses.Select(sc => new StudentInfoInClass
             {
                 studentId = sc.user.userId.ToString(),
