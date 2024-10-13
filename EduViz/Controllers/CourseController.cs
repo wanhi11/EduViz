@@ -370,7 +370,7 @@ public class CourseController : ControllerBase
         return Ok(ApiResult<GetAllQuizByCourseResponse>.Succeed(result));
     }
 
-    [HttpGet("/mentor/{mentorId:guid}/quizzes")]
+    [HttpGet("mentor/{mentorId:guid}/quizzes")]
     public async Task<IActionResult> GetAllQuizByMentor([FromRoute] Guid mentorId)
     {
         var result = await _quizService.GetAllQuizzesByMentor(mentorId);
