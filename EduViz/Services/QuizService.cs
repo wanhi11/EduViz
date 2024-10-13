@@ -23,16 +23,19 @@ public class QuizService
     private readonly IRepository<Question, Guid> _questionRepository;
     private readonly IRepository<Class, Guid> _classRepository;
     private readonly IRepository<StudentQuizScore, Guid> _studentQuizScoreRepository;
+    private readonly IRepository<MentorDetails, Guid> _mentorRepository;
+
 
     public QuizService(IRepository<Quiz, Guid> quizRepository, IMapper mapper,
         IRepository<Question, Guid> questionRepository, IRepository<Class, Guid>classRepository,
-        IRepository<StudentQuizScore,Guid> studentQuizScoreRepository)
+        IRepository<StudentQuizScore,Guid> studentQuizScoreRepository,IRepository<MentorDetails,Guid> mentorRepository)
     {
         _mapper = mapper;
         _quizRepository = quizRepository;
         _questionRepository = questionRepository;
         _classRepository = classRepository;
         _studentQuizScoreRepository = studentQuizScoreRepository;
+        _mentorRepository = mentorRepository;
     }
 
     public async Task<QuizModel?> CreateQuiz(QuizModel quiz)
@@ -198,6 +201,57 @@ public class QuizService
             }
         }
     }
+    public async Task<GetAllQuizByCourseResponse> GetAllQuizzesByMentor(Guid mentorId)
+    {
+        // Lấy thông tin mentor
+        var mentorDetails = await _mentorRepository
+            .FindByCondition(m => m.mentorDetailsId == mentorId)
+            .Include(m => m.courses)
+            .ThenInclude(c => c.classes)
+            .ThenInclude(cl => cl.quizzes)
+            .ThenInclude(q => q.questions) // Bao gồm thông tin về câu hỏi của mỗi quiz
+            .FirstOrDefaultAsync();
+
+        if (mentorDetails == null)
+        {
+            throw new BadRequestException("Mentor not found.");
+        }
+
+        // Khởi tạo danh sách quiz
+        var quizList = new List<QuizInCourse>();
+
+        foreach (var course in mentorDetails.courses)
+        {
+            foreach (var classInfo in course.classes)
+            {
+                foreach (var quiz in classInfo.quizzes)
+                {
+                    var totalStudent = classInfo.studentClasses.Count(); // Tổng số học viên trong lớp
+
+                    var numOfStuAttempt = await _studentQuizScoreRepository.FindByCondition(sqs => sqs.quizId == quiz.quizId)
+                        .Select(sqs => sqs.userId)
+                        .Distinct()
+                        .CountAsync(); // Số lượng học viên đã làm quiz
+
+                    var quizInClass = new QuizInCourse
+                    {
+                        quizTitle = quiz.quizTitle,
+                        duration = quiz.duration.ToString(@"hh\:mm\:ss"),
+                        totalStudent = totalStudent,
+                        numOfStuAttempt = numOfStuAttempt,
+                        numOfQuestion = quiz.questions.Count() // Số lượng câu hỏi trong quiz
+                    };
+
+                    quizList.Add(quizInClass);
+                }
+            }
+        }
+
+        return new GetAllQuizByCourseResponse()
+        {
+            quizzes = quizList
+        };
+    }
     public async Task<GetAllQuizByCourseResponse> GetAllQuizzesByCourse(Guid classId)
     {
         // Lấy thông tin lớp học
@@ -241,6 +295,9 @@ public class QuizService
             quizzes = quizList
         };
     }
+    
+    
+    
 }
 public class ParsedQuestion
 {
