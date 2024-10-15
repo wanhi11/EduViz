@@ -1,6 +1,7 @@
 using EduViz.Common.Payloads;
 using EduViz.Common.Payloads.Request;
 using EduViz.Common.Payloads.Response;
+using EduViz.Dtos;
 using EduViz.Exceptions;
 using EduViz.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -61,6 +62,7 @@ public class QuizController : ControllerBase
 
         return Ok(ApiResult<QuizzDetailResponse>.Succeed(new QuizzDetailResponse()
         {
+            duration = quiz.duration,
             quizTitle = quiz.quizTitle,
             quizId = quizId,
             questionList = questions
@@ -84,6 +86,29 @@ public class QuizController : ControllerBase
         {
             score = result,
             message = "Submit successfully"
+        }));
+    }
+
+    [HttpGet("history/{courseId:guid}")]
+    public async Task<IActionResult> GetQuizHistory([FromBody] GetQuizHistoryWithExactCourseRequest req)
+    {
+        var result = await _quizService.GetQuizHistoryWithExactCourse(req.studentId, req.courseId);
+        if (result is null) throw new BadRequestException("Student have not taken any exams yet");
+        return Ok(ApiResult<GetQuizHistoryWithExactCourseResponse>.Succeed(new GetQuizHistoryWithExactCourseResponse()
+        {
+            quizHistory = result
+        }));
+    }
+
+    [HttpGet("history/{userId:guid}")]
+    public async Task<IActionResult> GetAllQuizHistory([FromRoute] Guid studentId)
+    {
+        
+        var result = await _quizService.GetAllQuizHistory(studentId);
+        if (result is null) throw new BadRequestException("Student have not taken any exams yet");
+        return Ok(ApiResult<GetQuizHistoryWithExactCourseResponse>.Succeed(new GetQuizHistoryWithExactCourseResponse()
+        {
+            quizHistory = result
         }));
     }
 }

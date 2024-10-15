@@ -146,7 +146,7 @@ public class QuizService
                     // Start a new question
                     currentQuestion = new ParsedQuestion
                     {
-                        QuestionText = text.Replace("Question ", "").Trim(),
+                        QuestionText = Regex.Replace(text,@"^Question \d+:\s*","").Trim(),
                         AnswerA = string.Empty,
                         AnswerB = string.Empty,
                         AnswerC = string.Empty,
@@ -308,6 +308,7 @@ public class QuizService
 
             var quizInClass = new QuizInCourse
             {
+                quizId = quiz.quizId,
                 quizTitle = quiz.quizTitle,
                 duration = quiz.duration.ToString(@"hh\:mm\:ss"), // Chuyển đổi thời gian
                 totalStudent = totalStudent,
@@ -383,6 +384,25 @@ public class QuizService
            throw new BadRequestException("Can not add student quiz result");
        }
        return _mapper.Map<StudentQuizScoreModel>(result);
+    }
+
+    public async Task<List<StudentQuizScoreModel>?> GetQuizHistoryWithExactCourse(Guid studentId, Guid courseId)
+    {
+        var result = await _studentQuizScoreRepository.FindByCondition(s => s.userId.Equals(studentId)&& s.quiz.mentorClass.classId.Equals(courseId))
+            .Include(s => s.quiz)
+            .ThenInclude(q => q.mentorClass)
+            .ToListAsync();
+        if (!result.Any()) return null;
+        return _mapper.Map<List<StudentQuizScoreModel>>(result);
+    }
+
+    public async Task<List<StudentQuizScoreModel>?> GetAllQuizHistory(Guid studentId)
+    {
+        var result = await _studentQuizScoreRepository.FindByCondition(s =>
+            s.userId.Equals(studentId)).ToListAsync();
+
+        if (!result.Any()) return null;
+        return _mapper.Map<List<StudentQuizScoreModel>>(result);
     }
 
 

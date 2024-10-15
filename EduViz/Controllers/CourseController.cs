@@ -363,6 +363,7 @@ public class CourseController : ControllerBase
     public async Task<IActionResult> GetAllQuizByCourse([FromRoute] Guid classId)
     {
         var result = await _quizService.GetAllQuizzesByCourse(classId);
+        
         if (!result.quizzes.Any())
         {
             throw new BadRequestException("There is no Quiz yet");

@@ -83,7 +83,6 @@ public class CourseService
     public async Task<List<CourseModel>?> GetCoursesBySubjectWithVipMentorFirst(string subjectName)
     {
         var currentDate = DateTime.UtcNow;
-
         var existedCourse = _courseRepositoty.FindByCondition(c => c.subject.subjectName.Equals(subjectName));
         if (!existedCourse.Any())
         {
