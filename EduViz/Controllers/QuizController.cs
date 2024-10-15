@@ -89,7 +89,7 @@ public class QuizController : ControllerBase
         }));
     }
 
-    [HttpGet("history/{courseId:guid}")]
+    [HttpGet("history")]
     public async Task<IActionResult> GetQuizHistory([FromBody] GetQuizHistoryWithExactCourseRequest req)
     {
         var result = await _quizService.GetQuizHistoryWithExactCourse(req.studentId, req.courseId);
@@ -100,7 +100,7 @@ public class QuizController : ControllerBase
         }));
     }
 
-    [HttpGet("history/{userId:guid}")]
+    [HttpGet("history/{studentId:guid}")]
     public async Task<IActionResult> GetAllQuizHistory([FromRoute] Guid studentId)
     {
         
