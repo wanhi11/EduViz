@@ -14,9 +14,13 @@ public class StudentAnswer
 
     [ForeignKey("Question")]
     public Guid questionId { get; set; }
+    
+    [ForeignKey("StudentQuizScores")]
+    public Guid studentQuizScoreId { get; set; }
 
     public string selectedAnswer { get; set; } // Đáp án mà học viên đã chọn
 
     public virtual Quiz quiz { get; set; }
     public virtual Question question { get; set; }
+    public virtual StudentQuizScore studentQuizScore { get; set; }
 }

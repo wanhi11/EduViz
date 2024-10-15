@@ -73,18 +73,20 @@ public class QuizController : ControllerBase
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> SubmitQuiz([FromBody] QuizSubmitRequest req)
     {
-        var result = await _quizService.CalScoreStudent(req.answerList,req.quizId);
         var score = req.ToScoreModel();
-        score.score = result;
         var addValue = await _quizService.SaveStudentScore(score);
         if (addValue is null)
         {
             throw new BadRequestException("Something went wrong");
         }
+        var saveResult = await _quizService.CalScoreStudent(req.answerList,req.quizId,addValue.studentQuizScoreId);
+        score.score = saveResult;
+
+        await _quizService.UpdateScore(addValue);
 
         return Ok(ApiResult<QuizSubmitResponse>.Succeed(new QuizSubmitResponse()
         {
-            score = result,
+            score = saveResult,
             message = "Submit successfully"
         }));
     }
@@ -109,6 +111,25 @@ public class QuizController : ControllerBase
         return Ok(ApiResult<GetQuizHistoryWithExactCourseResponse>.Succeed(new GetQuizHistoryWithExactCourseResponse()
         {
             quizHistory = result
+        }));
+    }
+
+    [HttpGet("view-detail-history")]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> QuizReview([FromBody] QuizReviewRequest req)
+    {
+        var result = await _quizService.GetQuestionWithStudentAnswer(req.studentId, req.scoreId);
+        var quiz = _quizService.GetQuizModelFromQuizScore(req.scoreId);
+        var score = _quizService.GetScoreModelById(req.scoreId);
+        if (score is null) throw new BadRequestException("Can not have any score");
+        return Ok(ApiResult<QuizReviewHistoryResponse>.Succeed(new QuizReviewHistoryResponse()
+        {
+            duration = score.duration,
+            quizTitle = quiz.quizTitle,
+            score = score.score,
+            quizId = quiz.quizId,
+            examDate = score.dateTaken,
+            resultList = result
         }));
     }
 }

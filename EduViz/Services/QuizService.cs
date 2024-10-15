@@ -343,7 +343,7 @@ public class QuizService
         return _mapper.Map<QuizModel>(quiz);
     }
 
-    public async Task<double> CalScoreStudent(List<QuestionWithAnswer> qaaList, Guid quizId)
+    public async Task<double> CalScoreStudent(List<QuestionWithAnswer> qaaList, Guid quizId,Guid scoreHistoryId)
     {
         int totalScore = 0;
         List<StudentAnswer> listChosenAnswer = new List<StudentAnswer>();
@@ -362,7 +362,8 @@ public class QuizService
                 selectedAnswer = qaa.chosenAnswer,
                 quizId = quizId,
                 questionId = qaa.questionId,
-                studentAnswerId = Guid.NewGuid()
+                studentAnswerId = Guid.NewGuid(),
+                studentQuizScoreId = scoreHistoryId
             };
             listChosenAnswer.Add(historyEntity);
             if (qaa.chosenAnswer.Equals(question.correctAnswer))
@@ -386,6 +387,17 @@ public class QuizService
        return _mapper.Map<StudentQuizScoreModel>(result);
     }
 
+    public async Task<StudentQuizScoreModel> UpdateScore(StudentQuizScoreModel req)
+    {
+        var result = _studentQuizScoreRepository.Update(_mapper.Map<StudentQuizScore>(req));
+        if (!(await _studentQuizScoreRepository.Commit() > 0))
+        {
+            throw new BadRequestException("Can not add student quiz result");
+        }
+
+        return _mapper.Map<StudentQuizScoreModel>(result);
+    }
+
     public async Task<List<StudentQuizScoreModel>?> GetQuizHistoryWithExactCourse(Guid studentId, Guid courseId)
     {
         var result = await _studentQuizScoreRepository.FindByCondition(s => s.userId.Equals(studentId)&& s.quiz.mentorClass.classId.Equals(courseId))
@@ -403,6 +415,47 @@ public class QuizService
 
         if (!result.Any()) return null;
         return _mapper.Map<List<StudentQuizScoreModel>>(result);
+    }
+
+    public async Task<List<QuestionWithStudentAnswer>> GetQuestionWithStudentAnswer(Guid studentId, Guid scoreId)
+    {
+        var result = await _quizHistoryRepository.FindByCondition(sa => sa.studentQuizScoreId.Equals(scoreId))
+            .Include(sa => sa.studentQuizScore)
+            .Include(sa => sa.question)
+            .Select(sa => new QuestionWithStudentAnswer
+            {
+                questionId = sa.questionId,
+                questionText = sa.question.questionText,
+                answerA = sa.question.answerA,
+                answerB = sa.question.answerB,
+                answerC = sa.question.answerC,
+                answerD = sa.question.answerD,
+                studentAnswer = sa.selectedAnswer,
+                correctAnswer = sa.question.correctAnswer
+            }).ToListAsync();
+        if (!result.Any())
+        {
+            throw new BadRequestException("Student have not joined the test");
+        }
+
+        return result;
+    }
+
+    public QuizModel GetQuizModelFromQuizScore(Guid scoreId)
+    {
+        var result = _scoreRepository.FindByCondition(s =>
+                s.studentQuizScoreId.Equals(scoreId))
+            .Include(s => s.quiz)
+            .First();
+        return _mapper.Map<QuizModel>(result.quiz);
+    }
+    
+    public StudentQuizScoreModel? GetScoreModelById (Guid scoreId)
+    {
+        var result = _scoreRepository.FindByCondition(x => x.studentQuizScoreId.Equals(scoreId)).FirstOrDefault();
+        if (result is null) return null;
+        return _mapper.Map<StudentQuizScoreModel>(result);
+
     }
 
 
