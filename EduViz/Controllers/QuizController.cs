@@ -80,7 +80,7 @@ public class QuizController : ControllerBase
             throw new BadRequestException("Something went wrong");
         }
         var saveResult = await _quizService.CalScoreStudent(req.answerList,req.quizId,addValue.studentQuizScoreId);
-        score.score = saveResult;
+        addValue.score = saveResult;
 
         await _quizService.UpdateScore(addValue);
 
@@ -114,7 +114,7 @@ public class QuizController : ControllerBase
         }));
     }
 
-    [HttpGet("view-detail-history")]
+    [HttpPost("view-detail-history")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> QuizReview([FromBody] QuizReviewRequest req)
     {

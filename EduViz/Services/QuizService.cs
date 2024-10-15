@@ -379,6 +379,7 @@ public class QuizService
 
     public async Task<StudentQuizScoreModel> SaveStudentScore(StudentQuizScoreModel req)
     {
+       
        var result = await _studentQuizScoreRepository.AddAsync(_mapper.Map<StudentQuizScore>(req));
        if (!(await _studentQuizScoreRepository.Commit() > 0))
        {
@@ -389,13 +390,25 @@ public class QuizService
 
     public async Task<StudentQuizScoreModel> UpdateScore(StudentQuizScoreModel req)
     {
-        var result = _studentQuizScoreRepository.Update(_mapper.Map<StudentQuizScore>(req));
-        if (!(await _studentQuizScoreRepository.Commit() > 0))
+        var existingScore = await _studentQuizScoreRepository
+            .FindByCondition(sqs => sqs.studentQuizScoreId == req.studentQuizScoreId)
+            .FirstOrDefaultAsync();
+
+        if (existingScore == null)
         {
-            throw new BadRequestException("Can not add student quiz result");
+            throw new NotFoundException("Student quiz score not found.");
         }
 
-        return _mapper.Map<StudentQuizScoreModel>(result);
+        existingScore.score = req.score; 
+
+        _studentQuizScoreRepository.Update(existingScore);
+
+        if (!(await _studentQuizScoreRepository.Commit() > 0))
+        {
+            throw new BadRequestException("Cannot update student quiz result");
+        }
+
+        return _mapper.Map<StudentQuizScoreModel>(existingScore);
     }
 
     public async Task<List<StudentQuizScoreModel>?> GetQuizHistoryWithExactCourse(Guid studentId, Guid courseId)
