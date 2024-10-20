@@ -29,12 +29,7 @@ public class QuizController : ControllerBase
             throw new BadRequestException("No file provided.");
         }
 
-        // Kiểm tra kiểu file
-        var fileExtension = Path.GetExtension(file.file.FileName);
-        if (fileExtension.Equals(".docx", StringComparison.OrdinalIgnoreCase) == false)
-        {
-            throw new BadRequestException("Invalid file type. Please upload a .docx file.");
-        }
+       
 
         var quiz = await _quizService.CreateQuiz(file.ToQuizModel());
         if (quiz is null)
@@ -92,7 +87,7 @@ public class QuizController : ControllerBase
     }
 
     [HttpGet("history")]
-    public async Task<IActionResult> GetQuizHistory([FromBody] GetQuizHistoryWithExactCourseRequest req)
+    public async Task<IActionResult> GetQuizHistory([FromQuery] GetQuizHistoryWithExactCourseRequest req)
     {
         var result = await _quizService.GetQuizHistoryWithExactCourse(req.studentId, req.courseId);
         if (result is null) throw new BadRequestException("Student have not taken any exams yet");
@@ -131,5 +126,11 @@ public class QuizController : ControllerBase
             examDate = score.dateTaken,
             resultList = result
         }));
+    }
+
+    [HttpGet("{quizId:guid}/history/{userId:guid}")]
+    public async Task<IActionResult> GetQuizHistory([FromRoute] Guid quizId, [FromRoute] Guid userId)
+    {
+        return Ok();
     }
 }
