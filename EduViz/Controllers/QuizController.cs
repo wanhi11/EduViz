@@ -109,7 +109,7 @@ public class QuizController : ControllerBase
         }));
     }
 
-    [HttpPost("view-detail-history")]
+    [HttpGet("view-detail-history")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> QuizReview([FromBody] QuizReviewRequest req)
     {
@@ -131,6 +131,11 @@ public class QuizController : ControllerBase
     [HttpGet("{quizId:guid}/history/{userId:guid}")]
     public async Task<IActionResult> GetQuizHistory([FromRoute] Guid quizId, [FromRoute] Guid userId)
     {
-        return Ok();
+        var result = await _quizService.GetQuizHistory(userId,quizId);
+        if (result is null) throw new BadRequestException("Student have not taken any exams yet");
+        return Ok(ApiResult<GetQuizHistoryWithExactCourseResponse>.Succeed(new GetQuizHistoryWithExactCourseResponse()
+        {
+            quizHistory = result
+        }));
     }
 }

@@ -5,6 +5,7 @@ using EduViz.Exceptions;
 using EduViz.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Task = DocumentFormat.OpenXml.Office2021.DocumentTasks.Task;
 
 namespace EduViz.Controllers;
 
@@ -150,5 +151,13 @@ public class UserController:ControllerBase
             name = user.UserName,
         }));
     }
+
+    // [HttpGet("{id:guid}/income")]
+    // [Authorize(Roles = "Mentor")]
+    // public async Task<IActionResult> GetInCome([FromRoute] Guid id)
+    // {
+    //     
+    // }
+
 
 }

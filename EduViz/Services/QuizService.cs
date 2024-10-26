@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using EduViz.Common.Payloads.Request;
 using EduViz.Common.Payloads.Response;
 using EduViz.Exceptions;
+using Microsoft.VisualBasic;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
 using QuizModel = EduViz.Dtos.QuizModel;
 using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
@@ -410,6 +411,7 @@ public class QuizService
 
         return _mapper.Map<StudentQuizScoreModel>(existingScore);
     }
+    
 
     public async Task<List<StudentQuizScoreModel>?> GetQuizHistoryWithExactCourse(Guid studentId, Guid courseId)
     {
@@ -428,6 +430,15 @@ public class QuizService
 
         if (!result.Any()) return null;
         return _mapper.Map<List<StudentQuizScoreModel>>(result);
+    }
+
+    public async Task<List<StudentQuizScoreModel>?> GetQuizHistory(Guid studentId, Guid quizId)
+    {
+        var result = await _studentQuizScoreRepository.FindByCondition(s =>
+            s.userId.Equals(studentId) && s.quizId.Equals(quizId)).ToListAsync();
+        if (!result.Any()) return null;
+        return _mapper.Map<List<StudentQuizScoreModel>>(result);
+
     }
 
     public async Task<List<QuestionWithStudentAnswer>> GetQuestionWithStudentAnswer(Guid studentId, Guid scoreId)
