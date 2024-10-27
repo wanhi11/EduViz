@@ -111,7 +111,7 @@ public class QuizController : ControllerBase
 
     [HttpGet("view-detail-history")]
     [Authorize(Roles = "Student")]
-    public async Task<IActionResult> QuizReview([FromBody] QuizReviewRequest req)
+    public async Task<IActionResult> QuizReview([FromQuery] QuizReviewRequest req)
     {
         var result = await _quizService.GetQuestionWithStudentAnswer(req.studentId, req.scoreId);
         var quiz = _quizService.GetQuizModelFromQuizScore(req.scoreId);
