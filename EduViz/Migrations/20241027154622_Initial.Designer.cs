@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241007124812_Initial")]
+    [Migration("20241027154622_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -317,11 +317,16 @@ namespace EduViz.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("studentQuizScoreId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("studentAnswerId");
 
                     b.HasIndex("questionId");
 
                     b.HasIndex("quizId");
+
+                    b.HasIndex("studentQuizScoreId");
 
                     b.ToTable("StudentAnswers");
                 });
@@ -645,9 +650,17 @@ namespace EduViz.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("EduViz.Entities.StudentQuizScore", "studentQuizScore")
+                        .WithMany()
+                        .HasForeignKey("studentQuizScoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("question");
 
                     b.Navigation("quiz");
+
+                    b.Navigation("studentQuizScore");
                 });
 
             modelBuilder.Entity("EduViz.Entities.StudentClass", b =>

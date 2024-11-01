@@ -383,6 +383,7 @@ namespace EduViz.Migrations
                     studentAnswerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     quizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     questionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    studentQuizScoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     selectedAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -400,6 +401,12 @@ namespace EduViz.Migrations
                         principalTable: "Quizzes",
                         principalColumn: "quizId",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_StudentAnswers_StudentQuizScores_studentQuizScoreId",
+                        column: x => x.studentQuizScoreId,
+                        principalTable: "StudentQuizScores",
+                        principalColumn: "studentQuizScoreId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -494,6 +501,11 @@ namespace EduViz.Migrations
                 column: "quizId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StudentAnswers_studentQuizScoreId",
+                table: "StudentAnswers",
+                column: "studentQuizScoreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudentClasses_classId",
                 table: "StudentClasses",
                 column: "classId");
@@ -548,9 +560,6 @@ namespace EduViz.Migrations
                 name: "StudentClasses");
 
             migrationBuilder.DropTable(
-                name: "StudentQuizScores");
-
-            migrationBuilder.DropTable(
                 name: "UpgradeOrderDetails");
 
             migrationBuilder.DropTable(
@@ -561,6 +570,9 @@ namespace EduViz.Migrations
 
             migrationBuilder.DropTable(
                 name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "StudentQuizScores");
 
             migrationBuilder.DropTable(
                 name: "Quizzes");
