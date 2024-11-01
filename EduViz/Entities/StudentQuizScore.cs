@@ -13,7 +13,7 @@ namespace EduViz.Entities
         public Guid userId { get; set; }
 
         [ForeignKey("Quiz")]
-        public Guid quizId { get; set; }
+        public Guid quizId {  get; set; }
         public TimeSpan duration { get; set; }     
         public DateTime dateTaken { get; set; }
 
