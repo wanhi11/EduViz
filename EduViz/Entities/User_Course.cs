@@ -14,6 +14,9 @@ namespace EduViz.Entities
 
         [ForeignKey("Course")]
         public Guid courseId { get; set; }
+        public string? comment { get; set; }
+        public DateTime? commentDate { get; set; }
+        public int? ratingStar { get; set; }
 
         public virtual User user { get; set; }
         public virtual Course course { get; set; }

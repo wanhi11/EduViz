@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduViz.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241027154622_Initial")]
+    [Migration("20241119145831_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -468,8 +468,17 @@ namespace EduViz.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("commentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("courseId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ratingStar")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");

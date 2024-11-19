@@ -465,8 +465,17 @@ namespace EduViz.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("commentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("courseId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ratingStar")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("userId")
                         .HasColumnType("uniqueidentifier");

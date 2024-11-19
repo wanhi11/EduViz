@@ -24,8 +24,8 @@ public class CourseService
 
     public CourseService(IRepository<User, Guid> userRepository, IRepository<Subject, Guid> subjectRepository,
         IMapper mapper, IRepository<Course, Guid> courseRepository, IRepository<MentorDetails, Guid> mentorRepository,
-        CloudinaryService cloudinaryService,IRepository<Class,Guid> classRepository,
-        IRepository<StudentClass,Guid>studentClassRepository,IRepository<UserCourse,Guid> userCourseRepository)
+        CloudinaryService cloudinaryService, IRepository<Class, Guid> classRepository,
+        IRepository<StudentClass, Guid> studentClassRepository, IRepository<UserCourse, Guid> userCourseRepository)
     {
         _userRepository = userRepository;
         _subjectRepository = subjectRepository;
@@ -119,13 +119,13 @@ public class CourseService
 
     public List<CourseModel>? GetCourseByStudentId(Guid studentId)
     {
-        var userCourses =  _userCourseRepository
+        var userCourses = _userCourseRepository
             .FindByCondition(uc => uc.userId == studentId)
             .ToList();
-        
+
         var courseIds = userCourses.Select(uc => uc.courseId).ToList();
-        
-        var courses =  _courseRepositoty
+
+        var courses = _courseRepositoty
             .FindByCondition(c => courseIds.Contains(c.courseId))
             .ToList();
         if (!courses.Any()) return null;
@@ -171,102 +171,136 @@ public class CourseService
         return false;
     }
 
- public async Task<List<CourseResponse>> GetAllCoursesWithSearchString(string searchString)
-{
-    searchString = searchString.ToLower();
-    var currentDate = DateTime.UtcNow;
-    
-    // Lấy danh sách các khóa học chứa searchString trong tên khóa học từ database
-    var coursesList = await _courseRepositoty
-        .FindByCondition(course => course.courseName.ToLower().Contains(searchString))
-        .Include(course => course.mentor)
-        .ThenInclude(mentor => mentor.user)
-        .Include(course => course.subject)
-        .ToListAsync();
-
-    // Lấy danh sách các mentor có tên chứa searchString từ database
-    var mentorsList = await _mentorRepository
-        .FindByCondition(mentor => mentor.user.userName.ToLower().Contains(searchString))
-        .Include(mentor => mentor.courses)
-        .ThenInclude(course => course.subject)
-        .ToListAsync();
-
-    // Lấy danh sách các khóa học từ danh sách mentor đã tìm thấy
-    var mentorCoursesList = mentorsList
-        .SelectMany(mentor => mentor.courses)
-        .ToList();
-
-    // Kết hợp cả hai danh sách khóa học và loại bỏ trùng lặp bằng courseId
-    var combinedCourses = coursesList
-        .Concat(mentorCoursesList)
-        .GroupBy(course => course.courseId)
-        .Select(group => group.First())
-        .ToList();
-
-    var studentCounts = await _studentClassRepository
-        .FindByCondition(sc => combinedCourses.Select(c => c.courseId).Contains(sc.classId))
-        .GroupBy(sc => sc.classId)
-        .Select(group => new 
-        {
-            CourseId = group.Key,
-            StudentCount = group.Count()
-        })
-        .ToListAsync();
-        
-        
-    // Chuyển đổi kết quả sang CourseResponse
-    var courseResponses = combinedCourses.Select(course => new CourseResponse
+    public async Task<List<CourseResponse>> GetAllCoursesWithSearchString(string searchString)
     {
-        meetUrl = course.meetUrl,
-        userId = course.mentor.user.userId.ToString(),
-        numOfStudents = studentCounts.FirstOrDefault(sc => sc.CourseId == course.courseId)?.StudentCount ?? 0,
-        courseId = course.courseId,
-        courseName = course.courseName,
-        mentorName = course.mentor.user.userName,
-        subjectName = course.subject.subjectName,
-        price = course.price,
-        picture = course.picture,
-        startDate = course.startDate,
-        duration = course.duration,
-        mentorId = course.mentorId.ToString(),
-        weekSchedule = ConvertEnumHelper.ConvertEnumToDayList(course.schedule.ToString()), // Chuyển đổi schedule thành List<string>
-        beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"), // Định dạng thời gian bắt đầu
-        endingClass = course.endingClass.ToString(@"hh\:mm\:ss") // Định dạng thời gian kết thúc
-    }).ToList();
+        searchString = searchString.ToLower();
+        var currentDate = DateTime.UtcNow;
 
-    // Sắp xếp theo trạng thái VIP của mentor (VIP trước, không VIP sau)
-    var sortedCourses = courseResponses
-        .OrderByDescending(c => mentorsList
-            .Any(m => m.mentorDetailsId == combinedCourses
-                .Where(course => course.courseId == c.courseId)
-                .Select(course => course.mentor.mentorDetailsId)
-                .FirstOrDefault() && m.vipExpirationDate > currentDate))
-        .ToList();
+        // Lấy danh sách các khóa học chứa searchString trong tên khóa học từ database
+        var coursesList = await _courseRepositoty
+            .FindByCondition(course => course.courseName.ToLower().Contains(searchString))
+            .Include(course => course.mentor)
+            .ThenInclude(mentor => mentor.user)
+            .Include(course => course.subject)
+            .ToListAsync();
 
-    return sortedCourses;
-}
+        // Lấy danh sách các mentor có tên chứa searchString từ database
+        var mentorsList = await _mentorRepository
+            .FindByCondition(mentor => mentor.user.userName.ToLower().Contains(searchString))
+            .Include(mentor => mentor.courses)
+            .ThenInclude(course => course.subject)
+            .ToListAsync();
 
-public async Task<List<CourseWithSubject>> GetCoursesGroupedBySubjectWithSearchString(string searchString)
-{
-    var currentDate = DateTime.UtcNow;
+        // Lấy danh sách các khóa học từ danh sách mentor đã tìm thấy
+        var mentorCoursesList = mentorsList
+            .SelectMany(mentor => mentor.courses)
+            .ToList();
 
-    // Sử dụng hàm đã có để lấy danh sách khóa học
-    var combinedCourses = await GetAllCoursesWithSearchString(searchString);
+        // Kết hợp cả hai danh sách khóa học và loại bỏ trùng lặp bằng courseId
+        var combinedCourses = coursesList
+            .Concat(mentorCoursesList)
+            .GroupBy(course => course.courseId)
+            .Select(group => group.First())
+            .ToList();
 
-    // Nhóm khóa học theo môn học
-    var courseGroups = combinedCourses
-        .GroupBy(course => course.subjectName)
-        .Select(group => new CourseWithSubject
+        var studentCounts = await _studentClassRepository
+            .FindByCondition(sc => combinedCourses.Select(c => c.courseId).Contains(sc.classId))
+            .GroupBy(sc => sc.classId)
+            .Select(group => new
+            {
+                CourseId = group.Key,
+                StudentCount = group.Count()
+            })
+            .ToListAsync();
+
+
+        // Chuyển đổi kết quả sang CourseResponse
+        var courseResponses = combinedCourses.Select(course => new CourseResponse
         {
-            subjectName = group.Key,
-            listCourse = group.ToList() // Chuyển nhóm thành danh sách
-        })
-        .ToList();
+            meetUrl = course.meetUrl,
+            userId = course.mentor.user.userId.ToString(),
+            numOfStudents = studentCounts.FirstOrDefault(sc => sc.CourseId == course.courseId)?.StudentCount ?? 0,
+            courseId = course.courseId,
+            courseName = course.courseName,
+            mentorName = course.mentor.user.userName,
+            subjectName = course.subject.subjectName,
+            price = course.price,
+            picture = course.picture,
+            startDate = course.startDate,
+            duration = course.duration,
+            mentorId = course.mentorId.ToString(),
+            weekSchedule =
+                ConvertEnumHelper.ConvertEnumToDayList(course.schedule
+                    .ToString()), // Chuyển đổi schedule thành List<string>
+            beginingClass = course.beginingClass.ToString(@"hh\:mm\:ss"), // Định dạng thời gian bắt đầu
+            endingClass = course.endingClass.ToString(@"hh\:mm\:ss") // Định dạng thời gian kết thúc
+        }).ToList();
 
-    return courseGroups; // Trả về danh sách CourseWithSubject
-}
+        // Sắp xếp theo trạng thái VIP của mentor (VIP trước, không VIP sau)
+        var sortedCourses = courseResponses
+            .OrderByDescending(c => mentorsList
+                .Any(m => m.mentorDetailsId == combinedCourses
+                    .Where(course => course.courseId == c.courseId)
+                    .Select(course => course.mentor.mentorDetailsId)
+                    .FirstOrDefault() && m.vipExpirationDate > currentDate))
+            .ToList();
 
+        return sortedCourses;
+    }
 
+    public async Task<List<CourseWithSubject>> GetCoursesGroupedBySubjectWithSearchString(string searchString)
+    {
+        var currentDate = DateTime.UtcNow;
 
+        // Sử dụng hàm đã có để lấy danh sách khóa học
+        var combinedCourses = await GetAllCoursesWithSearchString(searchString);
 
+        // Nhóm khóa học theo môn học
+        var courseGroups = combinedCourses
+            .GroupBy(course => course.subjectName)
+            .Select(group => new CourseWithSubject
+            {
+                subjectName = group.Key,
+                listCourse = group.ToList() // Chuyển nhóm thành danh sách
+            })
+            .ToList();
+
+        return courseGroups; // Trả về danh sách CourseWithSubject
+    }
+
+    public async Task<CommentResponse> AddCommentForCourse(string message,int star,Guid userId, Guid courseId)
+    {
+        var user = _userRepository.FindByCondition(u => u.userId == userId).FirstOrDefault();
+        if (user is null) throw new BadRequestException("Cannot find user's account");
+        var userClass = _userCourseRepository.FindByCondition(u => u.userId == userId
+                                                                   && u.courseId == courseId).FirstOrDefault();
+        if (userClass is null) throw new BadRequestException("This account do not attempt to the course");
+        userClass.comment = message;
+        userClass.ratingStar = star;
+        userClass.commentDate = DateTime.Now;
+        var result = _userCourseRepository.Update(userClass);
+        if (!(await _userCourseRepository.Commit() > 0))
+            throw new BadRequestException("Something went wrong when " +
+                                          "comment");
+        return new CommentResponse()
+        {
+            comment = message,
+            userName = user.userName
+        };
+    }
+
+    public async Task<List<FeedBack>> GetCommentsOfClass(Guid classId)
+    {
+        var response =await _userCourseRepository.FindByCondition(x => x.courseId == classId 
+                                                                  && x.comment !=null)
+            .Include(x=> x.user)
+            .Select(x => new FeedBack()
+            {
+                commentDate = x.commentDate.Value,
+                userName = x.user.userName,
+                ratingStar = x.ratingStar.Value,
+                comment = x.comment
+            }).ToListAsync();
+        return response;
+    }
 }

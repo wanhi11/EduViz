@@ -208,7 +208,10 @@ namespace EduViz.Migrations
                 {
                     userCourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     userId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    courseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    courseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    commentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ratingStar = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

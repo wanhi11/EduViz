@@ -420,4 +420,30 @@ public class CourseController : ControllerBase
         }));
     }
 
+    [HttpPost]
+    [Route("{classId:guid}/comment")]
+    public async Task<IActionResult> AddCommentForCourse([FromRoute] Guid classId,[FromBody] CommentRequest req)
+    {
+        Request.Headers.TryGetValue("Authorization", out var token);
+        token = token.ToString().Split()[1];
+        var currentUser = _userService.GetUserInToken(token);
+        var result = await _courseService.AddCommentForCourse(req.comment,req.rate, currentUser.UserId,
+            classId);
+        return Ok(ApiResult<CommentResponse>.Succeed(new CommentResponse()
+        {
+            userName = result.userName,
+            comment = result.comment
+        }));
+    }
+    
+    [HttpGet]
+    [Route("{classId:guid}/comment")]
+    public async Task<IActionResult> GetComments([FromRoute] Guid classId)
+    {
+        var reult = await _courseService.GetCommentsOfClass(classId);
+        return Ok(ApiResult<GetCommentResponse>.Succeed(new GetCommentResponse()
+        {
+            feedBacks = reult
+        }));
+    }
 }
