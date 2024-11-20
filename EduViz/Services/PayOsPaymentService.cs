@@ -25,7 +25,7 @@ public class PayOsPaymentService
     private readonly IRepository<UpgradeOrderDetails, Guid> _upgradeRepository;
     private readonly IRepository<Course, Guid> _courseRepository;
     private readonly IRepository<Payment, Guid> _paymentRepository;
-
+    private readonly IRepository<User, Guid> _userRepository;
 
     public PayOsPaymentService(IConfiguration configuration, IRepository<MentorDetails, Guid> mentorRepository,
         IRepository<User, Guid> userRepository,IRepository<UpgradeOrderDetails,Guid> upgradeRepository,
@@ -39,6 +39,7 @@ public class PayOsPaymentService
         _upgradeRepository = upgradeRepository;
         _courseRepository = courseRepository;
         _paymentRepository = paymentRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<PayOSPaymentResponse> CreateVipUpgradePaymentLinkAsync(
@@ -52,7 +53,7 @@ public class PayOsPaymentService
         };
         long orderCode = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var result = await CreatePaymentLinkAsync(orderCode, amount, "Upgrade Vip "+request.monthDuration+" Month", items
-            , request.cancelUrl, request.returnUrl);
+            , request.cancelUrl, request.returnUrl,buyerName:"");
         
         var mentorUpgradeDetail = new UpgradeOrderDetails()
         {
@@ -87,12 +88,12 @@ public class PayOsPaymentService
     }
 
     public async Task<PayOSPaymentResponse> CreatePaymentLinkAsync(long orderCode, int amount, string description,
-        List<ItemData> items, string cancelUrl, string returnUrl)
+        List<ItemData> items, string cancelUrl, string returnUrl,string buyerName)
     {
         
         PayOS payOS = new PayOS(_clientId, _apiKey, _checksumKey);
 
-        PaymentData paymentData = new PaymentData(orderCode, amount, description, items, cancelUrl, returnUrl);
+        PaymentData paymentData = new PaymentData(orderCode, amount, description, items, cancelUrl, returnUrl,buyerName:buyerName);
 
         var payOSResult = await payOS.createPaymentLink(paymentData);
         return new PayOSPaymentResponse()
@@ -162,6 +163,7 @@ public class PayOsPaymentService
     public async Task<PayOSPaymentResponse> CreatePurchaseCourseAsync(
         CoursePurchaseRequest req,Guid studentId)
     {
+        var user = _userRepository.FindByCondition(x => x.userId == studentId).First();
         var course = _courseRepository.FindByCondition(c => c.courseId.Equals(req.courseId)).FirstOrDefault();
         if (course is null)
         {
@@ -176,7 +178,7 @@ public class PayOsPaymentService
         long orderCode = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         var result = await CreatePaymentLinkAsync(orderCode, amount,
             "", items,
-            req.cancelUrl, req.returnUrl);
+            req.cancelUrl, req.returnUrl,buyerName:user.userName);
         var payment = new Payment()
         {
             amount = amount,
